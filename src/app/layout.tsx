@@ -4,14 +4,13 @@ import "./globals.css"
 // All packages except `@mantine/hooks` require styles imports
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core'
 import '@mantine/core/styles.css'
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { NextIntlClientProvider } from 'next-intl'
 
 export const metadata: Metadata = {
   title: "Lensor - Portfolio Builder for Designers & Photographers",
   description: "Portfolio builder for designers & photographers with templates, custom domains, digital asset store, and Reddit-like communities.",
 }
 
-const queryClient = new QueryClient()
 
 export default function RootLayout({
   children,
@@ -24,11 +23,11 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <QueryClientProvider client={queryClient}>
+        <NextIntlClientProvider>
           <MantineProvider>
             {children}
           </MantineProvider>
-        </QueryClientProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )
