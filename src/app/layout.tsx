@@ -4,6 +4,7 @@ import "./globals.css"
 // All packages except `@mantine/hooks` require styles imports
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core'
 import '@mantine/core/styles.css'
+import { NextIntlClientProvider } from 'next-intl'
 
 export const metadata: Metadata = {
   title: "Lensor - Portfolio Builder for Designers & Photographers",
@@ -22,7 +23,11 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-          <MantineProvider>{children}</MantineProvider>
+        <NextIntlClientProvider>
+          <MantineProvider>
+            {children}
+          </MantineProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )
