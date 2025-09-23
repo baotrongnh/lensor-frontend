@@ -1,7 +1,5 @@
 import Link from 'next/link'
 import { FaFacebook, FaGithub } from 'react-icons/fa'
-import { LiaFacebook } from 'react-icons/lia'
-import { VscGithub } from 'react-icons/vsc'
 
 export default function MainFooter() {
      return (
