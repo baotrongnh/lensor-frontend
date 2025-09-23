@@ -1,10 +1,17 @@
-import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core'
+import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core'
 import '@mantine/core/styles.css'
+import { Notifications } from '@mantine/notifications'
 import '@mantine/notifications/styles.css'
 import type { Metadata } from "next"
 import { NextIntlClientProvider } from 'next-intl'
+import { Poppins } from "next/font/google"
 import "./globals.css"
-import { Notifications } from '@mantine/notifications'
+import MantineProviderWrapper from './mantine-provider'
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"]
+})
 
 export const metadata: Metadata = {
   title: "Lensor - Portfolio Builder for Designers & Photographers",
@@ -17,16 +24,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
+    <html lang="en" className={poppins.className} {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript />
       </head>
       <body>
         <NextIntlClientProvider>
-          <MantineProvider defaultColorScheme="dark">
+          <MantineProviderWrapper>
             <Notifications />
             {children}
-          </MantineProvider>
+          </MantineProviderWrapper>
         </NextIntlClientProvider>
       </body>
     </html>
