@@ -1,21 +1,29 @@
 @import "tailwindcss";
+@custom-variant dark (&:where([data-mantine-color-scheme=dark], [data-mantine-color-scheme=dark] *));
+@utility container {
+  margin-inline: auto;
+}
+
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
 
 :root {
-
 }
 
 @theme inline {
-
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-
   }
 }
 
 body {
   /* background: var(--background);
   color: var(--foreground); */
-  /* font-family: Arial, Helvetica, sans-serif; */
 }
