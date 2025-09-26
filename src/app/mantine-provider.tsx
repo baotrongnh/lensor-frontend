@@ -1,10 +1,18 @@
 'use client'
 
-import { createTheme, MantineProvider } from '@mantine/core'
+import { colorsTuple, createTheme, MantineProvider, MantineRadiusValues } from '@mantine/core'
 import React from 'react'
 
 const theme = createTheme({
-     fontFamily: "inherit"
+     fontFamily: "inherit",
+     colors: {
+          main: colorsTuple('#8c4aea'),
+          dynamic: colorsTuple(
+               Array.from({ length: 10 }, (_, index) => '#FFC0CB')
+          ),
+     },
+     primaryColor: 'main',
+     defaultRadius: 'md'
 })
 
 export default function MantineProviderWrapper({ children }: { children: React.ReactNode }) {

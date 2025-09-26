@@ -12,10 +12,14 @@
   --breakpoint-xl: 1280px;
 }
 
-:root {
+:root[data-mantine-color-scheme="light"] {
+  --mantine-color-body: #F7F7F8 !important;
+  --color-box-inside: #FFFFFF;
 }
 
-@theme inline {
+:root[data-mantine-color-scheme="dark"] {
+  --mantine-color-body: #111214 !important;
+  --color-box-inside: #27282a;
 }
 
 @media (prefers-color-scheme: dark) {
