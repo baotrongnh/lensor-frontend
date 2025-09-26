@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 interface NavbarLinkProps {
@@ -10,12 +13,14 @@ interface NavbarLinkProps {
 }
 
 export default function NavbarLink({ label, icon, href, isActive, onClick }: NavbarLinkProps) {
+     const pathname = usePathname()
+
      return (
           <Link
                href={href}
                className={
                     `flex items-center gap-3 py-3 pl-8 opacity-70 hover:opacity-90 duration-200 transition-all
-                    ${isActive && 'bg-gradient-to-r from-neutral-700 to-40% opacity-100'}
+                    ${pathname.split('/')[1] === href.split('/')[1] && 'bg-gradient-to-r from-neutral-700 to-40% opacity-100'}
                     `
                }
                onClick={onClick}
