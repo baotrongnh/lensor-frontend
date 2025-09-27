@@ -19,7 +19,7 @@ export default function ProfileContent() {
           },
      ]
      return (
-          <div>
+          <div className='h-30'>
                <Tabs variant="outline" defaultValue={listTabs[0].value}>
                     <Tabs.List>
                          {listTabs.map((item, index) =>
