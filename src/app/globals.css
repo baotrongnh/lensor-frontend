@@ -10,6 +10,7 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
+  --color-main-theme: #8C4AEA;
 }
 
 :root[data-mantine-color-scheme="light"] {
@@ -19,7 +20,7 @@
 
 :root[data-mantine-color-scheme="dark"] {
   --mantine-color-body: #111214 !important;
-  --color-box-inside: #27282a;
+  --color-box-inside: #27282A;
 }
 
 @media (prefers-color-scheme: dark) {
