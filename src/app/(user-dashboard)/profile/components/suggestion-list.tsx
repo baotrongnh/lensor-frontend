@@ -1,12 +1,12 @@
 import React from 'react'
-import { Avatar } from '@mantine/core'
+import { Avatar, Divider } from '@mantine/core'
 import Link from 'next/link'
 
 export default function SuggestionList() {
   const demoUserData = [
     {
       id: 1,
-      name: "Sarah Johnson",
+      name: "Sarah Johnsonasa",
       email: "sarah.johnson@gmail.com",
       imageUrl: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face"
     },
@@ -70,26 +70,28 @@ export default function SuggestionList() {
   return (
     <div className='flex flex-col h-120 py-4 px-5'>
       <h3 className='text-main-theme font-bold text-2xl mb-4 ps-3'>You might know</h3>
-      <div className='flex flex-col gap-1 overflow-y-scroll 
+      <div className='flex flex-col gap-0 overflow-y-scroll overflow-x-hidden
       [&::-webkit-scrollbar]:w-0
         hover:[&::-webkit-scrollbar]:w-1
         [&::-webkit-scrollbar-track]:bg-transparent
         [&::-webkit-scrollbar-thumb]:bg-gray-400
         [&::-webkit-scrollbar-thumb]:rounded-full
         transition-all duration-300'>
+
         {demoUserData.map((user) => (
           <Link key={user.id} href='/'>
-            <div className='flex justify-start items-center gap-2 hover:bg-[#45464A] hover:[&_h5]:text-purple-500 transition-colors cursor-pointer p-2 rounded-xl'>
+            <div className='flex justify-start items-center gap-3 hover:bg-[#45464A] transition-colors cursor-pointer p-2 rounded-xl me-2'>
               <Avatar
                 src={user.imageUrl || defaultAvatar}
                 alt={user.name}
                 size='md'
               />
-              <div className='flex flex-col justify-center items-start gap-0'>
-                <h5 className='text-main-theme font-bold text-lg'>{user.name}</h5>
-                <h6 className='text-main-theme text-xs'>{user.email}</h6>
+              <div className='flex flex-col justify-center items-start gap-0 flex-1 min-w-0'>
+                <h5 className='text-main-theme font-bold text-lg truncate w-full'>{user.name}</h5>
+                <h6 className='text-main-theme text-xs truncate w-full'>{user.email}</h6>
               </div>
             </div>
+            <Divider my="xs" />
           </Link>
         ))}
       </div>
