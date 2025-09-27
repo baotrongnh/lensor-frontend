@@ -6,10 +6,7 @@ import React from 'react'
 const theme = createTheme({
      fontFamily: "inherit",
      colors: {
-          main: colorsTuple('#8c4aea'),
-          dynamic: colorsTuple(
-               Array.from({ length: 10 }, (_, index) => '#FFC0CB')
-          ),
+          main: colorsTuple('#8C4AEA'),
      },
      primaryColor: 'main',
      defaultRadius: 'md'
