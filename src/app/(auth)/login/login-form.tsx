@@ -192,7 +192,7 @@ export function LoginForm(props: PaperProps) {
                             onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
                             radius="md"
                             size="md"
-                            className='text-main-theme [&_input]:focus:border-purple-500 [&_input]:focus:font-medium'
+                            className='[&_input]:focus:border-purple-500 [&_input]:focus:font-medium'
                         />
                     )}
 
@@ -205,7 +205,7 @@ export function LoginForm(props: PaperProps) {
                         error={form.errors.email && 'Invalid email'}
                         radius="md"
                         size="md"
-                        className='text-main-theme [&_input]:focus:border-purple-500 [&_input]:focus:font-medium'
+                        className='[&_input]:focus:border-purple-500 [&_input]:focus:font-medium'
                     />
 
                     <PasswordInput
@@ -217,7 +217,7 @@ export function LoginForm(props: PaperProps) {
                         error={form.errors.password && 'Password should include at least 6 characters'}
                         radius="md"
                         size="md"
-                        className='text-main-theme [&_input]:focus:border-purple-500 [&_input]:focus:font-medium'
+                        className='[&_input]:focus:border-purple-500 [&_input]:focus:font-medium'
                     />
 
                     {type === 'register' && (
@@ -228,7 +228,7 @@ export function LoginForm(props: PaperProps) {
                             color="violet"
                             size="sm"
                             error={form.errors.term}
-                            className='text-main-theme'
+                            
                         />
                     )}
                 </Stack>
@@ -252,10 +252,7 @@ export function LoginForm(props: PaperProps) {
                         radius="md"
                         size="md"
                         disabled={loading}
-
-                        style={{
-                            background: loading ? '#9CA3AF' : 'linear-gradient(135deg, #6441A5 100%, #2a0845 100%)'
-                        }}
+                        
                     >
                         {loading && type === 'login' ? 'Signing in...' : loading && type === 'register' ? 'Creating account...' : upperFirst(type)}
                     </Button>

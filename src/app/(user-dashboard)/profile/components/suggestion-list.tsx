@@ -69,7 +69,7 @@ export default function SuggestionList() {
 
   return (
     <div className='flex flex-col h-120 py-4 px-5'>
-      <h3 className='text-main-theme font-bold text-2xl mb-4 ps-3'>You might know</h3>
+      <h3 className=' font-bold text-2xl mb-4 ps-3'>You might know</h3>
       <div className='flex flex-col gap-0 overflow-y-scroll overflow-x-hidden
       [&::-webkit-scrollbar]:w-0
         hover:[&::-webkit-scrollbar]:w-1
@@ -87,8 +87,8 @@ export default function SuggestionList() {
                 size='md'
               />
               <div className='flex flex-col justify-center items-start gap-0 flex-1 min-w-0'>
-                <h5 className='text-main-theme font-bold text-lg truncate w-full'>{user.name}</h5>
-                <h6 className='text-main-theme text-xs truncate w-full'>{user.email}</h6>
+                <h5 className='font-bold text-lg truncate w-full'>{user.name}</h5>
+                <h6 className='text-xs truncate w-full'>{user.email}</h6>
               </div>
             </div>
             <Divider my="xs" />

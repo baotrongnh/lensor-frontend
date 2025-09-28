@@ -15,26 +15,26 @@ export default function About() {
 
   return (
     <div className='flex flex-col h-auto py-4 px-8'>
-      <h3 className='text-main-theme font-bold text-2xl mb-6'>About me</h3>
+      <h3 className='font-bold text-2xl mb-6'>About me</h3>
       <div className='flex flex-col gap-2'>
         <div className='flex justify-start items-center gap-2'>
           <IoPerson size='24px' className='flex-shrink-0'/>
-          <h4 className='text-main-theme text-lg'>{demoUserData.gender}</h4>
+          <h4 className='text-md'>{demoUserData.gender}</h4>
         </div>
         <Divider my='xs' />
         <div className='flex justify-start items-center gap-2'>
           <MdCake size='24px' className='flex-shrink-0'/>
-          <h4 className='text-main-theme text-lg'>{demoUserData.birth}</h4>
+          <h4 className='text-md'>{demoUserData.birth}</h4>
         </div>
         <Divider my='xs' />
         <div className='flex justify-start items-start gap-2'>
           <FaMapLocationDot size='24px' className='flex-shrink-0'/>
-          <h4 className='text-main-theme text-lg'>{demoUserData.address}</h4>
+          <h4 className='text-md'>{demoUserData.address}</h4>
         </div>
         <Divider my='xs' />
         <div className='flex justify-start items-center gap-2'>
           <IoMdMail size='24px' className='flex-shrink-0'/>
-          <h4 className='text-main-theme text-lg'>{demoUserData.email}</h4>
+          <h4 className='text-md'>{demoUserData.email}</h4>
         </div>
         <Divider my='xs' />
       </div>
