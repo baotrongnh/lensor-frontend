@@ -11,14 +11,14 @@ export default function UserSidebar() {
 
      const sidebarItems = [
           {
-               label: 'Home',
+               label: 'Forum',
                icon: <FaHome />,
-               href: '/home'
+               href: '/forum'
           },
           {
                label: 'Profile',
                icon: <FaUser />,
-               href: '/profile'
+               href: '/profile/36'
           },
           {
                label: 'Message',
@@ -43,7 +43,7 @@ export default function UserSidebar() {
      ]
 
      return (
-          <nav className='h-screen bg-black text-white'>
+          <nav className='h-screen bg-black text-white-custom sticky top-0'>
                <h1 className='py-8'>LENSOR</h1>
                <Divider /> 
                <div className='mt-10'>
