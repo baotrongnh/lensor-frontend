@@ -8,7 +8,7 @@ export default function SuggestionList() {
       id: 1,
       name: "Sarah Johnsonasa",
       email: "sarah.johnson@gmail.com",
-      imageUrl: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face"
+      imageUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face"
     },
     {
       id: 2,
@@ -91,7 +91,7 @@ export default function SuggestionList() {
                 <h6 className='text-xs truncate w-full'>{user.email}</h6>
               </div>
             </div>
-            <Divider my="xs" />
+            {user.id == demoUserData.length ? <Divider my="xs" color='transparent' /> : <Divider my="xs" />}
           </Link>
         ))}
       </div>
