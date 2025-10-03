@@ -18,10 +18,8 @@ pipeline {
         
         stage('Install & Build') {
             steps {
-                dir('frontend') {
                     sh 'npm install'
                     sh 'npm run build'
-                }
             }
         }
     }
