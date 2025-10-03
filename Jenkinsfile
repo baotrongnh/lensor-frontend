@@ -27,24 +27,28 @@ pipeline {
     post {
         success {
             script {
-                githubNotify context: 'jenkins/build', 
-                             status: 'SUCCESS', 
-                             description: 'Build passed'
+                publishChecks name: 'jenkins/build',
+                              title: 'Build Status',
+                              summary: 'Build passed ✅',
+                              conclusion: 'SUCCESS'
             }
         }
         failure {
             script {
-                githubNotify context: 'jenkins/build', 
-                             status: 'FAILURE', 
-                             description: 'Build failed'
+                publishChecks name: 'jenkins/build',
+                              title: 'Build Status',
+                              summary: 'Build failed ❌',
+                              conclusion: 'FAILURE'
             }
         }
         aborted {
             script {
-                githubNotify context: 'jenkins/build', 
-                             status: 'ERROR', 
-                             description: 'Build aborted'
+                publishChecks name: 'jenkins/build',
+                              title: 'Build Status',
+                              summary: 'Build aborted ⚠️',
+                              conclusion: 'CANCELLED'
             }
         }
-    }
+}
+
 }
