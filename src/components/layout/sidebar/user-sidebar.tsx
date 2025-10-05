@@ -1,94 +1,169 @@
 'use client'
 
-import { Divider, TextInput } from '@mantine/core'
-import { useState } from 'react'
+import { Avatar, Menu, Switch, TextInput, UnstyledButton, useMantineColorScheme } from '@mantine/core'
+import { useDebouncedValue, useHotkeys } from '@mantine/hooks'
+import clsx from 'clsx'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { BsThreeDots } from 'react-icons/bs'
 import { CiSearch } from 'react-icons/ci'
-import { FaHome, FaMoneyCheckAlt, FaPhotoVideo, FaTools, FaUser } from 'react-icons/fa'
-import { FaMessage } from 'react-icons/fa6'
-import NavbarLink from './navbar-link'
+import { FaHome, FaLayerGroup, FaMoneyCheckAlt, FaShoppingCart, FaTools, FaUser } from 'react-icons/fa'
+import { FaCircleQuestion, FaMessage, FaShop } from 'react-icons/fa6'
+import { IoMdMoon, IoMdSunny } from 'react-icons/io'
+import { RiArrowLeftDoubleLine, RiArrowRightDoubleLine } from 'react-icons/ri'
+import NavbarLink from './components/navbar-link'
 
 export default function UserSidebar() {
-     const [active, setActive] = useState(0)
+     const [searchValue, setSearchValue] = useState('')
+     const [debounced] = useDebouncedValue(searchValue, 750)
+     const { setColorScheme, colorScheme, toggleColorScheme } = useMantineColorScheme()
+     const [collapsed, setCollapsed] = useState(false)
 
-     const sidebarItems = [
-          {
-               label: 'Forum',
-               icon: <FaHome />,
-               href: '/forum'
-          },
-          {
-               label: 'Profile',
-               icon: <FaUser />,
-               href: '/profile/36'
-          },
-          {
-               label: 'Message',
-               icon: <FaMessage />,
-               href: '/message'
-          },
-          {
-               label: 'Purchases',
-               icon: <FaMoneyCheckAlt />,
-               href: '/purchases'
-          },
-          {
-               label: 'Gallery',
-               icon: <FaPhotoVideo />,
-               href: '/gallery'
-          },
-     ]
 
-     const sideBarItemsSetting = [
+     useEffect(() => {
+          console.log(`SEARCH SIDEBAR: ${debounced}`)
+     }, [debounced])
+
+     const onChangeTheme = (value: boolean) => {
+          setColorScheme(`${value ? 'dark' : 'light'}`)
+     }
+
+     useHotkeys([
+          ['mod + j', () => toggleColorScheme()],
+     ])
+
+     const sidebar = [
           {
-               label: 'Setting',
-               icon: <FaTools />,
-               href: '/setting'
+               title: 'MAIN MENU',
+               subs: [
+                    {
+                         label: 'Forum',
+                         icon: <FaHome />,
+                         href: '/forum'
+                    },
+                    {
+                         label: 'Profile',
+                         icon: <FaUser />,
+                         href: '/profile/36'
+                    },
+                    {
+                         label: 'Create Portfolio',
+                         icon: <FaLayerGroup />,
+                         href: '/portfolio'
+                    },
+                    {
+                         label: 'Message',
+                         icon: <FaMessage />,
+                         href: '/message'
+                    },
+               ]
           },
           {
-               label: 'Help',
-               icon: <FaTools />,
-               href: '/setting'
+               title: 'MARKETPLACES',
+               subs: [
+                    {
+                         label: 'Marketplace',
+                         icon: <FaShop />,
+                         href: '/marketplace'
+                    },
+                    {
+                         label: 'Purchased Presets',
+                         icon: <FaMoneyCheckAlt />,
+                         href: '/purchased-presets'
+                    },
+                    {
+                         label: 'Cart',
+                         icon: <FaShoppingCart />,
+                         href: '/cart'
+                    },
+               ]
           },
           {
-               label: 'Supscriptions',
-               icon: <FaTools />,
-               href: '/setting'
+               title: 'Settings',
+               subs: [
+                    {
+                         label: 'Setting',
+                         icon: <FaTools />,
+                         href: '/setting'
+                    },
+                    {
+                         label: 'Help',
+                         icon: <FaCircleQuestion />,
+                         href: '/help'
+                    },
+               ]
           }
      ]
 
      return (
-          <nav className='h-screen sticky top-0'>
-               <h1 className='py-8'>LENSOR</h1>
-               <Divider />
-               <div className='mt-5 px-2'>
-                    <TextInput
-                         radius='md'
-                         placeholder='Search'
-                         leftSection={<CiSearch />}
-                         className='my-2'
-                    />
-                    <h1 className='text-neutral-600 text-sm py-1'>MAIN MENU</h1>
-                    {sidebarItems.map((item, index) =>
-                         <NavbarLink
-                              key={index}
-                              href={item.href}
-                              label={item.label}
-                              icon={item.icon}
-                              isActive={index === active}
-                              onClick={() => setActive(index)}
+          <nav
+               className={
+                    clsx('h-screen sticky top-0 border-r border-black/10 dark:border-white/10 duration-300',
+                         collapsed ? 'w-15' : 'w-64'
+                    )
+               }>
+               <button onClick={() => setCollapsed(!collapsed)} className='absolute hover:opacity-80 duration-300 bg-white dark:bg-neutral-900 right-[-13px] top-4 rounded-full border p-1 cursor-pointer'>
+                    {collapsed ? <RiArrowRightDoubleLine /> : <RiArrowLeftDoubleLine />}
+
+               </button>
+               <div className={clsx('flex flex-col justify-between h-full')}>
+                    <div className='p-2'>
+                         <h1 className=''>LOGO</h1>
+
+                         <TextInput
+                              radius='md'
+                              placeholder='Search'
+                              leftSection={<CiSearch />}
+                              className={clsx('my-2', collapsed && 'hidden')}
+                              onChange={(e) => setSearchValue(e.currentTarget.value)}
                          />
-                    )}
-                    <h1 className='text-neutral-600 text-sm py-1'>Setting</h1>
-                    {sideBarItemsSetting.map((item, index) =>
-                         <NavbarLink
-                              key={index}
-                              href={item.href}
-                              label={item.label}
-                              icon={item.icon}
-                              isActive={index === active}
-                              onClick={() => setActive(index)}
-                         />
-                    )}
+
+                         {sidebar.map((item, index) =>
+                              <div key={index}>
+                                   {!collapsed && <h1 className='text-neutral-600 text-sm py-1'>{item.title}</h1>}
+                                   {item.subs.map((sub, index) =>
+                                        <NavbarLink
+                                             key={index}
+                                             href={sub.href}
+                                             label={sub.label}
+                                             icon={sub.icon}
+                                             collapsed={collapsed}
+                                        />
+                                   )}
+                              </div>
+                         )}
+                    </div>
+
+                    <div className={clsx('flex items-center justify-between py-3 px-2', collapsed && 'hidden')}>
+                         <div className='hidden lg:flex gap-2'>
+                              <Link href='/profile/36'><Avatar src='/images/avatar_test.jpg' /></Link>
+                              <Link href='/profile/36' className='flex-1 w-[150px] overflow-hidden text-sm'>
+                                   <p className='truncate whitespace-nowrap font-bold'>Bảo Trọng Nguyễn Huỳnh</p>
+                                   <p className='truncate whitespace-nowrap opacity-80'>baotrong@gmail.com</p>
+                              </Link>
+                         </div>
+                         <Menu shadow="md" position='right-end' withArrow>
+                              <Menu.Target>
+                                   <UnstyledButton><BsThreeDots size={20} /></UnstyledButton>
+                              </Menu.Target>
+
+                              <Menu.Dropdown>
+                                   <Menu.Label>Application</Menu.Label>
+                                   <Menu.Item closeMenuOnClick={false}>
+                                        <Switch
+                                             label='Theme'
+                                             labelPosition='left'
+                                             size="md"
+                                             color="dark.4"
+                                             onLabel={<IoMdMoon />}
+                                             offLabel={<IoMdSunny />}
+                                             onChange={e => onChangeTheme(e.currentTarget.checked)}
+                                             defaultChecked={colorScheme === 'dark'}
+                                        />
+                                   </Menu.Item>
+                              </Menu.Dropdown>
+                         </Menu>
+                    </div>
                </div>
           </nav>
      )
