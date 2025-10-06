@@ -1,14 +1,12 @@
 'use client'
 
 import { Avatar, Menu, Switch, TextInput, UnstyledButton, useMantineColorScheme } from '@mantine/core'
-import { useDebouncedValue, useHotkeys } from '@mantine/hooks'
+import { useDebouncedState, useDebouncedValue, useHotkeys } from '@mantine/hooks'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { BsThreeDots } from 'react-icons/bs'
 import { CiSearch } from 'react-icons/ci'
-import { FaHome, FaLayerGroup, FaMoneyCheckAlt, FaShoppingCart, FaTools, FaUser } from 'react-icons/fa'
-import { FaCircleQuestion, FaMessage, FaShop } from 'react-icons/fa6'
 import { IoMdMoon, IoMdSunny } from 'react-icons/io'
 import { RiArrowLeftDoubleLine, RiArrowRightDoubleLine } from 'react-icons/ri'
 import NavbarLink from './components/navbar-link'
@@ -26,14 +24,13 @@ interface sidebarProps {
 }
 
 export default function Sidebar({ listItems }: sidebarProps) {
-     const [searchValue, setSearchValue] = useState('')
-     const [debounced] = useDebouncedValue(searchValue, 750)
+     const [searchValue, setSearchValue] = useDebouncedState('', 750)
      const { setColorScheme, colorScheme, toggleColorScheme } = useMantineColorScheme()
      const [collapsed, setCollapsed] = useState(false)
 
      useEffect(() => {
-          console.log(`SEARCH SIDEBAR: ${debounced}`)
-     }, [debounced])
+          console.log(`SEARCH SIDEBAR: ${searchValue}`)
+     }, [searchValue])
 
      const onChangeTheme = (value: boolean) => {
           setColorScheme(`${value ? 'dark' : 'light'}`)
