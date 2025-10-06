@@ -13,12 +13,23 @@ import { IoMdMoon, IoMdSunny } from 'react-icons/io'
 import { RiArrowLeftDoubleLine, RiArrowRightDoubleLine } from 'react-icons/ri'
 import NavbarLink from './components/navbar-link'
 
-export default function UserSidebar() {
+interface sidebarProps {
+     listItems: {
+          title: string,
+          subs: {
+               label: string,
+               icon: React.ReactNode,
+               href: string
+          }[]
+     }[]
+
+}
+
+export default function Sidebar({ listItems }: sidebarProps) {
      const [searchValue, setSearchValue] = useState('')
      const [debounced] = useDebouncedValue(searchValue, 750)
      const { setColorScheme, colorScheme, toggleColorScheme } = useMantineColorScheme()
      const [collapsed, setCollapsed] = useState(false)
-
 
      useEffect(() => {
           console.log(`SEARCH SIDEBAR: ${debounced}`)
@@ -32,83 +43,25 @@ export default function UserSidebar() {
           ['mod + j', () => toggleColorScheme()],
      ])
 
-     const sidebar = [
-          {
-               title: 'MAIN MENU',
-               subs: [
-                    {
-                         label: 'Forum',
-                         icon: <FaHome />,
-                         href: '/forum'
-                    },
-                    {
-                         label: 'Profile',
-                         icon: <FaUser />,
-                         href: '/profile/36'
-                    },
-                    {
-                         label: 'Create Portfolio',
-                         icon: <FaLayerGroup />,
-                         href: '/portfolio'
-                    },
-                    {
-                         label: 'Message',
-                         icon: <FaMessage />,
-                         href: '/message'
-                    },
-               ]
-          },
-          {
-               title: 'MARKETPLACES',
-               subs: [
-                    {
-                         label: 'Marketplace',
-                         icon: <FaShop />,
-                         href: '/marketplace'
-                    },
-                    {
-                         label: 'Purchased Presets',
-                         icon: <FaMoneyCheckAlt />,
-                         href: '/purchased-presets'
-                    },
-                    {
-                         label: 'Cart',
-                         icon: <FaShoppingCart />,
-                         href: '/cart'
-                    },
-               ]
-          },
-          {
-               title: 'Settings',
-               subs: [
-                    {
-                         label: 'Setting',
-                         icon: <FaTools />,
-                         href: '/setting'
-                    },
-                    {
-                         label: 'Help',
-                         icon: <FaCircleQuestion />,
-                         href: '/help'
-                    },
-               ]
-          }
-     ]
+
 
      return (
           <nav
                className={
-                    clsx('h-screen sticky top-0 border-r border-black/10 dark:border-white/10 duration-300',
+                    clsx('hidden lg:block h-screen sticky top-0 border-r border-black/10 dark:border-white/10 duration-300',
                          collapsed ? 'w-15' : 'w-64'
                     )
                }>
-               <button onClick={() => setCollapsed(!collapsed)} className='absolute hover:opacity-80 duration-300 bg-white dark:bg-neutral-900 right-[-13px] top-4 rounded-full border p-1 cursor-pointer'>
+               <button
+                    onClick={() => setCollapsed(!collapsed)}
+                    className='absolute hover:opacity-80 duration-300 bg-white dark:bg-neutral-900 right-[-13px] top-8 rounded-full p-1 cursor-pointer'
+               >
                     {collapsed ? <RiArrowRightDoubleLine /> : <RiArrowLeftDoubleLine />}
 
                </button>
                <div className={clsx('flex flex-col justify-between h-full')}>
                     <div className='p-2'>
-                         <h1 className=''>LOGO</h1>
+                         <h1 className='mb-5'>LOGO</h1>
 
                          <TextInput
                               radius='md'
@@ -118,7 +71,7 @@ export default function UserSidebar() {
                               onChange={(e) => setSearchValue(e.currentTarget.value)}
                          />
 
-                         {sidebar.map((item, index) =>
+                         {listItems.map((item, index) =>
                               <div key={index}>
                                    {!collapsed && <h1 className='text-neutral-600 text-sm py-1'>{item.title}</h1>}
                                    {item.subs.map((sub, index) =>

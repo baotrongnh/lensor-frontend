@@ -15,7 +15,7 @@ export default function NavbarLink({ label, icon, href, collapsed }: NavbarLinkP
                href={href}
                className={clsx(
                     'flex items-center opacity-70 hover:opacity-90 duration-300 transition-all rounded-lg',
-                    pathname.split('/')[1] === href.split('/')[1] && 'bg-[var(--color-box-inside)] opacity-100',
+                    pathname === href && 'bg-[var(--color-box-inside)] opacity-100',
                     collapsed ? 'p-2 justify-center text-2xl' : 'py-2 px-6 gap-3'
                )}
           >
