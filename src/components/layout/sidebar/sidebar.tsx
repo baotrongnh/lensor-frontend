@@ -57,7 +57,7 @@ export default function Sidebar({ listItems }: SidebarProps) {
 
                          {listItems.map((item, index) =>
                               <div key={index}>
-                                   {!collapsed && <h1 className='text-neutral-600 text-sm py-1'>{item.title}</h1>}
+                                   {!collapsed && <h1 className='text-neutral-600 text-xs py-1'>{item.title}</h1>}
                                    {item.subs.map((sub, index) =>
                                         <NavbarLink
                                              key={index}

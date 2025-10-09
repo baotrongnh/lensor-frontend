@@ -16,12 +16,12 @@ export default function NavbarLink({ label, icon, href, collapsed }: NavbarLinkP
                className={clsx(
                     'flex items-center opacity-70 hover:opacity-90 duration-300 transition-all rounded-lg',
                     pathname === href && 'bg-[var(--color-box-inside)] opacity-100',
-                    collapsed ? 'p-2 justify-center text-2xl' : 'py-2 px-6 gap-3'
+                    collapsed ? 'p-2 justify-center text-2xl' : 'py-[4.5] px-6 gap-3'
                )}
           >
                {collapsed && <Tooltip target={`#${idFromLabel}`} label={label} position='right' offset={10} withArrow />}
-               <div id={idFromLabel}>{icon}</div>
-               {!collapsed && <span>{label}</span>}
+               <div id={idFromLabel} className='text-sm'>{icon}</div>
+               {!collapsed && <span className='text-sm'>{label}</span>}
           </Link>
      )
 }

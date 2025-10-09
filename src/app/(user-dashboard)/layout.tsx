@@ -51,7 +51,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                ]
           },
           {
-               title: 'Settings',
+               title: 'SETTINGS',
                subs: [
                     {
                          label: 'Setting',
