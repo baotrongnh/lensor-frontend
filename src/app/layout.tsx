@@ -7,15 +7,10 @@ import { NextIntlClientProvider } from 'next-intl'
 import { Poppins, Nunito } from "next/font/google"
 import "./globals.css"
 import MantineProviderWrapper from './mantine-provider'
+import { Geist, Geist_Mono } from 'next/font/google'
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"]
-})
-
-const nunito = Nunito({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800", "900"]
+const geist = Geist({
+  subsets: ['latin'],
 })
 
 export const metadata: Metadata = {
@@ -29,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={nunito.className} {...mantineHtmlProps}>
+    <html lang="en" className={geist.className} {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript />
       </head>

@@ -4,12 +4,19 @@ import { colorsTuple, createTheme, MantineProvider, MantineRadiusValues } from '
 import React from 'react'
 
 const theme = createTheme({
-     // fontFamily: "inherit",
+     fontFamily: "inherit",
      colors: {
           main: colorsTuple('#8C4AEA'),
      },
      primaryColor: 'main',
-     defaultRadius: 'md'
+     defaultRadius: 'md',
+     components: {
+          Text: {
+               defaultProps: {
+                    c: 'dark.9',
+               }
+          }
+     }
 })
 
 export default function MantineProviderWrapper({ children }: { children: React.ReactNode }) {
