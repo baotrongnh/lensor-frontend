@@ -39,7 +39,7 @@ export default function Post({ user, time, title, content, imageUrl, commentCoun
                     </div>
                </div>
 
-               <h1 className='font-bold mt-2'>{title}</h1>
+               <h1 className='font-bold mt-2 text-[var(--c-text-title)]'>{title}</h1>
                <p className='text-base/5'>{content}</p>
 
                <div className='w-full aspect-[3/2] flex justify-center items-center bg-[var(--color-box-inside)] rounded-2xl mt-3'>
