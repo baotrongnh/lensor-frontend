@@ -1,7 +1,6 @@
-import React from 'react'
-import Post from '../../../components/forum/post'
-import { Divider } from '@mantine/core'
 import forum from '@/data-test/forum.json'
+import { Divider } from '@mantine/core'
+import Post from '../../../components/forum/post'
 
 export default function ForumPage() {
      const { data: dataForum } = forum
