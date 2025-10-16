@@ -1,4 +1,5 @@
 import Sidebar from '@/components/layout/sidebar/sidebar'
+import { ROUTES } from '@/constants/path'
 import React from 'react'
 import { FaHome, FaLayerGroup, FaMoneyCheckAlt, FaShoppingCart, FaTools, FaUser } from 'react-icons/fa'
 import { FaCircleQuestion, FaMessage, FaShop } from 'react-icons/fa6'
@@ -11,22 +12,22 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                     {
                          label: 'Forum',
                          icon: <FaHome />,
-                         href: '/forum'
+                         href: ROUTES.FORUM
                     },
                     {
                          label: 'Profile',
                          icon: <FaUser />,
-                         href: '/profile/36'
+                         href: ROUTES.PROFILE('36')
                     },
                     {
                          label: 'Create Portfolio',
                          icon: <FaLayerGroup />,
-                         href: '/portfolio'
+                         href: ROUTES.PORTFOLIO
                     },
                     {
                          label: 'Message',
                          icon: <FaMessage />,
-                         href: '/message'
+                         href: ROUTES.MESSAGE
                     },
                ]
           },
@@ -36,17 +37,17 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                     {
                          label: 'Marketplace',
                          icon: <FaShop />,
-                         href: '/marketplace'
+                         href: ROUTES.MARTKETPLACE
                     },
                     {
                          label: 'Purchased Presets',
                          icon: <FaMoneyCheckAlt />,
-                         href: '/purchased-presets'
+                         href: ROUTES.PURCHASED_PRESET
                     },
                     {
                          label: 'Cart',
                          icon: <FaShoppingCart />,
-                         href: '/cart'
+                         href: ROUTES.CART
                     },
                ]
           },
@@ -56,12 +57,12 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                     {
                          label: 'Setting',
                          icon: <FaTools />,
-                         href: '/setting'
+                         href: ROUTES.SETTING
                     },
                     {
                          label: 'Help',
                          icon: <FaCircleQuestion />,
-                         href: '/help'
+                         href: ROUTES.HELP
                     },
                ]
           }
