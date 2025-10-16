@@ -9,7 +9,14 @@ const theme = createTheme({
           main: colorsTuple('#8C4AEA'),
      },
      primaryColor: 'main',
-     defaultRadius: 'md'
+     defaultRadius: 'md',
+     components: {
+          Text: {
+               defaultProps: {
+                    c: 'dark.9',
+               }
+          }
+     }
 })
 
 export default function MantineProviderWrapper({ children }: { children: React.ReactNode }) {

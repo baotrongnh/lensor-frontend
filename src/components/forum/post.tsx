@@ -1,6 +1,6 @@
 'use client'
 
-import { PostProps } from '@/types'
+import { PostProps } from '@/interface/post'
 import { Avatar, Button, Image, Menu, UnstyledButton } from '@mantine/core'
 import Link from 'next/link'
 import { BsThreeDots } from 'react-icons/bs'
@@ -14,9 +14,9 @@ export default function Post({ user, time, title, content, imageUrl, commentCoun
                <div className='flex items-center justify-between'>
                     <div className='flex items-center'>
                          <Link href={`/profile/${user.name}`}><Avatar src={user.avatarUrl} /></Link>
-                         <span className='font-bold ml-2 text-[var(--color-text-muted)]'>{user.name}</span>
+                         <span className='font-bold ml-2 text-[var(--c-text-title)]'>{user.name}</span>
                          <LuDot />
-                         <span className='text-[var(--color-text-subtle)]'>{time}</span>
+                         <span className='text-[var(--color-text-muted)]'>{time}</span>
                     </div>
                     <div className='flex items-center gap-3'>
                          <Button size='xs' radius='lg' variant={user.isFollowed ? 'filled' : 'default'}>
@@ -39,7 +39,7 @@ export default function Post({ user, time, title, content, imageUrl, commentCoun
                     </div>
                </div>
 
-               <h1 className='font-bold mt-2'>{title}</h1>
+               <h1 className='font-bold mt-2 text-[var(--c-text-title)]'>{title}</h1>
                <p className='text-base/5'>{content}</p>
 
                <div className='w-full aspect-[3/2] flex justify-center items-center bg-[var(--color-box-inside)] rounded-2xl mt-3'>

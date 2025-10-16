@@ -1,6 +1,6 @@
 'use client'
 
-import { NavbarLinkProps } from '@/types'
+import { NavbarLinkProps } from '@/interface/sidebar'
 import { Tooltip } from '@mantine/core'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -14,13 +14,13 @@ export default function NavbarLink({ label, icon, href, collapsed }: NavbarLinkP
           <Link
                href={href}
                className={clsx(
-                    'flex items-center opacity-70 hover:opacity-90 duration-300 transition-all rounded-lg',
-                    pathname.split('/')[1] === href.split('/')[1] && 'bg-[var(--color-box-inside)] opacity-100',
-                    collapsed ? 'p-2 justify-center text-2xl' : 'py-2 px-6 gap-3'
+                    'flex items-center opacity-75 hover:opacity-100 duration-300 transition-all rounded-lg font-light my-0.5',
+                    pathname === href && 'bg-[var(--color-box-inside)] opacity-100',
+                    collapsed ? 'p-2 justify-center text-xl' : 'py-[4.5] px-6 gap-3'
                )}
           >
                {collapsed && <Tooltip target={`#${idFromLabel}`} label={label} position='right' offset={10} withArrow />}
-               <div id={idFromLabel}>{icon}</div>
+               <div id={idFromLabel} >{icon}</div>
                {!collapsed && <span>{label}</span>}
           </Link>
      )
