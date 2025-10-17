@@ -1,7 +1,6 @@
 'use client'
 
-import { Burger, Button, Drawer, NavLink } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
+import { Button } from '@/components/ui/button'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
@@ -11,7 +10,6 @@ interface MainHeaderProps {
 
 export default function MainHeader({ isLogin }: MainHeaderProps) {
   const t = useTranslations('MainHeader')
-  const [opened, { open, close }] = useDisclosure(false)
 
   const navLinkItems = [
     { title: t('feature'), href: '/' },
@@ -27,22 +25,9 @@ export default function MainHeader({ isLogin }: MainHeaderProps) {
           {navLinkItems.map((item, index) =>
             <Link href={item.href} key={index}>{item.title}</Link>)
           }
-          {!isLogin && <Button component={Link} href='/login' variant='default'>{t('login')}</Button>}
+          {!isLogin && <Button variant='default'>{t('login')}</Button>}
         </div>
-
-        <Burger className='md:hidden' opened={opened} onClick={open} />
       </div>
-
-      <Drawer
-        opened={opened}
-        onClose={close}
-        position='right'
-        overlayProps={{ backgroundOpacity: 0.5, blur: 1 }}
-      >
-        {navLinkItems.map((item, index) =>
-          <NavLink key={index} href={item.href} label={item.title} className='font-bold' />
-        )}
-      </Drawer>
     </header>
   )
 }

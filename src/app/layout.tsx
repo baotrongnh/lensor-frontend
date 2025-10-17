@@ -1,17 +1,6 @@
-import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core'
-import '@mantine/core/styles.css'
-import { Notifications } from '@mantine/notifications'
-import '@mantine/notifications/styles.css'
 import type { Metadata } from "next"
 import { NextIntlClientProvider } from 'next-intl'
-import { Poppins, Nunito } from "next/font/google"
 import "./globals.css"
-import MantineProviderWrapper from './mantine-provider'
-import { Geist, Geist_Mono } from 'next/font/google'
-
-const geist = Geist({
-  subsets: ['latin'],
-})
 
 export const metadata: Metadata = {
   title: "Lensor - Portfolio Builder for Designers & Photographers",
@@ -24,16 +13,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={geist.className} {...mantineHtmlProps}>
+    <html lang="en">
       <head>
-        <ColorSchemeScript />
       </head>
       <body>
         <NextIntlClientProvider>
-          <MantineProviderWrapper>
-            <Notifications />
-            {children}
-          </MantineProviderWrapper>
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>

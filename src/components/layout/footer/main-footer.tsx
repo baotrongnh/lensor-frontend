@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { FaFacebook, FaGithub } from 'react-icons/fa'
 
 export default function MainFooter() {
      return (
@@ -21,10 +20,10 @@ export default function MainFooter() {
                               </Link>
                               <div className="flex space-x-4">
                                    <Link href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                                        <FaFacebook className='w-5 h-5' />
+                                        {/* <FaFacebook className='w-5 h-5' /> */}
                                    </Link>
                                    <Link href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                                        <FaGithub className='w-5 h-5' />
+                                        {/* <FaGithub className='w-5 h-5' /> */}
                                    </Link>
                                    <Link href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
                                         {/* <Instagram className="w-5 h-5" /> */}

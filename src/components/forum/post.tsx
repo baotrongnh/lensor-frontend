@@ -1,12 +1,11 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PostType } from '@/types/post'
-import { Avatar, Button, Image, Menu, UnstyledButton } from '@mantine/core'
 import clsx from 'clsx'
+import Image from "next/image"
 import Link from 'next/link'
 import { useState } from 'react'
-import { BsThreeDots } from 'react-icons/bs'
-import { FaRegComment } from 'react-icons/fa'
-import { LuDot } from 'react-icons/lu'
-import { PiShareFat } from 'react-icons/pi'
+import { Button } from '../ui/button'
+import { Dot } from "lucide-react"
 
 export default function Post({ dataPost }: { dataPost: PostType }) {
      const [expanded, setExpanded] = useState(false)
@@ -15,29 +14,18 @@ export default function Post({ dataPost }: { dataPost: PostType }) {
           <div className='p-5'>
                <div className='flex items-center justify-between'>
                     <div className='flex items-center'>
-                         <Link href={`/profile/${123}`}><Avatar src={''} /></Link>
+                         <Avatar>
+                              <AvatarImage src="https://github.com/shadcn.png" />
+                              <AvatarFallback>CN</AvatarFallback>
+                         </Avatar>
                          <span className='font-bold ml-2 text-[var(--c-text-title)]'>{`123`}</span>
-                         <LuDot />
+                         <Dot />
                          <span className='text-[var(--color-text-muted)]'>{dataPost?.createdAt}</span>
                     </div>
                     <div className='flex items-center gap-3'>
-                         <Button size='xs' radius='lg' variant={true ? 'filled' : 'default'}>
+                         <Button>
                               {true ? 'Follow' : 'Following'}
                          </Button>
-                         <Menu shadow="md" width={200} offset={20} position='bottom-end'>
-                              <Menu.Target>
-                                   <UnstyledButton className='hover:opacity-85 duration-300'>
-                                        <BsThreeDots />
-                                   </UnstyledButton>
-                              </Menu.Target>
-
-                              <Menu.Dropdown>
-                                   <Menu.Label>Application</Menu.Label>
-                                   <Menu.Item>
-                                        Settings
-                                   </Menu.Item>
-                              </Menu.Dropdown>
-                         </Menu>
                     </div>
                </div>
 
@@ -51,21 +39,21 @@ export default function Post({ dataPost }: { dataPost: PostType }) {
 
                <div className='w-full aspect-[3/2] flex justify-center items-center bg-[var(--color-box-inside)] rounded-2xl mt-3'>
                     <Image
-                         src={dataPost?.imageUrl}
-                         fit='contain'
-                         fallbackSrc='/images/default-fallback-image.png'
+                         src={dataPost?.imageUrl ?? '/images/default-fallback-image.png'}
+                         width={500}
+                         height={500}
+                         alt="Picture of the author"
                          className='max-h-full max-w-full'
-                         radius='lg'
                     />
                </div>
                <div className='flex gap-3 mt-4'>
-                    <Button variant='default' size='compact-md' radius='lg'>Vote</Button>
+                    <Button variant='default'>Vote</Button>
                     <Link href={`/forum/${dataPost?.id}`}>
-                         <Button variant='default' size='compact-md' radius='lg' leftSection={<FaRegComment />}>
+                         <Button variant='default' >
                               {dataPost?.commentCount}
                          </Button>
                     </Link>
-                    <Button variant='default' size='compact-md' radius='lg' leftSection={<PiShareFat />}>Share</Button>
+                    <Button variant='default'>Share</Button>
                </div>
           </div>
      )

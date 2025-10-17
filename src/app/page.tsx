@@ -1,8 +1,7 @@
 import MainFooter from "@/components/layout/footer/main-footer"
 import MainHeader from "@/components/layout/header/main-header"
-import { Button } from "@mantine/core"
+import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
-import Link from 'next/link'
 
 export default function Home() {
   const t = useTranslations('HomePage')
@@ -27,8 +26,6 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
-                  component={Link}
-                  href='/login'
                 >
                   Start for Free
                 </Button>
