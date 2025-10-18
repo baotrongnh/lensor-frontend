@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar"
+import { UserDashboardSidebar } from "@/components/user-dashboard/sidebar/user-dashboard-sidebar"
 import BreadcrumbHeader from "@/components/layout/header/breadcrumb-header"
 import {
      SidebarInset,
@@ -12,7 +12,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
 
      return (
           <SidebarProvider>
-               <AppSidebar />
+               <UserDashboardSidebar />
                <SidebarInset>
                     <BreadcrumbHeader />
                     <div className="pt-16">
