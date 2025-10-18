@@ -1,17 +1,8 @@
 "use client"
 
 import {
-     AudioWaveform,
-     Blocks,
-     Calendar,
-     Command,
-     Home,
-     Inbox,
      MessageCircleQuestion,
-     Search,
-     Settings2,
-     Sparkles,
-     Trash2,
+     Settings2
 } from "lucide-react"
 import * as React from "react"
 
@@ -81,10 +72,6 @@ export function ForumSidebarLeft({
 }: React.ComponentProps<typeof Sidebar>) {
      return (
           <Sidebar className="border-r-0 pt-16" {...props}>
-               {/* <SidebarHeader>
-                    <TeamSwitcher teams={data.teams} />
-                    <NavMain items={data.navMain} />
-               </SidebarHeader> */}
                <SidebarContent>
                     <NavFavorites favorites={data.favorites} />
                     <NavSecondary items={data.navSecondary} className="mt-auto" />

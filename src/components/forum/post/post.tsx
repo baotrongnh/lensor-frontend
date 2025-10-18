@@ -10,6 +10,7 @@ import { Button } from '../../ui/button'
 import { Card } from "../../ui/card"
 import DialogComment from "./dialog-comment"
 import { DialogShare } from "./dialog-share"
+import Link from "next/link"
 
 export default function Post({ dataPost }: { dataPost: PostType }) {
      const [expanded, setExpanded] = useState(false)
@@ -30,11 +31,13 @@ export default function Post({ dataPost }: { dataPost: PostType }) {
           <div className='p-5 hover:backdrop-brightness-95 dark:hover:backdrop-brightness-0 rounded-2xl duration-300 my-3'>
                <div className='flex items-center justify-between'>
                     <div className='flex items-center'>
-                         <Avatar>
-                              <AvatarImage src="https://github.com/shadcn.png" />
-                              <AvatarFallback>NHBT</AvatarFallback>
-                         </Avatar>
-                         <span className='font-bold ml-2 text-[var(--c-text-title)]'>{`Bảo Trọng`}</span>
+                         <Link href={ROUTES.PROFILE('id-abc-test')} className="hover:opacity-80 duration-300">
+                              <Avatar>
+                                   <AvatarImage src="https://github.com/shadcn.png" />
+                                   <AvatarFallback>NHBT</AvatarFallback>
+                              </Avatar>
+                         </Link>
+                         <Link href={ROUTES.PROFILE('id-abc-test')} className='font-bold ml-2 text-[var(--c-text-title)] hover:opacity-80 duration-300'>{`Bảo Trọng`}</Link>
                          <Dot />
                          <span className='text-[var(--color-text-muted)]'>{dataPost?.createdAt}</span>
                     </div>

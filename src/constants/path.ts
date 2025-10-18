@@ -6,7 +6,7 @@ export const ROUTES = {
      PROFILE: (id: string | number) => `/profile/${id}`,
      PORTFOLIO: '/portfolio',
      MESSAGE: '/message',
-     MARTKETPLACE: '/marketplace',
+     MARTKETPLACE: '/marketplace-2',
      PURCHASED_PRESET: '/purchased-presets',
      CART: '/cart',
      SETTING: '/setting',
