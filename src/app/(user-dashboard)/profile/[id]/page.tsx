@@ -1,13 +1,12 @@
 'use client'
 
-import Image from 'next/image'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { useParams } from 'next/navigation'
 import ProfileContent from '../components/_profile-content/profile-content'
 import About from '../components/about'
 import SuggestionList from '../components/suggestion-list'
-import { useParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card } from '@/components/ui/card'
 
 export default function ProfilePage() {
      const isOwnProfile = false
