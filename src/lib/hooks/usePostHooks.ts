@@ -3,8 +3,8 @@ import { endpoints } from "../apis/endpoints"
 import { postApi } from "../apis/postApi"
 
 export const usePosts = () => {
-     const { data, error, isLoading } = useSWR(endpoints.post.all, postApi.getAll)
-     return { data, error, isLoading }
+     const { data, error, isLoading, mutate, isValidating } = useSWR(endpoints.post.all, postApi.getAll)
+     return { data, error, isLoading, mutate, isValidating }
 }
 
 export const usePostDetail = (id: string) => {
