@@ -12,12 +12,14 @@ import Comment from "./comment"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Send } from "lucide-react"
 
 export default function DialogComment({ children }: { children: React.ReactNode }) {
      return (
           <Dialog>
                <DialogTrigger asChild>{children}</DialogTrigger>
-               <DialogContent className="h-[85%] !max-w-[750px]">
+               <DialogContent className="h-[95%] !max-w-[750px]">
                     <DialogHeader className="shrink-0">
                          <DialogTitle>Comment (25)</DialogTitle>
                          <DialogDescription>
@@ -26,7 +28,7 @@ export default function DialogComment({ children }: { children: React.ReactNode 
 
                     </DialogHeader>
                     <div
-                         className="pr-4 overflow-y-auto 
+                         className="pr-2 overflow-y-auto 
                               [&::-webkit-scrollbar]:w-1
                               hover:[&::-webkit-scrollbar]:w-1
                               [&::-webkit-scrollbar-track]:bg-transparent
@@ -41,7 +43,7 @@ export default function DialogComment({ children }: { children: React.ReactNode 
                          <Comment />
                          <Comment />
                     </div>
-                    <InputGroup>
+                    <InputGroup className="h-12">
                          <InputGroupInput placeholder="Search..." />
                          <InputGroupAddon>
                               <Avatar>
@@ -49,7 +51,7 @@ export default function DialogComment({ children }: { children: React.ReactNode 
                                    <AvatarFallback>CN</AvatarFallback>
                               </Avatar>
                          </InputGroupAddon>
-                         <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
+                         <InputGroupAddon align="inline-end"><Button><Send /></Button></InputGroupAddon>
                     </InputGroup>
                </DialogContent>
           </Dialog>
