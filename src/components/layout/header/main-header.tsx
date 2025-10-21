@@ -19,8 +19,8 @@ export default function MainHeader() {
 
   const navLinkItems = [
     { title: 'Forum', href: ROUTES.FORUM },
-    { title: 'Marketplace', href: ROUTES.MARTKETPLACE },
-    { title: 'Create portfolio', href: ROUTES.MARTKETPLACE }
+    { title: 'Marketplace', href: ROUTES.MARKETPLACE },
+    { title: 'Create portfolio', href: ROUTES.MARKETPLACE }
   ]
 
   return (
