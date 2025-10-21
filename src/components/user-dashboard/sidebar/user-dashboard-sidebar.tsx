@@ -3,14 +3,16 @@
 import {
   AudioWaveform,
   Command,
-  Frame,
   GalleryVerticalEnd,
-  Settings2,
-  SquareTerminal
+  Images,
+  Mail,
+  ShoppingCart,
+  Store,
+  User
 } from "lucide-react"
+import { usePathname } from "next/navigation"
 import * as React from "react"
 
-import { NavMain } from "@/components/user-dashboard/sidebar/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
@@ -20,6 +22,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { NavMain } from "@/components/user-dashboard/sidebar/nav-main"
 import { ROUTES } from "@/constants/path"
 
 const data = {
@@ -45,56 +48,58 @@ const data = {
       plan: "Free",
     },
   ],
-  navMain: [
+  navMains: [
     {
-      title: "Main Menu",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Forum",
-          url: ROUTES.FORUM,
-        },
-        {
-          title: "Message",
-          url: ROUTES.MESSAGE
-        },
-        {
-          title: "Martketplace",
-          url: ROUTES.MARTKETPLACE
-        }
-      ],
+      name: "Profile",
+      url: ROUTES.CURRENT_PROFILE,
+      icon: User,
     },
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        }
-      ],
+      name: "Message",
+      url: ROUTES.MESSAGE,
+      icon: Mail,
     },
-  ],
-  projects: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
+      name: "Cart",
+      url: ROUTES.CART,
+      icon: ShoppingCart,
     }
+  ],
+  public: [
+    {
+      name: "Forum",
+      url: ROUTES.FORUM,
+      icon: Images,
+    },
+    {
+      name: "Marketplace",
+      url: ROUTES.MARKETPLACE,
+      icon: Store,
+    },
   ],
 }
 
 export function UserDashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname()
+
+  const navMainsWithActive = data.navMains.map(item => ({
+    ...item,
+    isActive: pathname === item.url || pathname.startsWith(item.url + '/')
+  }))
+
+  const publicWithActive = data.public.map(item => ({
+    ...item,
+    isActive: pathname === item.url || pathname.startsWith(item.url + '/')
+  }))
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain title="Personal Space" items={navMainsWithActive} />
+        <NavMain title="Public Spaces" items={publicWithActive} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
