@@ -6,7 +6,7 @@ import { ROUTES } from '@/constants/path'
 import { Bell, ChevronDown, ShoppingCart } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 export default function MainHeader() {
   const t = useTranslations('MainHeader')
@@ -72,14 +72,21 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { authHelpers } from '@/lib/supabase'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
 
 function DropdownMenuUser({ children }: { children: React.ReactNode }) {
   const { setTheme, resolvedTheme } = useTheme()
+  const router = useRouter()
 
   const handleChangeTheme = (value: boolean) => {
     setTheme(value ? 'dark' : 'light')
+  }
+
+  const handleLogout = async () => {
+    const res = await authHelpers.signOut()
+    if (!res.error) router.refresh()
   }
 
   return (
@@ -93,7 +100,7 @@ function DropdownMenuUser({ children }: { children: React.ReactNode }) {
           <Switch id="dark-mode" onCheckedChange={handleChangeTheme} checked={resolvedTheme === 'dark'} />
           <Label htmlFor="dark-mode">Dark Mode</Label>
         </DropdownMenuItem>
-        <DropdownMenuItem>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

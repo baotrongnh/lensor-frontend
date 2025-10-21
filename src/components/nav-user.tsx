@@ -30,6 +30,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { authHelpers } from "@/lib/supabase"
+import { useRouter } from "next/navigation"
 
 export function NavUser({
   user,
@@ -41,8 +42,10 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter()
   const handleLogout = async () => {
     const res = await authHelpers.signOut()
+    if (!res.error) router.refresh()
   }
 
   return (

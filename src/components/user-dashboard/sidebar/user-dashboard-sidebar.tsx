@@ -10,6 +10,7 @@ import {
   Store,
   User
 } from "lucide-react"
+import { usePathname } from "next/navigation"
 import * as React from "react"
 
 import { NavUser } from "@/components/nav-user"
@@ -79,14 +80,26 @@ const data = {
 }
 
 export function UserDashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname()
+
+  const navMainsWithActive = data.navMains.map(item => ({
+    ...item,
+    isActive: pathname === item.url || pathname.startsWith(item.url + '/')
+  }))
+
+  const publicWithActive = data.public.map(item => ({
+    ...item,
+    isActive: pathname === item.url || pathname.startsWith(item.url + '/')
+  }))
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain title="Personal Space" items={data.navMains} />
-        <NavMain title="Public Spaces" items={data.public} />
+        <NavMain title="Personal Space" items={navMainsWithActive} />
+        <NavMain title="Public Spaces" items={publicWithActive} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

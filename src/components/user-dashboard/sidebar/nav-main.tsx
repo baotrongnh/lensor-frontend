@@ -34,6 +34,7 @@ export function NavMain({
     name: string
     url: string
     icon: LucideIcon
+    isActive?: boolean
   }[]
 }) {
   const { isMobile } = useSidebar()
@@ -44,7 +45,7 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild className={item.isActive ? 'bg-sidebar-accent' : ''}>
               <a href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
