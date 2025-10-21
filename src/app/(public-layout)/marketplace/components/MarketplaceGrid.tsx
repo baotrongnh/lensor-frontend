@@ -7,8 +7,10 @@ interface MarketplaceItem {
     description: string;
     price: string;
     image: string;
-    userAvatar: string;
-    userName: string;
+    author: {
+        name: string;
+        avatar: string;
+    };
     rating: number;
 }
 

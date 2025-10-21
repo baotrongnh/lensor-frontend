@@ -9,7 +9,6 @@ import {
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
-    BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
@@ -23,9 +22,11 @@ export default function MarketplacePage() {
             title: "Urban Photography Preset",
             description: "Professional preset pack for urban street photography with moody tones.",
             price: "$15.99",
-            image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=600&h=400&fit=crop",
-            userAvatar: "https://randomuser.me/api/portraits/men/32.jpg",
-            userName: "Alex Chen",
+            image: "https://i.pinimg.com/1200x/3e/d5/5b/3ed55b7a8edad9e811900cd55ca50f05.jpg",
+            author: {
+                name: "Alex Chen",
+                avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+            },
             rating: 4.8
         },
         {
@@ -33,9 +34,11 @@ export default function MarketplacePage() {
             title: "Nature Portrait Collection",
             description: "Beautiful nature portraits with natural lighting and vibrant colors.",
             price: "$24.99",
-            image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=400&fit=crop",
-            userAvatar: "https://randomuser.me/api/portraits/women/44.jpg",
-            userName: "Sarah Martinez",
+            image: "https://i.pinimg.com/1200x/d9/b2/97/d9b29715b473dd0a5b37e1bc9929907b.jpg",
+            author: {
+                name: "Sarah Martinez",
+                avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+            },
             rating: 4.9
         },
         {
@@ -43,9 +46,11 @@ export default function MarketplacePage() {
             title: "Vintage Film Presets",
             description: "Classic film look presets for that authentic vintage aesthetic.",
             price: "$12.99",
-            image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=600&h=400&fit=crop",
-            userAvatar: "https://randomuser.me/api/portraits/men/65.jpg",
-            userName: "Mike Johnson",
+            image: "https://i.pinimg.com/736x/3f/93/c6/3f93c61810a9a68442366031087841a9.jpg",
+            author: {
+                name: "Mike Johnson",
+                avatar: "https://randomuser.me/api/portraits/men/65.jpg"
+            },
             rating: 4.7
         },
         {
@@ -53,9 +58,11 @@ export default function MarketplacePage() {
             title: "Happy Robot 032",
             description: "Cute robot character for digital art projects.",
             price: "$300.00",
-            image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
-            userAvatar: "https://randomuser.me/api/portraits/men/12.jpg",
-            userName: "BeKind2Robots",
+            image: "https://i.pinimg.com/1200x/7d/66/04/7d6604111a2fb44b73a4bc8b643e479d.jpg",
+            author: {
+                name: "BeKind2Robots",
+                avatar: "https://randomuser.me/api/portraits/men/12.jpg"
+            },
             rating: 4.6
         },
         {
@@ -63,9 +70,11 @@ export default function MarketplacePage() {
             title: "Cinematic LUT Pack",
             description: "Transform your videos with cinematic LUTs for professional-grade color grading.",
             price: "$19.99",
-            image: "https://i.pinimg.com/736x/d8/74/88/d874880a4d2cdb3269a4b4aad38f2fd7.jpg",
-            userAvatar: "https://randomuser.me/api/portraits/women/68.jpg",
-            userName: "Emma Watson",
+            image: "https://i.pinimg.com/1200x/95/5b/43/955b437d7a0a91f60b944abf6a99a544.jpg",
+            author: {
+                name: "Emma Watson",
+                avatar: "https://randomuser.me/api/portraits/women/68.jpg"
+            },
             rating: 4.9
         },
         {
@@ -73,9 +82,11 @@ export default function MarketplacePage() {
             title: "Abstract 3D Models",
             description: "Pack of 10 abstract 3D models perfect for motion design and concept art.",
             price: "$45.00",
-            image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=400&fit=crop",
-            userAvatar: "https://randomuser.me/api/portraits/men/23.jpg",
-            userName: "David Kim",
+            image: "https://i.pinimg.com/1200x/b4/fe/42/b4fe428c83502f66bbd2af43ae20b1dc.jpg",
+            author: {
+                name: "David Kim",
+                avatar: "https://randomuser.me/api/portraits/men/23.jpg"
+            },
             rating: 4.8
         },
         {
@@ -83,9 +94,11 @@ export default function MarketplacePage() {
             title: "Moody Landscape Presets",
             description: "Dark and dramatic tones for stunning landscape photography.",
             price: "$17.99",
-            image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=400&fit=crop",
-            userAvatar: "https://randomuser.me/api/portraits/men/41.jpg",
-            userName: "Liam Brown",
+            image: "https://i.pinimg.com/736x/fd/ac/3c/fdac3cc7c47d3fa7a0df6bce7be249eb.jpg",
+            author: {
+                name: "Liam Brown",
+                avatar: "https://randomuser.me/api/portraits/men/41.jpg"
+            },
             rating: 4.7
         },
         {
@@ -93,9 +106,11 @@ export default function MarketplacePage() {
             title: "Minimal Portrait Pack",
             description: "Clean and soft presets for minimalistic portrait photography.",
             price: "$21.00",
-            image: "https://i.pinimg.com/736x/14/23/d9/1423d9df0525e953942e8b930646a371.jpg",
-            userAvatar: "https://randomuser.me/api/portraits/women/55.jpg",
-            userName: "Sophia Lee",
+            image: "https://i.pinimg.com/736x/f7/80/44/f780449c1d678dcc7474cb20fb075ff8.jpg",
+            author: {
+                name: "Sophia Lee",
+                avatar: "https://randomuser.me/api/portraits/women/55.jpg"
+            },
             rating: 4.8
         },
         {
@@ -103,9 +118,11 @@ export default function MarketplacePage() {
             title: "Golden Hour Magic",
             description: "Warm presets to enhance golden hour and sunset photos.",
             price: "$18.50",
-            image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=600&h=400&fit=crop",
-            userAvatar: "https://randomuser.me/api/portraits/women/33.jpg",
-            userName: "Olivia Green",
+            image: "https://i.pinimg.com/1200x/29/fd/cc/29fdccf1df70d964d1b1be7ef163b594.jpg",
+            author: {
+                name: "Olivia Green",
+                avatar: "https://randomuser.me/api/portraits/women/33.jpg"
+            },
             rating: 4.9
         },
         {
@@ -113,9 +130,11 @@ export default function MarketplacePage() {
             title: "Black & White Mastery",
             description: "High-contrast black and white presets for timeless photography.",
             price: "$14.00",
-            image: "https://i.pinimg.com/1200x/05/d4/ae/05d4ae13fb7927b9de80f61e1b77b8ae.jpg",
-            userAvatar: "https://randomuser.me/api/portraits/men/77.jpg",
-            userName: "Ethan White",
+            image: "https://i.pinimg.com/1200x/da/01/9c/da019c2984b8381140b07c17ca3fb353.jpg",
+            author: {
+                name: "Ethan White",
+                avatar: "https://randomuser.me/api/portraits/men/77.jpg"
+            },
             rating: 4.6
         },
         {
@@ -123,9 +142,11 @@ export default function MarketplacePage() {
             title: "Travel Explorer Presets",
             description: "Vibrant presets perfect for travel bloggers and explorers.",
             price: "$22.00",
-            image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=400&fit=crop",
-            userAvatar: "https://randomuser.me/api/portraits/women/21.jpg",
-            userName: "Isabella Cruz",
+            image: "https://i.pinimg.com/736x/39/b3/be/39b3be05e8e691e67032df91f831225e.jpg",
+            author: {
+                name: "Isabella Cruz",
+                avatar: "https://randomuser.me/api/portraits/women/21.jpg"
+            },
             rating: 4.8
         }
     ];

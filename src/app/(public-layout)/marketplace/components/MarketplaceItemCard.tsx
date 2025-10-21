@@ -1,6 +1,7 @@
 import { Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface MarketplaceItem {
     id: number;
@@ -8,8 +9,10 @@ interface MarketplaceItem {
     description: string;
     price: string;
     image: string;
-    userAvatar: string;
-    userName: string;
+    author: {
+        name: string;
+        avatar: string;
+    };
     rating: number;
 }
 
@@ -33,6 +36,17 @@ export default function MarketplaceItemCard({ item }: MarketplaceItemCardProps) 
                 <div className="p-4 absolute inset-0 z-10 flex flex-col justify-end bg-gradient-to-t from-black to-transparent">
                     <h3 className="text-lg font-semibold mb-2 truncate">{item.title}</h3>
                     <p className="text-sm text-gray-400 mb-4 line-clamp-2">{item.description}</p>
+
+                    <div className="flex items-center gap-2 mb-3">
+                        <Avatar className='size-8'>
+                            <AvatarImage src={item.author.avatar} alt={item.author.name} />
+                            <AvatarFallback className="bg-gray-700 text-white text-xs">
+                                {item.author.name.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm text-gray-300">{item.author.name}</span>
+                    </div>
+
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs text-gray-400">Price</p>

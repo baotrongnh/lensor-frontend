@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
 import React from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface RelatedProduct {
     id: string
@@ -11,6 +12,10 @@ interface RelatedProduct {
     image: string
     rating: number
     downloads: number
+    author?: {
+        name: string
+        avatar?: string
+    }
 }
 
 interface RelatedProductsProps {
@@ -35,6 +40,19 @@ export default function RelatedProducts({ products }: RelatedProductsProps) {
                             />
                             <div className="p-4 absolute inset-0 z-10 flex flex-col justify-end bg-gradient-to-t from-black to-transparent">
                                 <h3 className="text-lg font-semibold mb-2 truncate">{product.name}</h3>
+
+                                {product.author && (
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Avatar className='size-6'>
+                                            <AvatarImage src={product.author.avatar} alt={product.author.name} />
+                                            <AvatarFallback className="bg-gray-700 text-white text-xs">
+                                                {product.author.name.charAt(0).toUpperCase()}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <span className="text-xs text-gray-300">{product.author.name}</span>
+                                    </div>
+                                )}
+
                                 <div className="flex items-end justify-between">
                                     <div>
                                         <p className="text-xs text-gray-400">Price</p>
@@ -43,11 +61,11 @@ export default function RelatedProducts({ products }: RelatedProductsProps) {
                                             <span className='text-xs text-gray-400 line-through'>${product.originalPrice}</span>
                                         </div>
                                     </div>
-                                     <div className='flex items-center gap-1 mb-2'>
-                                    <Star fill="yellow" stroke="none" color="yellow" className="w-4 h-4" />
-                                    <span className="text-sm font-semibold">{product.rating}</span>
-                                    <span className='text-xs text-gray-400'>({product.downloads})</span>
-                                </div>
+                                    <div className='flex items-center gap-1 mb-2'>
+                                        <Star fill="yellow" stroke="none" color="yellow" className="w-4 h-4" />
+                                        <span className="text-sm font-semibold">{product.rating}</span>
+                                        <span className='text-xs text-gray-400'>({product.downloads})</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
