@@ -1,13 +1,13 @@
 'use client'
 
-import { Tabs } from '@mantine/core'
-import Post from './post'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import PostSection from './post-section'
 
 export default function ProfileContent() {
      const listTabs = [
           {
-               label: 'Post',
-               value: 'post'
+               label: 'Your post',
+               value: 'posts'
           },
           {
                label: 'Followers',
@@ -19,27 +19,22 @@ export default function ProfileContent() {
           },
      ]
      return (
-          <div className='h-30'>
-               <Tabs variant="outline" defaultValue={listTabs[0].value}>
-                    <Tabs.List>
-                         {listTabs.map((item, index) =>
-                              <Tabs.Tab value={item.value} key={index}>
-                                   {item.label}
-                              </Tabs.Tab>
-                         )}
-                    </Tabs.List>
-
-                    <Tabs.Panel value="post">
-                         <Post />
-                    </Tabs.Panel>
-
-                    <Tabs.Panel value="follower">
-                         SECTION 2
-                    </Tabs.Panel>
-
-                    <Tabs.Panel value="following">
-                         SECTION 3
-                    </Tabs.Panel>
+          <div className=''>
+               <Tabs defaultValue="posts">
+                    <TabsList>
+                         {listTabs.map((tab, index) => (
+                              <TabsTrigger key={index} value={tab.value}>{tab.label}</TabsTrigger>
+                         ))}
+                    </TabsList>
+                    <TabsContent value="posts">
+                         <PostSection />
+                    </TabsContent>
+                    <TabsContent value="follower">
+                         Tab2
+                    </TabsContent>
+                    <TabsContent value="following">
+                         Tab3
+                    </TabsContent>
                </Tabs>
           </div>
      )

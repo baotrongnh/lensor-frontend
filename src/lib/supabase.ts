@@ -1,9 +1,11 @@
-import { createClient } from '@supabase/supabase-js'
+// import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@/utils/supabase/client"
+import type { Session, AuthChangeEvent } from "@supabase/supabase-js"
+// const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+// const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient()
 
 export const authHelpers = {
     signInWithEmail: async (email: string, password: string) => {
@@ -49,7 +51,7 @@ export const authHelpers = {
     },
 
 
-    onAuthStateChange: (callback: (event: string, session: unknown) => void) => {
+    onAuthStateChange: (callback: (event: AuthChangeEvent, session: Session | null) => void) => {
         return supabase.auth.onAuthStateChange(callback)
     },
 
