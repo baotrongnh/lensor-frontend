@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/sidebar"
 import { NavMain } from "@/components/user-dashboard/sidebar/nav-main"
 import { ROUTES } from "@/constants/path"
+import { useUserStore } from "@/stores/user-store"
 
 const data = {
   user: {
@@ -81,6 +82,8 @@ const data = {
 
 export function UserDashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
+  const user = useUserStore(state => state.user)
+  console.log(user);
 
   const navMainsWithActive = data.navMains.map(item => ({
     ...item,
@@ -102,7 +105,7 @@ export function UserDashboardSidebar({ ...props }: React.ComponentProps<typeof S
         <NavMain title="Public Spaces" items={publicWithActive} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

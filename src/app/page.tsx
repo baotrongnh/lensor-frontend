@@ -7,7 +7,7 @@ export default function Home() {
   const t = useTranslations('HomePage')
   return (
     <>
-      <MainHeader isLogin={false} />
+      <MainHeader />
       <section className="py-20 lg:py-32 bg-neutral-900 text-white">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">

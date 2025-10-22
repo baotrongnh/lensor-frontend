@@ -1,7 +1,8 @@
+import { ThemeProvider } from "@/components/theme-provider"
 import type { Metadata } from "next"
 import { NextIntlClientProvider } from 'next-intl'
+import AuthProvider from "./auth-provider"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
   title: "Lensor - Portfolio Builder for Designers & Photographers",
@@ -25,7 +26,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider>
-            {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

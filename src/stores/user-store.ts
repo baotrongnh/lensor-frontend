@@ -1,17 +1,18 @@
 import { authHelpers } from '@/lib/supabase'
-import { create } from 'zustand'
 import { User } from '@supabase/supabase-js'
+import { create } from 'zustand'
 
 interface UserState {
      user: User | null
      loading: boolean
+     setUser: (user: User | null) => void
      fetchUser: () => Promise<void>
 }
 
 export const useUserStore = create<UserState>((set) => ({
      user: null,
      loading: false,
-
+     setUser: (user) => set({ user }),
      fetchUser: async () => {
           set({ loading: true })
           const response = await authHelpers.getCurrentUser()

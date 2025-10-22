@@ -3,6 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/constants/path'
+import { useUserStore } from '@/stores/user-store'
 import { Bell, ChevronDown, ShoppingCart } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -11,8 +12,7 @@ import { usePathname, useRouter } from 'next/navigation'
 export default function MainHeader() {
   const t = useTranslations('MainHeader')
   const currentPath = usePathname()
-  const [isLogin, setIsLogin] = useState(true)
-  console.log(currentPath)
+  const user = useUserStore(state => state.user)
 
   const navLinkItems = [
     { title: 'Forum', href: ROUTES.FORUM },
@@ -32,7 +32,7 @@ export default function MainHeader() {
           )}
         </div>
         <div className='w-64 flex justify-end items-center gap-5'>
-          {!isLogin
+          {!user
             ? <>
               <Link href={ROUTES.LOGIN}><Button variant='secondary'>Register</Button></Link>
               <Link href={ROUTES.LOGIN}><Button>Login</Button></Link>
@@ -74,7 +74,6 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { authHelpers } from '@/lib/supabase'
 import { useTheme } from 'next-themes'
-import { useState } from 'react'
 
 function DropdownMenuUser({ children }: { children: React.ReactNode }) {
   const { setTheme, resolvedTheme } = useTheme()
