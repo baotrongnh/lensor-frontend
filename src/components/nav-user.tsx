@@ -30,8 +30,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { authHelpers } from "@/lib/supabase"
-import { useRouter } from "next/navigation"
 import { User } from "@supabase/supabase-js"
+import { useRouter } from "next/navigation"
 
 export function NavUser({
   user,
@@ -44,8 +44,6 @@ export function NavUser({
     const res = await authHelpers.signOut()
     if (!res.error) router.refresh()
   }
-  
-  console.log(user);
 
   return (
     <SidebarMenu>
