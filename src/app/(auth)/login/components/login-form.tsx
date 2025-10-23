@@ -1,110 +1,149 @@
 'use client'
 
 import { authHelpers } from '@/lib/supabase'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card } from '@/components/ui/card'
 import { Facebook, Github } from 'lucide-react';
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { useUserStore } from '@/stores/user-store'
 import { ROUTES } from '@/constants/path'
+import {
+    Field,
+    FieldDescription,
+    FieldGroup,
+    FieldLabel,
+    FieldSet,
+    FieldSeparator,
+    FieldError,
+} from "@/components/ui/field"
+
+type FormType = 'login' | 'register'
 
 export function LoginForm(props: Record<string, never>) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const [formType, setFormType] = useState<FormType>('login')
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    })
+    const [formErrors, setFormErrors] = useState({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    })
     const { user } = useUserStore()
 
-    // useEffect(() => {
-    //     if (user) {
-    //         setTimeout(() => {
-    //             toast.success('Login successfuly!')
-    //             router.replace(ROUTES.HOME)
-    //         }, 100)
-    //     }
-    // }, [user, router])
+    useEffect(() => {
+        if (user) {
+            router.replace(ROUTES.HOME)
+            toast.success('You are already logged in')
+        }
+    }, [user, router])
 
-    // const [type, toggle] = useToggle(['login', 'register'])
-    // const form = useForm({
-    //     initialValues: {
-    //         email: '',
-    //         name: '',
-    //         password: '',
-    //         term: false,
-    //     },
+    // Validate form
+    const validateForm = () => {
+        const errors = {
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+        }
 
-    //     validate: {
-    //         email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-    //         password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
-    //         term: (val) => (type === 'register' && !val ? 'You must accept terms and conditions' : null)
-    //     },
-    // });
+        // Email validation
+        if (!formData.email) {
+            errors.email = 'Email is required'
+        } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+            errors.email = 'Please enter a valid email address'
+        }
+
+        // Password validation
+        if (!formData.password) {
+            errors.password = 'Password is required'
+        } else if (formData.password.length < 6) {
+            errors.password = 'Password must be at least 6 characters long'
+        }
+
+        // Register-specific validations
+        if (formType === 'register') {
+            if (!formData.name.trim()) {
+                errors.name = 'Full name is required'
+            }
+
+            if (!formData.confirmPassword) {
+                errors.confirmPassword = 'Please confirm your password'
+            } else if (formData.password !== formData.confirmPassword) {
+                errors.confirmPassword = 'Passwords do not match'
+            }
+        }
+
+        setFormErrors(errors)
+        return !Object.values(errors).some(error => error !== '')
+    }
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target
+        setFormData(prev => ({ ...prev, [name]: value }))
+        if (formErrors[name as keyof typeof formErrors]) {
+            setFormErrors(prev => ({ ...prev, [name]: '' }))
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setLoading(true)
         setError('')
 
-        try {
-            const { data, error: signInError } = await authHelpers.signInWithEmail(
-                'email', 'pass'
-                // form.values.email,
-                // form.values.password
-            )
+        if (!validateForm()) {
+            return
+        }
 
-            if (signInError) {
-                setError(signInError.message)
-                toast.error(error)
-            } else if (data.user) {
-                router.push('/')
+        setLoading(true)
+
+        try {
+            if (formType === 'login') {
+                const { data, error: signInError } = await authHelpers.signInWithEmail(
+                    formData.email,
+                    formData.password
+                )
+
+                if (signInError) {
+                    setError(signInError.message)
+                    toast.error(signInError.message)
+                } else if (data.user) {
+                    toast.success('Login successful!')
+                    router.push(ROUTES.HOME)
+                }
+            } else {
+                const { data, error: signUpError } = await authHelpers.signUpWithEmail(
+                    formData.name,
+                    formData.email.toLowerCase().trim(),
+                    formData.password
+                )
+
+                if (signUpError) {
+                    setError(signUpError.message)
+                    toast.error(signUpError.message)
+                } else if (data.user) {
+                    toast.success('Account created successfully! Please check your email to verify.')
+                    setFormType('login')
+                    setFormData({ name: '', email: formData.email, password: '', confirmPassword: '' })
+                }
             }
         } catch (err) {
-            setError('Đã xảy ra lỗi khi đăng nhập!')
-            toast.error(error)
+            const errorMessage = 'An error occurred. Please try again.'
+            setError(errorMessage)
+            toast.error(errorMessage)
         } finally {
             setLoading(false)
         }
     }
-
-    // const handleRegister = async (e: React.FormEvent) => {
-    //     e.preventDefault()
-
-    //     if(!form.validate()) return
-
-    //     setLoading(true)
-    //     setError('')
-    //     const email = form.values.email.toLowerCase().trim();
-
-    //     try {
-    //         const { data, error: signInError } = await authHelpers.signUpWithEmail(
-    //             form.values.name,
-    //             email,
-    //             form.values.password
-    //         )
-    //         if (signInError) {
-    //             if (signInError.message.includes("invalid")) {
-    //                 setError("Email không hợp lệ hoặc đã tồn tại. Vui lòng dùng email khác.");
-    //                 notifications.show({
-    //                     title: 'Error',
-    //                     message: error,
-    //                 })
-    //             } else if (data.user) {
-    //                 console.log(data.user)
-    //                 router.push('/')
-    //             }
-    //         }
-    //     } catch (err) {
-    //         setError('Có lỗi khi đăng ký!')
-    //         // notifications.show({
-    //         //     title: 'Error',
-    //         //     message: error,
-    //         // })
-    //     } finally {
-    //         setLoading(false)
-    //     }
-    // }
 
     const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => {
         setLoading(true)
@@ -120,7 +159,6 @@ export function LoginForm(props: Record<string, never>) {
                 return
             }
 
-            // If no error and no redirect URL, something went wrong
             if (!data?.url) {
                 console.error('No redirect URL returned from OAuth')
                 setError('Failed to initiate login. Please try again.')
@@ -128,8 +166,6 @@ export function LoginForm(props: Record<string, never>) {
                 setLoading(false)
                 return
             }
-
-            // OAuth redirect is happening, loading state will persist until redirect
             console.log('Redirecting to OAuth provider:', data.url)
 
         } catch (err) {
@@ -142,113 +178,163 @@ export function LoginForm(props: Record<string, never>) {
 
 
     return (
-        <div className='w-full py-12 shadow-lg bg-[var(--color-box-inside)]'>
-            <div className='flex justify-center items-center  gap-6'>
+        <div className='w-full max-w-md mx-auto py-4 px-6 bg-card text-card-foreground rounded-lg '>
+            <div className='text-center mb-4'>
+                <h2 className='text-xl font-bold'>
+                    {formType === 'login' ? 'Welcome Back' : 'Create Account'}
+                </h2>
+
+            </div>
+
+            {/* Social Login Buttons */}
+            <div className='flex justify-center items-center gap-3 mb-4'>
                 <button
-                    className='cursor-pointer bg-red-500 hover:bg-red-600 items-center justify-center w-12 h-12 flex rounded-lg text-white transition-all duration-300 hover:scale-105 hover:shadow-md'
+                    className='cursor-pointer bg-red-500 hover:bg-red-600 items-center justify-center w-11 h-11 flex rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed'
                     onClick={() => handleSocialLogin('google')}
+                    disabled={loading}
+                    aria-label="Sign in with Google"
                 >
                     <Image
                         src='/icons8-google-32.png'
                         alt='Login With Google'
-                        width={24}
-                        height={24}
+                        width={22}
+                        height={22}
                     />
                 </button>
                 <button
-                    className='cursor-pointer bg-blue-600 hover:bg-blue-700 items-center justify-center w-12 h-12 flex rounded-lg text-white transition-all duration-300 hover:scale-105 hover:shadow-md'
+                    className='cursor-pointer bg-blue-600 hover:bg-blue-700 items-center justify-center w-11 h-11 flex rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed'
                     onClick={() => handleSocialLogin('facebook')}
+                    disabled={loading}
+                    aria-label="Sign in with Facebook"
                 >
-                    <Facebook fill='white' size={22} />
+                    <Facebook className='text-white' size={20} />
                 </button>
                 <button
-                    className='cursor-pointer bg-gray-800 hover:bg-gray-900 items-center justify-center w-12 h-12 flex rounded-lg text-white transition-all duration-300 hover:scale-105 hover:shadow-md'
+                    className='cursor-pointer bg-gray-800 dark:bg-gray-800 hover:bg-gray-900 dark:hover:bg-gray-700 items-center justify-center w-11 h-11 flex rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed'
                     onClick={() => handleSocialLogin('github')}
+                    disabled={loading}
+                    aria-label="Sign in with GitHub"
                 >
-                    <Github fill='white' size={22} />
+                    <Github className='text-white' size={20} />
                 </button>
             </div>
-            <div className='border-t border-grey/10 my-3' />
 
-            {/* <form
-                onSubmit={type === 'login' ? handleSubmit : handleRegister}
-                className='text-left space-y-4'
-            >
-                <Stack gap="md">
-                    {type === 'register' && (
-                        <TextInput
-                            label="Name"
-                            placeholder="Enter your full name"
-                            value={form.values.name}
-                            onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-                            radius="md"
-                            size="md"
-                            className='[&_input]:focus:border-purple-500 [&_input]:focus:font-medium'
-                        />
+            <FieldSeparator>
+                <span className='text-muted-foreground text-xs'>OR CONTINUE WITH</span>
+            </FieldSeparator>
+
+            <form onSubmit={handleSubmit} className='mt-4'>
+                <FieldSet>
+                    <FieldGroup className='gap-4'>
+                        {formType === 'register' && (
+                            <Field>
+                                <div className='flex gap-6 justify-between items-center'>
+                                    <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                                    {formErrors.name && <FieldError>{formErrors.name}</FieldError>}
+                                </div>
+                                <Input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    placeholder="John Doe"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    disabled={loading}
+                                    className={formErrors.name ? 'border-destructive' : ''}
+                                />
+
+                            </Field>
+                        )}
+
+                        <Field>
+                            <div className='flex gap-6 justify-between items-center'>
+                                <FieldLabel htmlFor="email">Email Address</FieldLabel>
+                                {formErrors.email && <FieldError>{formErrors.email}</FieldError>}
+                            </div>
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="you@example.com"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                disabled={loading}
+                                className={formErrors.email ? 'border-destructive' : ''}
+                            />
+                        </Field>
+
+                        <Field>
+                            <div className='flex gap-6 justify-between items-center'>
+                                <FieldLabel htmlFor="password">Password</FieldLabel>
+                                {formErrors.password && <FieldError>{formErrors.password}</FieldError>}
+                            </div>
+                            <Input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="••••••••"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                disabled={loading}
+                                className={formErrors.password ? 'border-destructive' : ''}
+                            />
+                        </Field>
+
+                        {formType === 'register' && (
+                            <Field>
+                                <div className='flex gap-6 justify-between items-center'>
+                                    <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+                                    {formErrors.confirmPassword && <FieldError>{formErrors.confirmPassword}</FieldError>}
+                                </div>
+                                <Input
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={formData.confirmPassword}
+                                    onChange={handleInputChange}
+                                    disabled={loading}
+                                    className={formErrors.confirmPassword ? 'border-destructive' : ''}
+                                />
+                            </Field>
+                        )}
+                    </FieldGroup>
+
+                    {error && (
+                        <div className="text-destructive text-sm mt-2 p-2.5 bg-destructive/10 rounded-md">
+                            {error}
+                        </div>
                     )}
 
-                    <TextInput
-                        required
-                        label="Email"
-                        placeholder="Enter your email address"
-                        value={form.values.email}
-                        onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                        error={form.errors.email && 'Invalid email'}
-                        radius="md"
-                        size="md"
-                        className='[&_input]:focus:border-purple-500 [&_input]:focus:font-medium'
-                    />
-
-                    <PasswordInput
-                        required
-                        label="Password"
-                        placeholder="Enter your password"
-                        value={form.values.password}
-                        onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                        error={form.errors.password && 'Password should include at least 6 characters'}
-                        radius="md"
-                        size="md"
-                        className='[&_input]:focus:border-purple-500 [&_input]:focus:font-medium'
-                    />
-
-                    {type === 'register' && (
-                        <Checkbox
-                            label="I accept terms and conditions"
-                            checked={form.values.term}
-                            onChange={(event) => form.setFieldValue('term', event.currentTarget.checked)}
-                            color="violet"
-                            size="sm"
-                            error={form.errors.term}
-                            
-                        />
-                    )}
-                </Stack>
-
-                <Group justify="space-between" mt="md" className="pt-4">
-                    <Anchor
-                        component="button"
-                        type="button"
-                        c="dimmed"
-                        onClick={() => toggle()}
-                        size="sm"
-                        className="hover:no-underline"
-                    >
-                        {type === 'register'
-                            ? <p className="text-gray-600">Already have an account? <span className='text-[#6441A5] font-medium hover:text-violet-700'>Login</span></p>
-                            : <p className="text-gray-600">Don&apos;t have an account? <span className='text-[#6441A5] font-medium hover:text-violet-700'>Register</span></p>
-                        }
-                    </Anchor>
                     <Button
                         type="submit"
-                        radius="md"
-                        size="md"
+                        className="w-full mt-3"
                         disabled={loading}
-                        
                     >
-                        {loading && type === 'login' ? 'Signing in...' : loading && type === 'register' ? 'Creating account...' : upperFirst(type)}
+                        {loading
+                            ? (formType === 'login' ? 'Signing in...' : 'Creating account...')
+                            : (formType === 'login' ? 'Sign In' : 'Sign Up')}
                     </Button>
-                </Group>
-            </form> */}
+                </FieldSet>
+            </form>
+
+            <div className='text-center mt-4'>
+                <p className="text-sm text-muted-foreground">
+                    {formType === 'login' ? "Don't have an account? " : "Already have an account? "}
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setFormType(formType === 'login' ? 'register' : 'login')
+                            setFormErrors({ name: '', email: '', password: '', confirmPassword: '' })
+                            setError('')
+                        }}
+                        className="text-primary font-medium hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={loading}
+                    >
+                        {formType === 'login' ? 'Sign Up' : 'Sign In'}
+                    </button>
+                </p>
+            </div>
         </div>
     )
 }

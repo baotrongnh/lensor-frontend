@@ -3,23 +3,19 @@ import Link from 'next/link';
 import { LoginForm } from './components/login-form';
 import { InfiniteSlider } from '@/components/motion-primitives/infinite-slider';
 import Image from 'next/image'
+import { ROUTES } from '@/constants/path';
 
 export default function Page() {
   return (
     <div className="flex justify-center items-center h-screen w-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 py-0 px-2 overflow-hidden">
-      <div className="flex flex-col md:flex-row gap-6 justify-center items-center bg-black/40 backdrop-blur-xl border border-purple-500/30 shadow-2xl shadow-purple-500/20 h-[650px] w-[1200px] rounded-4xl overflow-hidden p-6">
-        <div className="flex flex-col justify-center items-center w-full md:w-5/12 h-full bg-gradient-to-br from-black to-transparent backdrop-blur-sm rounded-3xl border border-purple-500/20 text-center py-8 md:py-0 shadow-lg">
-          <Link href='/' >
-            <h1 className='font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-4 md:mb-10 drop-shadow-2xl'>
-              Lensor
-            </h1>
-          </Link>
+      <div className="flex flex-col md:flex-row gap-6 justify-center items-center backdrop-blur-xl bg-black/40 border border-purple-500/30 shadow-2xl shadow-purple-500/20 h-[650px] w-[1200px] rounded-4xl overflow-hidden p-6">
+        <div className="flex flex-col justify-center items-center w-full md:w-5/12 h-full bg-card backdrop-blur-sm rounded-3xl border border-purple-500/20 text-center py-8 md:py-0 shadow-lg">
           <LoginForm />
         </div>
 
         <div className='flex flex-col w-full md:w-7/12 gap-2 justify-between items-center h-full'>
           <div className='w-full h-1/2 relative flex justify-center items-center overflow-hidden'>
-            <InfiniteSlider speedOnHover={80}  gap={18}>
+            <InfiniteSlider speedOnHover={80} gap={18}>
               <Image
                 src="https://i.pinimg.com/736x/0e/9b/8d/0e9b8d7be8ef4213d74afc9568668f4e.jpg"
                 alt="Urban Photography Preset"
@@ -112,6 +108,14 @@ export default function Page() {
           </div>
         </div>
       </div>
+      <Link href={ROUTES.HOME} className='absolute inset-5 w-14 h-14'>
+        <Image
+          src="/Lensor-removebg-preview.png"
+          alt="Lensor Logo"
+          width={50}
+          height={50}
+        />
+      </Link>
     </div >
   )
 }

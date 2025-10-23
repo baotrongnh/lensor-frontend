@@ -5,10 +5,10 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
-import ImageGallery from './components/ImageGallery'
-import ProductDetailsTabs from './components/ProductDetailsTabs'
-import ProductInfo from './components/ProductInfo'
-import RelatedProducts from './components/RelatedProducts'
+import ImageGallery from './components/image-gallery'
+import ProductDetailsTabs from './components/product-details-tabs'
+import ProductInfo from './components/product-info'
+import RelatedProducts from './components/related-products'
 
 export default function ProductDetail() {
     const demoProduct = {

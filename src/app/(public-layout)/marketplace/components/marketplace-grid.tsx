@@ -1,5 +1,5 @@
 import React from 'react';
-import MarketplaceItemCard from './MarketplaceItemCard';
+import MarketplaceItemCard from './marketplace-item-card';
 
 interface MarketplaceItem {
     id: number;
@@ -22,7 +22,7 @@ interface MarketplaceGridProps {
 export default function MarketplaceGrid({ items, searchQuery }: MarketplaceGridProps) {
     if (searchQuery && items.length === 0) {
         return (
-            <div className='text-center py-10 text-gray-400'>
+            <div className='text-center py-10 text-muted-foreground'>
                 <p className='text-lg mb-2'>No items found</p>
                 <p>Try searching with different keywords</p>
             </div>

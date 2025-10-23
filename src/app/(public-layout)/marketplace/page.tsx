@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import MarketplaceHeader from './components/MarketplaceHeader';
-import FilterSidebar from './components/FilterSidebar';
-import MarketplaceGrid from './components/MarketplaceGrid';
+import MarketplaceHeader from './components/marketplace-header';
+import FilterSidebar from './components/filter-sidebar';
+import MarketplaceGrid from './components/marketplace-grid';
 import {
     Breadcrumb,
     BreadcrumbItem,
