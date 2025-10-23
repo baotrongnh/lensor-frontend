@@ -1,16 +1,25 @@
 'use client'
 
 import { authHelpers } from '@/lib/supabase'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/card'
-import { Facebook, Github  } from 'lucide-react';
+import { Facebook, Github } from 'lucide-react';
 import Image from 'next/image'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+import { useUserStore } from '@/stores/user-store'
 
 export function LoginForm(props: Record<string, never>) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const { user } = useUserStore()
+
+    useEffect(() => {
+        if (user) router.push('/')
+    }, [user, router])
+
     // const [type, toggle] = useToggle(['login', 'register'])
     // const form = useForm({
     //     initialValues: {
@@ -41,19 +50,13 @@ export function LoginForm(props: Record<string, never>) {
 
             if (signInError) {
                 setError(signInError.message)
-                // notifications.show({
-                //     title: 'Error',
-                //     message: error,
-                // })
+                toast.error(error)
             } else if (data.user) {
                 router.push('/')
             }
         } catch (err) {
             setError('Đã xảy ra lỗi khi đăng nhập!')
-            // notifications.show({
-            //     title: 'Error',
-            //     message: error,
-            // })
+            toast.error(error)
         } finally {
             setLoading(false)
         }
@@ -102,24 +105,18 @@ export function LoginForm(props: Record<string, never>) {
         setError('')
 
         try {
-
             const { error: oauthError } = await authHelpers.signInWithOAuth(provider)
 
             if (oauthError) {
                 setError(oauthError.message)
-                // notifications.show({
-                //     title: 'Error',
-                //     message: error,
-                // })
+                toast.error(oauthError.message)
+                setLoading(false)
             }
-
+            
         } catch (err) {
-            setError('Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.')
-            // notifications.show({
-            //     title: 'Error',
-            //     message: error,
-            // })
-        } finally {
+            console.error('Error during social login:', err)
+            setError('An error occurred during login. Please try again.')
+            toast.error('An error occurred during login. Please try again.')
             setLoading(false)
         }
     }
@@ -132,7 +129,7 @@ export function LoginForm(props: Record<string, never>) {
                     className='cursor-pointer bg-red-500 hover:bg-red-600 items-center justify-center w-12 h-12 flex rounded-lg text-white transition-all duration-300 hover:scale-105 hover:shadow-md'
                     onClick={() => handleSocialLogin('google')}
                 >
-                    <Image 
+                    <Image
                         src='/icons8-google-32.png'
                         alt='Login With Google'
                         width={24}
@@ -149,11 +146,10 @@ export function LoginForm(props: Record<string, never>) {
                     className='cursor-pointer bg-gray-800 hover:bg-gray-900 items-center justify-center w-12 h-12 flex rounded-lg text-white transition-all duration-300 hover:scale-105 hover:shadow-md'
                     onClick={() => handleSocialLogin('github')}
                 >
-                    <Github  fill='white' size={22} />
+                    <Github fill='white' size={22} />
                 </button>
             </div>
-
-             <div className='border-t border-grey/10 my-3' />
+            <div className='border-t border-grey/10 my-3' />
 
             {/* <form
                 onSubmit={type === 'login' ? handleSubmit : handleRegister}

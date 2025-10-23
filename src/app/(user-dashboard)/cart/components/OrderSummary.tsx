@@ -8,14 +8,13 @@ import { CreditCard, Package, Truck } from 'lucide-react'
 
 interface OrderSummaryProps {
     subtotal: number
-    tax: number
     shipping: number
     itemCount: number
 }
 
-export function OrderSummary({ subtotal, tax, shipping, itemCount }: OrderSummaryProps) {
+export function OrderSummary({ subtotal, shipping, itemCount }: OrderSummaryProps) {
     const [promoCode, setPromoCode] = useState('')
-    const total = subtotal + tax + shipping
+    const total = subtotal + shipping
 
     const handleApplyPromo = () => {
         console.log('Applying promo code:', promoCode)
@@ -66,10 +65,6 @@ export function OrderSummary({ subtotal, tax, shipping, itemCount }: OrderSummar
                         <div className="flex justify-between text-sm">
                             <span className="text-gray-600">Subtotal ({itemCount} items)</span>
                             <span className="font-medium">${subtotal.toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">Tax</span>
-                            <span className="font-medium">${tax.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
                             <span className="text-gray-600">Shipping</span>

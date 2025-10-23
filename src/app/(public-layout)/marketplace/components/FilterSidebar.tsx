@@ -48,7 +48,7 @@ export default function FilterSidebar({ searchInput, onSearchChange, searchQuery
 
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-semibold mb-2">Compatibility</label>
+                        <label className="block text-sm font-semibold mb-2 text-muted-foreground">Compatibility</label>
                         <Select>
                             <SelectTrigger className="w-full h-11">
                                 <SelectValue placeholder="All" />
@@ -62,7 +62,7 @@ export default function FilterSidebar({ searchInput, onSearchChange, searchQuery
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold mb-2">Price Range</label>
+                        <label className="block text-sm font-semibold mb-2 text-muted-foreground">Price Range</label>
                         <Select>
                             <SelectTrigger className="w-full h-11">
                                 <SelectValue placeholder="All Prices" />
@@ -78,7 +78,7 @@ export default function FilterSidebar({ searchInput, onSearchChange, searchQuery
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold mb-2">Rating</label>
+                        <label className="block text-sm font-semibold mb-2 text-muted-foreground">Rating</label>
                         <Select>
                             <SelectTrigger className="w-full h-11">
                                 <SelectValue placeholder="All Ratings" />

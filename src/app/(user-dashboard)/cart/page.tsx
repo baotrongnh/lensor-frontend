@@ -86,7 +86,6 @@ export default function Cart() {
   }
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const tax = subtotal * 0.08 // 8% tax
   const shipping = 15.00
 
   return (
@@ -148,7 +147,6 @@ export default function Cart() {
             <div className="sticky top-20">
               <OrderSummary
                 subtotal={subtotal}
-                tax={tax}
                 shipping={shipping}
                 itemCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
               />
