@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MarketplaceItemCard from './marketplace-item-card';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import MarketplaceSkeleton from './marketplace-skeleton';
 
 interface MarketplaceItem {
     id: number;
@@ -23,9 +24,18 @@ interface MarketplaceGridProps {
 }
 
 export default function MarketplaceGrid({ items, searchQuery }: MarketplaceGridProps) {
+    const [loading, setLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
     const itemsPerPage = 9
     const totalPage = Math.ceil(items.length / itemsPerPage)
+
+    useEffect(() => {
+        setLoading(true)
+        const timer = setTimeout(() => {
+            setLoading(false)
+        }, 500)
+        return () => clearTimeout(timer)
+    }, [currentPage, items])
 
     const handlePrevious = () => {
         if (currentPage > 1) setCurrentPage(currentPage - 1)
@@ -55,12 +65,16 @@ export default function MarketplaceGrid({ items, searchQuery }: MarketplaceGridP
 
     return (
         <div className='flex flex-col gap-8'>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {currentItems.map(item => (
-                    <MarketplaceItemCard key={item.id} item={item} />
-                ))}
-            </div>
+            {loading ?
+                <MarketplaceSkeleton />
+                :
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {currentItems.map(item => (
+                        <MarketplaceItemCard key={item.id} item={item} />
+                    ))}
+                </div>
+            }
             <Pagination>
                 <PaginationContent>
                     <PaginationItem>
@@ -78,7 +92,7 @@ export default function MarketplaceGrid({ items, searchQuery }: MarketplaceGridP
                     </PaginationItem>
 
                     {currentPage > 3 && <PaginationEllipsis />}
-                    
+
                     {Array.from({ length: totalPage }, (_, i) => i + 1)
                         .filter(
                             (page) =>
@@ -99,9 +113,9 @@ export default function MarketplaceGrid({ items, searchQuery }: MarketplaceGridP
                             </PaginationItem>
                         ))}
 
-                    
+
                     {currentPage < totalPage - 2 && <PaginationEllipsis />}
-                    
+
                     {totalPage > 1 && (
                         <PaginationItem>
                             <PaginationLink

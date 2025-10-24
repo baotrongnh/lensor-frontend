@@ -9,6 +9,7 @@ import ImageGallery from './components/image-gallery'
 import ProductDetailsTabs from './components/product-details-tabs'
 import ProductInfo from './components/product-info'
 import RelatedProducts from './components/related-products'
+import { ROUTES } from "@/constants/path"
 
 export default function ProductDetail() {
     const demoProduct = {
@@ -157,15 +158,15 @@ export default function ProductDetail() {
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
-                        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                        <BreadcrumbLink href={ROUTES.HOME}>Home</BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbLink href="/marketplace">Marketplace</BreadcrumbLink>
+                        <BreadcrumbLink href={ROUTES.MARKETPLACE}>Marketplace</BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbLink href={`/marketplace/${demoProduct.id}`}>{demoProduct.name}</BreadcrumbLink>
+                        <BreadcrumbLink href={`${ROUTES.MARKETPLACE}/${demoProduct.id}`}>{demoProduct.name}</BreadcrumbLink>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>

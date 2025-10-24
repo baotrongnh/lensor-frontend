@@ -24,7 +24,7 @@ export default function MarketplaceItemCard({ item }: MarketplaceItemCardProps) 
     return (
         <Link href={`/marketplace/${item.id}`}>
 
-            <div className="relative w-full aspect-square bg-gray-900 rounded-lg overflow-hidden shadow-lg hover:shadow-xl hover:opacity-80 transition-shadow h-min-[442px] h-full group">
+            <div className="relative w-full aspect-square bg-card rounded-lg overflow-hidden shadow-lg hover:shadow-xl hover:opacity-80 transition-shadow h-min-[442px] h-full group">
                 <Image
                     src={item.image}
                     alt={item.title}
@@ -44,7 +44,7 @@ export default function MarketplaceItemCard({ item }: MarketplaceItemCardProps) 
                     <div className="flex items-center gap-2 mb-3">
                         <Avatar className='size-8'>
                             <AvatarImage src={item.author.avatar} alt={item.author.name} />
-                            <AvatarFallback className="bg-gray-700 text-white text-xs">
+                            <AvatarFallback className="bg-card text-xs">
                                 {item.author.name.charAt(0).toUpperCase()}
                             </AvatarFallback>
                         </Avatar>

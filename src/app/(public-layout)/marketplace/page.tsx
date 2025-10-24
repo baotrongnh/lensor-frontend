@@ -11,6 +11,7 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { ROUTES } from '@/constants/path';
 
 export default function MarketplacePage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -228,11 +229,11 @@ export default function MarketplacePage() {
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                            <BreadcrumbLink href={ROUTES.HOME}>Home</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/marketplace">Marketplace</BreadcrumbLink>
+                            <BreadcrumbLink href={ROUTES.MARKETPLACE}>Marketplace</BreadcrumbLink>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
