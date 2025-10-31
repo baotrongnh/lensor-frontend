@@ -72,7 +72,7 @@ export default function ProductDetailsTabs({
                             <div>
                                 <h3 className='font-semibold mb-2'>Compatibility</h3>
                                 <ul className='space-y-2 text-sm text-muted-foreground'>
-                                    {compatibility.map((item, index) => (
+                                    {compatibility?.map((item, index) => (
                                         <li key={index}>✓ {item}</li>
                                     ))}
                                 </ul>
@@ -89,14 +89,14 @@ export default function ProductDetailsTabs({
                             <div className='flex items-start gap-3'>
                                 <div className='text-3xl'>🛡️</div>
                                 <div>
-                                    <h3 className='font-semibold text-lg'>{warranty.duration} Money-Back Guarantee</h3>
-                                    <p className='text-muted-foreground'>{warranty.coverage}</p>
+                                    <h3 className='font-semibold text-lg'>{warranty?.duration} Money-Back Guarantee</h3>
+                                    <p className='text-muted-foreground'>{warranty?.coverage}</p>
                                 </div>
                             </div>
                             <div className='mt-4'>
                                 <h4 className='font-semibold mb-2'>Terms & Conditions:</h4>
                                 <ul className='space-y-2 text-sm text-muted-foreground'>
-                                    {warranty.terms.map((term, index) => (
+                                    {warranty?.terms?.map((term, index) => (
                                         <li key={index}>• {term}</li>
                                     ))}
                                 </ul>

@@ -16,7 +16,8 @@ export interface MarketplaceItem {
   description: string
   price: number
   salePrice?: number
-  imagePairs: ImagePair[]
+  imagePairs: ImagePair[],
+  thumbnail: string,
   author: {
     name: string
     avatar: string

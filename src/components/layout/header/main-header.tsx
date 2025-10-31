@@ -17,7 +17,7 @@ export default function MainHeader() {
   const navLinkItems = [
     { title: 'Forum', href: ROUTES.FORUM },
     { title: 'Marketplace', href: ROUTES.MARKETPLACE },
-    { title: 'Create portfolio', href: ROUTES.MARKETPLACE }
+    { title: 'Create portfolio', href: ROUTES.CREATE_PORTFOLIO }
   ]
 
   return (
@@ -45,7 +45,7 @@ export default function MainHeader() {
                 </div>
                 <Link href={ROUTES.CURRENT_PROFILE}>
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src={user?.user_metadata.avatar_url} />
                     <AvatarFallback>BT</AvatarFallback>
                   </Avatar>
                 </Link>
