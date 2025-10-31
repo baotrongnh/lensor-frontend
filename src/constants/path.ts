@@ -12,5 +12,6 @@ export const ROUTES = {
      CART: '/cart',
      SETTING: '/setting',
      HELP: '/help',
-     NOTIFICATION: '/notification'
+     NOTIFICATION: '/notification',
+     CREATE_PORTFOLIO: '/create-portfolio'
 }

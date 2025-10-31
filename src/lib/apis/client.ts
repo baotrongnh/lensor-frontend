@@ -18,7 +18,7 @@ apiClient.interceptors.request.use(
 
           return config
      },
-     (error) => {
+     async (error) => {
           return Promise.reject(error)
      }
 )

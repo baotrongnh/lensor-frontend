@@ -10,7 +10,7 @@ export default function MarketplaceGrid({ items, searchQuery }: MarketplaceGridP
     const [loading, setLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
     const itemsPerPage = 9
-    const totalPage = Math.ceil(items.length / itemsPerPage)
+    const totalPage = Math.ceil(items?.length / itemsPerPage)
 
     useEffect(() => {
         setLoading(true)
@@ -44,7 +44,7 @@ export default function MarketplaceGrid({ items, searchQuery }: MarketplaceGridP
     //Cai nay de filter item moi trang
     const startIndex = (currentPage - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
-    const currentItems = items.slice(startIndex, endIndex)
+    const currentItems = items?.slice(startIndex, endIndex)
 
     return (
         <div className='flex flex-col gap-8'>
@@ -53,7 +53,7 @@ export default function MarketplaceGrid({ items, searchQuery }: MarketplaceGridP
                 :
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {currentItems.map(item => (
+                    {currentItems?.map(item => (
                         <MarketplaceItemCard key={item.id} item={item} />
                     ))}
                 </div>

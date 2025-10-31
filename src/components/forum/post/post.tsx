@@ -1,19 +1,21 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { BASE_URL } from "@/constants"
 import { ROUTES } from "@/constants/path"
+import { postApi } from "@/lib/apis/postApi"
+import { usePosts } from "@/lib/hooks/usePostHooks"
+import { useUserStore } from "@/stores/user-store"
 import { PostType } from '@/types/post'
 import clsx from 'clsx'
 import { Dot, Ellipsis, Heart, ImageIcon, MessageCircle, Share2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from 'react'
+import { toast } from "sonner"
 import { Button } from '../../ui/button'
 import { Card } from "../../ui/card"
 import DialogComment from "./dialog-comment"
 import { DialogShare } from "./dialog-share"
 import DropdownMenuPost from "./dropdown-menu-post"
-import { postApi } from "@/lib/apis/postApi"
-import { usePosts } from "@/lib/hooks/usePostHooks"
 
 export default function Post({ dataPost }: { dataPost: PostType }) {
      const [expanded, setExpanded] = useState(false)
@@ -22,6 +24,7 @@ export default function Post({ dataPost }: { dataPost: PostType }) {
      const [isFollowing, setIsFollowing] = useState(false)
      const [imageError, setImageError] = useState(false)
      const { mutate } = usePosts()
+     const user = useUserStore(state => state.user)
 
      const handleVotePost = () => {
           setIsVoted(!isVoted)
@@ -33,9 +36,14 @@ export default function Post({ dataPost }: { dataPost: PostType }) {
      }
 
      const handleDeletePost = async () => {
-          const res = await postApi.delete(dataPost.id)
-          console.log(res);
-          mutate()
+          try {
+               const { data } = await postApi.delete(dataPost.id)
+               console.log(data)
+               toast.success(data.message)
+               mutate()
+          } catch (error) {
+               toast.error('You cannot delete this post.')
+          }
      }
 
      const handleSavePost = () => {
@@ -53,7 +61,7 @@ export default function Post({ dataPost }: { dataPost: PostType }) {
                          <Link href={ROUTES.PROFILE('id-abc-test')} className="hover:opacity-80 duration-300">
                               <Avatar>
                                    <AvatarImage src={dataPost?.user.avatarUrl} />
-                                   <AvatarFallback>NHBT</AvatarFallback>
+                                   <AvatarFallback>{dataPost?.user.name}</AvatarFallback>
                               </Avatar>
                          </Link>
                          <Link href={ROUTES.PROFILE(dataPost?.user.id)} className='font-bold ml-2 text-[var(--c-text-title)] hover:opacity-80 duration-300'>
@@ -63,7 +71,11 @@ export default function Post({ dataPost }: { dataPost: PostType }) {
                          <span className='text-[var(--color-text-muted)]'>{dataPost?.createdAt}</span>
                     </div>
                     <div className='flex items-center gap-3'>
-                         <Button onClick={handleFollow} variant={dataPost?.user.isFollowed ? 'outline' : 'default'}>
+                         <Button
+                              className={dataPost?.user.id === user?.id ? 'hidden' : ''}
+                              onClick={handleFollow}
+                              variant={dataPost?.user.isFollowed ? 'outline' : 'default'}
+                         >
                               {dataPost?.user.isFollowed ? 'Following' : 'Follow'}
                          </Button>
                          <DropdownMenuPost
@@ -71,6 +83,7 @@ export default function Post({ dataPost }: { dataPost: PostType }) {
                               handleReportPost={handleReportPost}
                               handleSavePost={handleSavePost}
                               handleViewDetail={handleDeletePost}
+                              isOwner={dataPost?.user.id === user?.id}
                          >
                               <Button variant='ghost'>
                                    <Ellipsis />

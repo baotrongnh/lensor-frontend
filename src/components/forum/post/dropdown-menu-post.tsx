@@ -14,7 +14,8 @@ interface DropdownMenuPostProps {
      handleDeletePost: () => void,
      handleReportPost: () => void,
      handleSavePost: () => void,
-     handleViewDetail: () => void
+     handleViewDetail: () => void,
+     isOwner: boolean
 }
 
 export default function DropdownMenuPost(props: DropdownMenuPostProps) {
@@ -22,8 +23,6 @@ export default function DropdownMenuPost(props: DropdownMenuPostProps) {
           <DropdownMenu>
                <DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
                <DropdownMenuContent>
-                    <DropdownMenuLabel>Action for this post</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={props.handleViewDetail}>
                          <Eye /> View detail
                     </DropdownMenuItem>
@@ -33,7 +32,7 @@ export default function DropdownMenuPost(props: DropdownMenuPostProps) {
                     <DropdownMenuItem onClick={props.handleSavePost}>
                          <BookMarked /> Save post
                     </DropdownMenuItem>
-                    <DropdownMenuItem variant="destructive" onClick={props.handleDeletePost}>
+                    <DropdownMenuItem variant="destructive" onClick={props.handleDeletePost} className={props.isOwner ? '' : 'hidden'}>
                          <Trash2 /> Delete post
                     </DropdownMenuItem>
                </DropdownMenuContent>
