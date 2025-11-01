@@ -1,12 +1,6 @@
 "use client"
 
 import {
-  Folder,
-  MoreHorizontal,
-  type LucideIcon
-} from "lucide-react"
-
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -21,6 +15,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import {
+  Folder,
+  MoreHorizontal,
+  type LucideIcon
+} from "lucide-react"
 import Link from "next/link"
 
 export function NavMain({
@@ -62,19 +61,12 @@ export function NavMain({
                 align={isMobile ? "end" : "start"}
               >
                 <DropdownMenuItem>
-                  <Folder className="text-muted-foreground" />
-                  <span>NHBT</span>
+                  <Link href={item.url}>Go to this page</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
         ))}
-        {/* <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <MoreHorizontal className="text-sidebar-foreground/70" />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem> */}
       </SidebarMenu>
     </SidebarGroup>
   )
