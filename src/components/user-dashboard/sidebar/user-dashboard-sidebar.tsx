@@ -1,19 +1,5 @@
 "use client"
 
-import {
-  AudioWaveform,
-  Bell,
-  Command,
-  GalleryVerticalEnd,
-  Images,
-  Mail,
-  ShoppingCart,
-  Store,
-  User,
-} from "lucide-react"
-import { usePathname } from "next/navigation"
-import * as React from "react"
-
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
@@ -26,6 +12,21 @@ import {
 import { NavMain } from "@/components/user-dashboard/sidebar/nav-main"
 import { ROUTES } from "@/constants/path"
 import { useUserStore } from "@/stores/user-store"
+import {
+  AudioWaveform,
+  Bell,
+  CirclePoundSterling,
+  Command,
+  GalleryVerticalEnd,
+  Images,
+  Mail,
+  ShoppingCart,
+  Store,
+  TicketCheck,
+  User,
+} from "lucide-react"
+import { usePathname } from "next/navigation"
+import * as React from "react"
 
 const data = {
   user: {
@@ -70,7 +71,17 @@ const data = {
       name: "Cart",
       url: ROUTES.CART,
       icon: ShoppingCart,
-    }
+    },
+    {
+      name: "Wallet",
+      url: ROUTES.WALLET,
+      icon: CirclePoundSterling,
+    },
+    {
+      name: "Purchased Presets",
+      url: ROUTES.PURCHASED_PRESETS,
+      icon: TicketCheck,
+    },
   ],
   public: [
     {
@@ -89,7 +100,6 @@ const data = {
 export function UserDashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
   const user = useUserStore(state => state.user)
-  console.log(user);
 
   const navMainsWithActive = data.navMains.map(item => ({
     ...item,

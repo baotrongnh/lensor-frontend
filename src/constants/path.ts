@@ -8,10 +8,11 @@ export const ROUTES = {
      PORTFOLIO: '/portfolio',
      MESSAGE: '/message',
      MARKETPLACE: '/marketplace',
-     PURCHASED_PRESET: '/purchased-presets',
      CART: '/cart',
      SETTING: '/setting',
      HELP: '/help',
      NOTIFICATION: '/notification',
-     CREATE_PORTFOLIO: '/create-portfolio'
+     CREATE_PORTFOLIO: '/create-portfolio',
+     PURCHASED_PRESETS: '/purchased-presets',
+     WALLET: '/wallet'
 }
