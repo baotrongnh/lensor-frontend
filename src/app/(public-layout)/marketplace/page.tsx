@@ -12,7 +12,7 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import { ROUTES } from '@/constants/path';
 import { useMarketplace } from '@/lib/hooks/useMarketplaceHooks';
 import { MarketplaceItem } from "@/types/marketplace";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import FilterSidebar from './components/filter-sidebar';
 import MarketplaceItemCard from "./components/marketplace-item-card";
 
@@ -26,33 +26,50 @@ export default function MarketplacePage() {
     });
     const [resetFilter, setResetFilter] = useState(false)
 
-    const { data: marketplaceItems, isLoading} = useMarketplace()
+    const { data: marketplaceItems, isLoading } = useMarketplace()
 
     const categories: string[] = marketplaceItems?.data
         ? Array.from(new Set(marketplaceItems.data.map((item: MarketplaceItem) => item.category)))
         : [];
 
-    const filteredItems = marketplaceItems?.data?.filter((item: MarketplaceItem) => {
-        const query = searchQuery.toLowerCase();
+    const validItems = useMemo(() => {
+        if (!marketplaceItems?.data) return []
 
-        const matchesSearch =
-            item.title.toLowerCase().includes(query) ||
-            item.description.toLowerCase().includes(query);
+        return marketplaceItems.data.filter((item: MarketplaceItem) => {
 
-        const matchesCategory =
-            filters.category === 'all' || item.category === filters.category;
+            const hasValidThumbnail = item?.thumbnail &&
+                typeof item.thumbnail === 'string' &&
+                item.thumbnail.trim() !== '';
 
-        const matchesRating =
-            filters.rating === 'all' || (item.rating !== undefined && item.rating >= parseFloat(filters.rating));
+            const hasValidImage = item?.image &&
+                typeof item.image === 'string' &&
+                item.image.trim() !== '';
 
-        const priceValue = item.price
-        let matchesPrice = true;
-        if (filters.price === 'under-15') matchesPrice = priceValue < 15;
-        else if (filters.price === '15-25') matchesPrice = priceValue >= 15 && priceValue <= 25;
-        else if (filters.price === '25-50') matchesPrice = priceValue > 25 && priceValue <= 50;
-        else if (filters.price === 'over-50') matchesPrice = priceValue > 50;
-        return matchesSearch && matchesCategory && matchesPrice && matchesRating;
-    });
+            return hasValidThumbnail && hasValidImage;
+        });
+    }, [marketplaceItems?.data]);
+
+    const filteredItems = useMemo(() => {
+        return validItems?.filter((item: MarketplaceItem) => {
+            const query = searchQuery.toLowerCase();
+
+            const matchesSearch =
+                item.title.toLowerCase().includes(query) ||
+                item.description.toLowerCase().includes(query);
+
+            const matchesCategory = filters.category === 'all' || item.category === filters.category;
+
+            const matchesRating = filters.rating === 'all' || (item.rating !== undefined && item.rating >= parseFloat(filters.rating));
+
+            const priceValue = item.price
+            let matchesPrice = true;
+            if (filters.price === 'under-15') matchesPrice = priceValue < 15;
+            else if (filters.price === '15-25') matchesPrice = priceValue >= 15 && priceValue <= 25;
+            else if (filters.price === '25-50') matchesPrice = priceValue > 25 && priceValue <= 50;
+            else if (filters.price === 'over-50') matchesPrice = priceValue > 50;
+            return matchesSearch && matchesCategory && matchesPrice && matchesRating;
+        });
+    }, [validItems, searchQuery, filters]);
 
     const handleResetFilter = () => {
         if (resetFilter) {
@@ -129,8 +146,8 @@ export default function MarketplacePage() {
                                 :
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {marketplaceItems.data?.map((item: MarketplaceItem) => (
-                                        <MarketplaceItemCard {...item} key={item.id}/>
+                                    {filteredItems?.map((item: MarketplaceItem) => (
+                                        <MarketplaceItemCard {...item} key={item.id} />
                                     ))}
                                 </div>
                             }
