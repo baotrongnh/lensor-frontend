@@ -15,6 +15,8 @@ import { MarketplaceItem } from "@/types/marketplace";
 import { useEffect, useState, useMemo } from 'react';
 import FilterSidebar from './components/filter-sidebar';
 import MarketplaceItemCard from "./components/marketplace-item-card";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export default function MarketplacePage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -117,63 +119,75 @@ export default function MarketplacePage() {
                         Your <span className='text-primary'>Marketplace</span> for Creativity
                     </h1>
                     <p className='mb-6 text-muted-foreground text-sm'>Buy, sell, and showcase stunning photos & professional presets in one place</p>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-14 gap-6">
-                    <FilterSidebar
-                        searchInput={searchInput}
-                        onSearchChange={setSearchInput}
-                        searchQuery={searchQuery}
-                        resultsCount={filteredItems?.length}
-                        filters={filters}
-                        onFilterChange={setFilters}
-                        resetFilter={resetFilter}
-                        onResetFilter={handleResetFilter}
-                        categories={categories}
-                    />
+                    <div className="flex gap-2 mb-6 justify-between items-center">
+                        <div className="w-[90%]">
+                            <Input
+                                type="text"
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                placeholder="Search presets..."
+                                className="w-full focus:ring-2 focus:ring-purple-500 transition-all"
+                            />
 
-                    <div className="col-span-11">
-
-                        <div className='flex flex-col gap-8'>
-                            {isLoading ?
-                                <MarketplaceSkeleton />
-                                :
-
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {filteredItems?.map((item: MarketplaceItem) => (
-                                        <MarketplaceItemCard {...item} key={item.id} />
-                                    ))}
+                            {searchQuery && (
+                                <div className="mt-4">
+                                    <p className='font-bold text-sm'>
+                                        Found <span className='text-purple-500'>{filteredItems?.length}</span> result{filteredItems?.length !== 1 ? 's' : ''} for &quot;<span className='text-purple-500'>{searchQuery}</span>&quot;
+                                    </p>
+                                    <div className='border-t border-gray-200 dark:border-gray-700 mt-3' />
                                 </div>
-                            }
-                            <Pagination>
-                                <PaginationContent>
-                                    <PaginationItem>
-                                        <PaginationPrevious href="#" />
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationLink href="#">1</PaginationLink>
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationLink href="#" isActive>
-                                            2
-                                        </PaginationLink>
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationLink href="#">3</PaginationLink>
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationEllipsis />
-                                    </PaginationItem>
-                                    <PaginationItem>
-                                        <PaginationNext href="#" />
-                                    </PaginationItem>
-                                </PaginationContent>
-                            </Pagination>
+                            )}
+                        </div>
 
-
-                        </div >
+                        <FilterSidebar
+                            filters={filters}
+                            onFilterChange={setFilters}
+                            resetFilter={resetFilter}
+                            onResetFilter={handleResetFilter}
+                            categories={categories}
+                        />
                     </div>
                 </div>
+
+                <div className='flex flex-col gap-8'>
+                    {isLoading ?
+                        <MarketplaceSkeleton />
+                        :
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {filteredItems?.map((item: MarketplaceItem) => (
+                                <MarketplaceItemCard {...item} key={item.id} />
+                            ))}
+                        </div>
+                    }
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious href="#" />
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="#">1</PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="#" isActive>
+                                    2
+                                </PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="#">3</PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationNext href="#" />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+
+
+                </div >
             </div>
         </div>
     );
