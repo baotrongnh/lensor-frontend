@@ -28,7 +28,7 @@ export default function HeroSection({
      videoSrc
 }: HeroSectionProps) {
      return (
-          <section className="relative py-20 lg:py-32 bg-gradient-to-br from-neutral-900 via-purple-900/20 to-neutral-900 text-white overflow-hidden">
+          <section className="relative py-5 pb-10 bg-gradient-to-br from-neutral-900 via-purple-900/20 to-neutral-900 text-white overflow-hidden">
                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
                <div className="container mx-auto px-4 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
