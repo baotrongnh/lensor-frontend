@@ -41,7 +41,7 @@ export default function MainHeader() {
             : <>
               <div className='flex justify-end items-center gap-1'>
                 <div className='flex items-center'>
-                  <Link href={ROUTES.CURRENT_PROFILE} className='max-w-32 overflow-hidden text-nowrap text-ellipsis'>Nguyễn Huỳnh Bảo Trọng</Link>
+                  <Link href={ROUTES.CURRENT_PROFILE} className='max-w-32 overflow-hidden text-nowrap text-ellipsis'>{user?.user_metadata.name}</Link>
                   <DropdownMenuUser><Button variant='ghost' size='icon'><ChevronDown /></Button></DropdownMenuUser>
                 </div>
                 <Link href={ROUTES.CURRENT_PROFILE}>
