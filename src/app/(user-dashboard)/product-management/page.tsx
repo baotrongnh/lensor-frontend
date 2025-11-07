@@ -1,30 +1,16 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { MoreHorizontal } from 'lucide-react'
-import Image from 'next/image'
-import DataTable from './data-table'
+import { useState } from 'react'
 import { useRouter } from "next/navigation"
 import { ROUTES } from "@/constants/path"
-import { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import Editable from "@/components/ui/editable"
-
-export type Product = {
-     id: string
-     imageBefore: string,
-     imageAfter: string,
-     title: string,
-     price: string
-}
-
-// EditableCell component for inline editing
+import { DataTable } from '@/components/ui/data-table-advanced'
+import { createProductColumns, Product } from "./columns"
 
 export default function ProductManagement() {
-     const [data, setData] = useState<Array<Product>>([
+     const router = useRouter()
+
+     // Mock data - replace with API call
+     const [data, setData] = useState<Product[]>([
           {
                id: 'preset_1sfdwz',
                imageAfter: '/images/default-fallback-image.png',
@@ -34,11 +20,13 @@ export default function ProductManagement() {
           }
      ])
 
+     // Action handlers - easy to connect to API
      const handleUpdateTitle = (id: string, newTitle: string) => {
           setData(prev => prev.map(item =>
                item.id === id ? { ...item, title: newTitle } : item
           ))
           console.log(`Updated product ${id} title to: ${newTitle}`)
+          // TODO: Call API to update title
      }
 
      const handleUpdatePrice = (id: string, newPrice: string) => {
@@ -46,131 +34,50 @@ export default function ProductManagement() {
                item.id === id ? { ...item, price: newPrice } : item
           ))
           console.log(`Updated product ${id} price to: ${newPrice}`)
+          // TODO: Call API to update price
      }
 
-     const router = useRouter()
+     const handleEdit = (id: string) => {
+          console.log(`Edit ${id}`)
+          // TODO: Implement edit logic
+     }
 
-     const columns: ColumnDef<Product>[] = [
-          {
-               id: "select",
-               header: ({ table }) => (
-                    <Checkbox
-                         checked={
-                              table.getIsAllPageRowsSelected() ||
-                              (table.getIsSomePageRowsSelected() && "indeterminate")
-                         }
-                         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                         aria-label="Select all"
-                    />
-               ),
-               cell: ({ row }) => (
-                    <Checkbox
-                         checked={row.getIsSelected()}
-                         onCheckedChange={(value) => row.toggleSelected(!!value)}
-                         aria-label="Select row"
-                    />
-               ),
-               enableSorting: false,
-               enableHiding: false,
-          },
-          {
-               accessorKey: "id",
-               header: "ID",
-          },
-          {
-               accessorKey: "imageBefore",
-               header: "Image Before",
-               cell: ({ row }) => {
-                    return (
-                         <div className="w-25 h-20 relative">
-                              <Image
-                                   src={row.getValue("imageBefore")}
-                                   alt="Before"
-                                   fill
-                                   className="object-cover rounded"
-                              />
-                         </div>
-                    )
-               },
-          },
-          {
-               accessorKey: "imageAfter",
-               header: "Image After",
-          },
-          {
-               accessorKey: "title",
-               header: "Title",
-               cell: ({ row }) => (
-                    <Editable
-                         value={row.getValue("title")}
-                         onSave={(newValue) => handleUpdateTitle(row.original.id, newValue)}
-                    />
-               ),
-          },
-          {
-               accessorKey: "price",
-               header: "Price",
-               cell: ({ row }) => (
-                    <Editable
-                         value={row.getValue("price")}
-                         onSave={(newValue) => handleUpdatePrice(row.original.id, newValue)}
-                    />
-               ),
-          },
-          {
-               id: "actions",
-               enableHiding: false,
-               cell: ({ row }) => {
-                    const product = row.original
+     const handleDelete = (id: string) => {
+          console.log(`Delete ${id}`)
+          // TODO: Call API to delete product
+     }
 
-                    const handleEdit = async (id: string) => {
-                         console.log(`Edit ${id}`)
-                    }
+     const handleHide = (id: string) => {
+          console.log(`Hide ${id}`)
+          // TODO: Call API to hide product
+     }
 
-                    const handleDelete = async (id: string) => {
-                         console.log(`Delete ${id}`)
-                    }
+     const handleViewProduct = (id: string) => {
+          router.push(`${ROUTES.MARKETPLACE}/${id}`)
+     }
 
-                    const handleHide = async (id: string) => {
-                         console.log(`Hide ${id}`)
-                    }
-
-                    return (
-                         <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                   <Button variant="ghost" className="h-8 w-8 p-0">
-                                        <span className="sr-only">Open menu</span>
-                                        <MoreHorizontal />
-                                   </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                   <DropdownMenuItem
-                                        onClick={() => navigator.clipboard.writeText(product.id)}
-                                   >
-                                        Copy product ID
-                                   </DropdownMenuItem>
-                                   <DropdownMenuSeparator />
-                                   <DropdownMenuItem onClick={() => router.push(`${ROUTES.MARKETPLACE}/${product.id}`)}>
-                                        View product
-                                   </DropdownMenuItem>
-                                   <DropdownMenuItem onClick={() => handleEdit(product.id)}>Edit</DropdownMenuItem>
-                                   <DropdownMenuItem onClick={() => handleHide(product.id)}>Hide</DropdownMenuItem>
-                                   <DropdownMenuItem
-                                        variant='destructive'
-                                        onClick={() => handleDelete(product.id)}
-                                   >
-                                        Delete
-                                   </DropdownMenuItem>
-                              </DropdownMenuContent>
-                         </DropdownMenu>
-                    )
-               },
-          },
-     ]
+     // Create columns with action callbacks
+     const columns = createProductColumns(
+          handleUpdateTitle,
+          handleUpdatePrice,
+          handleEdit,
+          handleDelete,
+          handleHide,
+          handleViewProduct
+     )
 
      return (
-          <div className="container mx-auto py-10">
-               <DataTable columns={columns} data={data} />
+          <div className="p-5">
+               <div className="bg-accent w-full p-5 rounded-2xl shadow-2xl border">
+                    <h1 className="text-2xl font-bold mb-4">Product Management</h1>
+                    <DataTable
+                         columns={columns}
+                         data={data}
+                         searchKey="title"
+                         searchPlaceholder="Filter by product title..."
+                         pageSize={10}
+                    />
+               </div>
           </div>
      )
 }
