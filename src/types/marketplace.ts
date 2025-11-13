@@ -113,3 +113,14 @@ export type PurchasedPreset = {
   rating?: number
   purchasedDate: string
 }
+
+
+export type CartItemType = {
+  id: string
+  image: string
+  title: string
+  author: string
+  price: number
+  originalPrice?: number
+  quantity: number
+}

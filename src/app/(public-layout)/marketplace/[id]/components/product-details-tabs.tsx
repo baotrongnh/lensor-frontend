@@ -2,7 +2,7 @@ import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Image from 'next/image'
 import { MarketplaceDetail } from '@/types/marketplace'
-import { Star, Shield, ThumbsUp, Check } from 'lucide-react'
+import { Star, Shield, ThumbsUp, Check, Tag } from 'lucide-react'
 
 export default function ProductDetailsTabs({
     description,
@@ -14,7 +14,9 @@ export default function ProductDetailsTabs({
     warranty,
     rating,
     reviewCount,
-    reviews
+    reviews,
+    specifications,
+    tags
 }: MarketplaceDetail) {
     return (
         <div className='mt-12'>
@@ -32,9 +34,29 @@ export default function ProductDetailsTabs({
                         <p className='text-muted-foreground leading-relaxed mb-4'>
                             {description || 'No description available'}
                         </p>
-                        <div className='grid grid-cols-2 gap-4 mt-6'>
+
+                        {tags && tags?.length > 0 && (
+                            <div className='mb-6'>
+                                <h3 className='font-semibold mb-3 flex items-center gap-2'>
+                                    <Tag className='w-4 h-4' />
+                                    Tags
+                                </h3>
+                                <div className='flex flex-wrap gap-2'>
+                                    {tags?.map((tag, index) => (
+                                        <span
+                                            key={index}
+                                            className='px-3 py-1 bg-primary/10 text-primary rounded-full text-sm'
+                                        >
+                                            #{tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className='grid grid-cols-2 gap-6 mt-6'>
                             <div>
-                                <h3 className='font-semibold mb-2'>Specifications</h3>
+                                <h3 className='font-semibold mb-3'>Product Information</h3>
                                 <ul className='space-y-2 text-sm text-muted-foreground'>
                                     <li><strong>Category:</strong> {category || 'N/A'}</li>
                                     <li><strong>File Format:</strong> {fileFormat || 'N/A'}</li>
@@ -43,17 +65,56 @@ export default function ProductDetailsTabs({
                                 </ul>
                             </div>
                             <div>
-                                <h3 className='font-semibold mb-2'>Compatibility</h3>
+                                <h3 className='font-semibold mb-3'>Compatibility</h3>
                                 <ul className='space-y-2 text-sm text-muted-foreground'>
                                     {compatibility?.map((item, index) => (
                                         <li key={index} className='flex items-center gap-2'>
-                                            <Check className='w-4 h-4' />
+                                            <Check className='w-4 h-4 text-green-500' />
                                             {item}
                                         </li>
                                     ))}
                                 </ul>
                             </div>
                         </div>
+
+                        {specifications && (
+                            <div className='mt-6 pt-6 border-t'>
+                                <h3 className='font-semibold mb-4'>Technical Specifications</h3>
+                                <div className='grid grid-cols-2 gap-6'>
+                                    {specifications?.adjustments && specifications?.adjustments?.length > 0 && (
+                                        <div>
+                                            <h4 className='text-sm font-medium mb-2'>Adjustments Included:</h4>
+                                            <ul className='space-y-1 text-sm text-muted-foreground'>
+                                                {specifications?.adjustments?.map((adjustment, index) => (
+                                                    <li key={index} className='flex items-center gap-2'>
+                                                        <Check className='w-3 h-3 text-green-500' />
+                                                        {adjustment}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    {specifications.bestFor && specifications.bestFor.length > 0 && (
+                                        <div>
+                                            <h4 className='text-sm font-medium mb-2'>Best For:</h4>
+                                            <ul className='space-y-1 text-sm text-muted-foreground'>
+                                                {specifications?.bestFor?.map((type, index) => (
+                                                    <li key={index} className='flex items-center gap-2'>
+                                                        <Check className='w-3 h-3 text-green-500' />
+                                                        {type}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            {specifications?.difficulty && (
+                                                <div className='mt-3'>
+                                                    <span className='text-sm'><strong>Difficulty:</strong> {specifications?.difficulty}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </TabsContent>
 
@@ -84,21 +145,29 @@ export default function ProductDetailsTabs({
 
                 <TabsContent value="reviews" className="mt-6">
                     <div className='border rounded-lg p-6'>
-                        <div className='flex items-center justify-between mb-6'>
-                            <h2 className='text-2xl font-bold'>Customer Reviews</h2>
-                            <div className='flex items-center gap-2'>
-                                <div className='flex text-yellow-500'>
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className='w-5 h-5'
-                                            fill={i < Math.floor(rating || 0) ? 'currentColor' : 'none'}
-                                            stroke="currentColor"
-                                        />
-                                    ))}
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl font-bold">Customer Reviews</h2>
+
+                            {rating && rating > 0 ? (
+                                <div className="flex items-center gap-2">
+                                    <div className="flex text-yellow-500">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                className="w-5 h-5"
+                                                fill={i < Math.floor(rating) ? 'currentColor' : 'none'}
+                                                stroke="currentColor"
+                                            />
+                                        ))}
+                                    </div>
+                                    <span className="font-semibold">{rating.toFixed(1)} out of 5</span>
                                 </div>
-                                <span className='font-semibold'>{rating || 0} out of 5</span>
-                            </div>
+                            ) : (
+                                <div className="flex items-center gap-2 text-gray-400">
+                                    <Star className="w-5 h-5" stroke="currentColor" />
+                                    <span className="italic">This product has no reviews yet</span>
+                                </div>
+                            )}
                         </div>
 
                         <div className='space-y-6'>

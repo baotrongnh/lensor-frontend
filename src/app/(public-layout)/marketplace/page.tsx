@@ -8,15 +8,14 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Input } from "@/components/ui/input";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { ROUTES } from '@/constants/path';
 import { useMarketplace } from '@/lib/hooks/useMarketplaceHooks';
 import { MarketplaceItem } from "@/types/marketplace";
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import FilterSidebar from './components/filter-sidebar';
 import MarketplaceItemCard from "./components/marketplace-item-card";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 
 export default function MarketplacePage() {
     const [searchQuery, setSearchQuery] = useState('');

@@ -20,11 +20,9 @@ export default function FilterSidebar({filters, onFilterChange, resetFilter, onR
     return (
         <div className="w-[10%] shrink-0">
             <Popover>
-                <PopoverTrigger className='w-full'>
-                    <Button variant={'secondary'}className='w-full'>
+                <PopoverTrigger className='flex justify-center items-center gap-2 w-full border-1 border-accent bg-primary p-2 rounded-md hover:opacity-80 text-white transition-all'>
                         <Filter className="w-5 h-5" />
-                        Filters
-                    </Button>
+                        <p>Filters</p>
                 </PopoverTrigger>
                 <PopoverContent className="p-6 rounded-xl shadow-md border">
                     <div className="space-y-4">

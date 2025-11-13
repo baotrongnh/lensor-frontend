@@ -9,16 +9,7 @@ import { OrderSummary } from './components/order-summary'
 import { SpecialInstructions } from './components/special-instructions'
 import Link from 'next/link'
 import { ShoppingCart } from 'lucide-react';
-
-interface CartItemType {
-  id: string
-  image: string
-  title: string
-  author: string
-  price: number
-  originalPrice?: number
-  quantity: number
-}
+import { CartItemType } from '@/types/marketplace'
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState<CartItemType[]>([

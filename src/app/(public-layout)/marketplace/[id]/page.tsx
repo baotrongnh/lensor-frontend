@@ -25,6 +25,7 @@ export default function ProductDetail() {
     const { data: item, isLoading, error } = useMarketplaceDetail(id)
     const { data: allItems } = useMarketplace()
 
+
     const relatedProducts = useMemo(() => {
         if (!allItems?.data || !item?.category) return []
 
@@ -81,7 +82,7 @@ export default function ProductDetail() {
 
                     <ProductDetailsTabs {...item} />
 
-                    {relatedProducts.length > 0
+                    {relatedProducts.length > 0 || relatedProducts !== null || relatedProducts !== undefined
                         ?
                         <RelatedProducts items={relatedProducts} />
                         :
