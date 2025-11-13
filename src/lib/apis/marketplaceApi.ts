@@ -10,5 +10,14 @@ export const marketplaceApi = {
      getById: async (id: string) => {
           const res = await apiClient.get(endpoints.product.byId(id))
           return res.data
+     },
+
+     create: async (payload: FormData) => {
+          const res = await apiClient.post(endpoints.product.all, payload, {
+               headers: {
+                    'Content-Type': 'multipart/form-data'
+               }
+          })
+          return res.data
      }
 }

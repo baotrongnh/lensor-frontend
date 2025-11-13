@@ -2,6 +2,7 @@ import { CreditCard, ShoppingCart, Star } from 'lucide-react'
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { MarketplaceDetail } from '@/types/marketplace'
+import { Button } from '@/components/ui/button'
 
 export default function ProductInfo({
     name,
@@ -66,14 +67,14 @@ export default function ProductInfo({
             </div>
 
             <div className='flex gap-3'>
-                <button className='flex-1 bg-primary text-primary-foreground py-3 rounded-md font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2'>
+                <Button size={'lg'} className='flex-1 bg-primary text-primary-foreground py-3 rounded-md font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2'>
                     <ShoppingCart className='w-5 h-5' />
                     Add to Cart
-                </button>
-                <button className='flex-1 bg-secondary text-secondary-foreground py-3 rounded-md font-medium hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2'>
+                </Button>
+                <Button size={'lg'} className='flex-1 bg-secondary text-secondary-foreground py-3 rounded-md font-medium hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2'>
                     <CreditCard className='w-5 h-5' />
                     Buy Now
-                </button>
+                </Button>
             </div>
 
             <div className='text-sm text-muted-foreground'>

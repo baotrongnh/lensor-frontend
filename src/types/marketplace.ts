@@ -124,3 +124,24 @@ export type CartItemType = {
   originalPrice?: number
   quantity: number
 }
+
+export type ImagePairUploaderProps = {
+  onChange?: (pairs: { before: File; after: File }[]) => void
+}
+
+export type PresetItem = {
+  id: string
+  beforeImage: File
+  afterImage: File
+  presetFile: File | PresetFile
+  beforePreview: string
+  afterPreview: string
+  presetFileName: string
+}
+
+export type PresetUploadModalProps = {
+    isOpen: boolean
+    onClose: () => void
+    onSave: (items: PresetItem[]) => void
+    existingItems?: PresetItem[]
+}
