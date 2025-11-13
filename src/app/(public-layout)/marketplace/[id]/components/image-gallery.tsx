@@ -50,7 +50,11 @@ export default function ImageGallery({ imagePairs, name }: Pick<MarketplaceDetai
                         Normal
                     </div>
                     <div className='absolute top-5 left-5 text-sm font-semibold text-white pointer-events-none' data-position="left">
-                        {name || 'Product'}
+                        {
+                            imagePairs && imagePairs.length > 1
+                                ? (name ? `${name} - Preset ${selectedImage + 1}` : 'Product')
+                                : (name ? name : 'Product')
+                        }
                     </div>
                 </ImageComparison>
             </div>

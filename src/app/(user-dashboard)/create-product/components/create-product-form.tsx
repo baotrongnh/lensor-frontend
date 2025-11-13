@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
     Field,
     FieldDescription,
@@ -12,17 +13,16 @@ import {
     FieldSet,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { NotepadText, Palette, Upload, Eye, Paperclip } from 'lucide-react'
+import { Textarea } from '@/components/ui/textarea'
+import { marketplaceApi } from '@/lib/apis/marketplaceApi'
+import { PresetItem } from '@/types/marketplace'
+import { Eye, NotepadText, Palette, Paperclip, Upload } from 'lucide-react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
-import { marketplaceApi } from '@/lib/apis/marketplaceApi'
-import { useRouter } from 'next/navigation'
-import { PresetItem } from '@/types/marketplace'
 import PresetUploadModal from './preset-upload-modal'
-import Image from 'next/image'
 
 const COMPATIBILITY_OPTIONS = [
     'Adobe Lightroom Classic',
@@ -59,7 +59,9 @@ export default function CreateForm() {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [price, setPrice] = useState('')
+    const [displayPrice, setDisplayPrice] = useState<string>("")
     const [originalPrice, setOriginalPrice] = useState('')
+    const [displayOriginalPrice, setDisplayOriginalPrice] = useState<string>("")
     const [category, setCategory] = useState('Presets')
     const [tags, setTags] = useState('')
     const [compatibility, setCompatibility] = useState<string[]>([])
@@ -71,6 +73,7 @@ export default function CreateForm() {
     })
     const [presetItems, setPresetItems] = useState<PresetItem[]>([])
     const [priceError, setPriceError] = useState('')
+    const [originalPriceError, setOriginalPriceError] = useState('')
 
     const handleCompatibilityChange = (option: string, checked: boolean) => {
         setCompatibility(prev =>
@@ -99,13 +102,41 @@ export default function CreateForm() {
     }
 
     const handlePriceChange = (value: string) => {
-        setPrice(value)
-        validatePrice(value, originalPrice)
+        try {
+            const numericValue = value.replace(/\D/g, "");
+
+            if (value && !/^\d*$/.test(value)) {
+                setPriceError('Please enter a valid number')
+                setDisplayPrice(value)
+                return
+            }
+
+            setPrice(numericValue)
+            setDisplayPrice(value)
+            validatePrice(numericValue, originalPrice)
+        } catch (error) {
+            console.error('Error parsing price:', error)
+            setPriceError('Invalid price format')
+        }
     }
 
     const handleOriginalPriceChange = (value: string) => {
-        setOriginalPrice(value)
-        validatePrice(price, value)
+        try {
+            const numericValue = value.replace(/\D/g, "");
+
+            if (value && !/^\d*$/.test(value)) {
+                setOriginalPriceError('Please enter a valid number for original price')
+                setDisplayOriginalPrice(value)
+                return
+            }
+
+            setOriginalPrice(numericValue)
+            setDisplayOriginalPrice(value)
+            validatePrice(price, numericValue)
+        } catch (error) {
+            console.error('Error parsing original price:', error)
+            setOriginalPriceError('Invalid original price format')
+        }
     }
 
     const validatePrice = (currentPrice: string, currentOriginalPrice: string) => {
@@ -117,14 +148,26 @@ export default function CreateForm() {
                 setPriceError('Price cannot be higher than original price')
             } else {
                 setPriceError('')
+                setOriginalPriceError('')
             }
         } else {
             setPriceError('')
+            setOriginalPriceError('')
         }
     }
 
     const handleCreateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        if (priceError) {
+            toast.error('Please fix the price error before submitting')
+            return
+        }
+
+        if (originalPriceError) {
+            toast.error('Please fix the original price error before submitting')
+            return
+        }
 
         if (presetItems.length === 0) {
             toast.error('Please add at least one preset item with before/after images and preset file')
@@ -279,10 +322,10 @@ export default function CreateForm() {
                                             </FieldLabel>
                                             <Input
                                                 id="product-price"
-                                                placeholder="e.g. 250000"
-                                                type="number"
+                                                placeholder="e.g. 250000 or 250.000"
+                                                type="text"
                                                 required
-                                                value={price}
+                                                value={displayPrice}
                                                 onChange={e => handlePriceChange(e.target.value)}
                                                 className={priceError ? 'border-red-500' : ''}
                                             />
@@ -297,11 +340,14 @@ export default function CreateForm() {
                                             </FieldLabel>
                                             <Input
                                                 id="product-originalPrice"
-                                                placeholder="e.g. 499000"
-                                                type="number"
-                                                value={originalPrice}
+                                                placeholder="e.g. 499000 or 499.000"
+                                                type="text"
+                                                value={displayOriginalPrice}
                                                 onChange={e => handleOriginalPriceChange(e.target.value)}
                                             />
+                                            {originalPriceError && (
+                                                <p className="text-sm text-red-500 mt-1">{originalPriceError}</p>
+                                            )}
                                             <FieldDescription>
                                                 Discount will be calculated automatically
                                             </FieldDescription>
@@ -524,7 +570,7 @@ export default function CreateForm() {
                                                     </div>
                                                 </div>
                                                 <p className="flex justify-start items-center gap-2 text-xs text-muted-foreground truncate">
-                                                    <Paperclip size={18}/>{item.presetFileName}
+                                                    <Paperclip size={18} />{item.presetFileName}
                                                 </p>
                                             </div>
                                         ))}
