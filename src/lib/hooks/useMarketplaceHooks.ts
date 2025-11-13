@@ -15,3 +15,11 @@ export const useMarketplaceDetail = (id: string) => {
      const data = dataRaw?.data
      return { data, error, isLoading, mutate }
 }
+
+export const useOwnProducts = () => {
+     const { data, error, isLoading, mutate, isValidating } = useSWR(
+          endpoints.product.all + '/me',
+          marketplaceApi.getOwn
+     )
+     return { data, error, isLoading, mutate, isValidating }
+}
