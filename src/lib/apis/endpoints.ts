@@ -55,5 +55,10 @@ export const endpoints = {
      order: {
           sold: `${API_PREFIX}/orders/sold`,
           withdraw: (orderId: string) => `${API_PREFIX}/orders/${orderId}/withdraw`
+     },
+     user: {
+          byId: (id: string) => `${API_PREFIX}/users/${id}`,
+          follow: (id: string) => `${API_PREFIX}/users/${id}/follow`,
+          unfollow: (id: string) => `${API_PREFIX}/users/${id}/unfollow`
      }
 }

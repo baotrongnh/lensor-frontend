@@ -3,18 +3,56 @@
 import { LostConnect } from '@/components/empty/lost-connect'
 import Post from '@/components/forum/post/post'
 import PostSkeleton from '@/components/forum/post/post-skeleton'
-import { usePosts } from '@/lib/hooks/usePostHooks'
+import { userApi } from '@/lib/apis/userApi'
+import { useUserStore } from '@/stores/user-store'
 import { PostType } from '@/types/post'
+import { UserPost } from '@/types'
 import { FileText } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 export default function PostSection() {
-  const { data, error, isLoading, mutate } = usePosts()
+  const user = useUserStore(state => state.user)
+  const [posts, setPosts] = useState<PostType[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(false)
 
-  if (error) return <LostConnect refecth={mutate} />
+  useEffect(() => {
+    fetchUserPosts()
+  }, [user])
+
+  const fetchUserPosts = async () => {
+    if (!user?.id) return
+
+    try {
+      setIsLoading(true)
+      setError(false)
+      const { data } = await userApi.getUserProfile(user.id)
+      const userPosts = data.posts.map((post: UserPost) => ({
+        ...post,
+        user: {
+          id: data.id,
+          name: data.name,
+          avatarUrl: data.avatarUrl,
+          isFollowed: false
+        },
+        voteCount: 0,
+        commentCount: 0,
+        isLiked: false
+      })) as PostType[]
+      setPosts(userPosts)
+    } catch (err) {
+      console.error('Error fetching user posts:', err)
+      setError(true)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (error) return <LostConnect refecth={fetchUserPosts} />
 
   if (isLoading) return <PostSkeleton />
 
-  if (!data?.data || data.data.length === 0) {
+  if (posts.length === 0) {
     return (
       <div className='flex flex-col items-center justify-center py-16 px-4 text-center'>
         <FileText className='h-16 w-16 text-muted-foreground mb-4' />
@@ -28,7 +66,7 @@ export default function PostSection() {
 
   return (
     <div className='space-y-4'>
-      {data.data.map((post: PostType) => (
+      {posts.map((post: PostType) => (
         <div key={post.id} className='border border-border/40 rounded-2xl overflow-hidden'>
           <Post dataPost={post} />
         </div>
@@ -36,4 +74,3 @@ export default function PostSection() {
     </div>
   )
 }
-

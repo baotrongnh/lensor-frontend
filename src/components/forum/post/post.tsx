@@ -6,7 +6,7 @@ import { usePosts, useCheckSavedPost } from "@/lib/hooks/usePostHooks"
 import { useUserStore } from "@/stores/user-store"
 import { PostType } from '@/types/post'
 import clsx from 'clsx'
-import { Dot, Ellipsis, Heart, ImageIcon, MessageCircle, Share2 } from "lucide-react"
+import { Dot, Ellipsis, Heart, ImageIcon, MessageCircle, Share2, AlertTriangle, Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -18,6 +18,15 @@ import DialogComment from "./dialog-comment"
 import { DialogShare } from "./dialog-share"
 import DropdownMenuPost from "./dropdown-menu-post"
 import { useTranslations } from "next-intl"
+import { formatDistanceToNow } from 'date-fns'
+
+const getTimeAgo = (dateString: string) => {
+     try {
+          return formatDistanceToNow(new Date(dateString), { addSuffix: true })
+     } catch {
+          return dateString
+     }
+}
 
 export default function Post({ dataPost, isDetailView = false }: { dataPost: PostType, isDetailView?: boolean }) {
      const t = useTranslations("Forum")
@@ -30,6 +39,7 @@ export default function Post({ dataPost, isDetailView = false }: { dataPost: Pos
      const [isFollowing, setIsFollowing] = useState(dataPost?.user.isFollowed || false)
      const [imageError, setImageError] = useState(false)
      const [isSaved, setIsSaved] = useState(false)
+     const [showNSFWContent, setShowNSFWContent] = useState(false)
      const { mutate } = usePosts()
      const user = useUserStore(state => state.user)
      const { data: savedData, mutate: mutateSaved } = useCheckSavedPost(dataPost?.id)
@@ -113,7 +123,7 @@ export default function Post({ dataPost, isDetailView = false }: { dataPost: Pos
           <div className='p-5 hover:backdrop-brightness-95 dark:hover:backdrop-brightness-0 rounded-2xl duration-300 my-3'>
                <div className='flex items-center justify-between'>
                     <div className='flex items-center'>
-                         <Link href={ROUTES.PROFILE('id-abc-test')} className="hover:opacity-80 duration-300">
+                         <Link href={ROUTES.PROFILE(dataPost?.user.id)} className="hover:opacity-80 duration-300">
                               <Avatar>
                                    <AvatarImage src={dataPost?.user.avatarUrl} />
                                    <AvatarFallback>{dataPost?.user.name}</AvatarFallback>
@@ -123,7 +133,7 @@ export default function Post({ dataPost, isDetailView = false }: { dataPost: Pos
                               {dataPost?.user.name}
                          </Link>
                          <Dot />
-                         <span className='text-[var(--color-text-muted)]'>{dataPost?.createdAt}</span>
+                         <span className='text-[var(--color-text-muted)]'>{getTimeAgo(dataPost?.createdAt)}</span>
                     </div>
                     <div className='flex items-center gap-3'>
                          <Button
@@ -156,19 +166,50 @@ export default function Post({ dataPost, isDetailView = false }: { dataPost: Pos
                     {dataPost?.content}
                </p>
 
-               <Card className='relative w-full aspect-[3/2] flex justify-center items-center mt-3 bg-muted/30'>
+               <Card className='relative w-full aspect-[3/2] flex justify-center items-center mt-3 bg-muted/30 overflow-hidden'>
                     {dataPost?.imageUrl && !imageError ? (
-                         <Image
-                              src={`${BASE_URL}${dataPost?.imageUrl}`}
-                              fill
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              alt={dataPost?.title || "Post image"}
-                              className="object-contain rounded-2xl"
-                              unoptimized
-                              onError={(e) => {
-                                   setImageError(true)
-                              }}
-                         />
+                         <>
+                              <Image
+                                   src={`${BASE_URL}${dataPost?.imageUrl}`}
+                                   fill
+                                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                   alt={dataPost?.title || "Post image"}
+                                   className={clsx(
+                                        "object-contain transition-all duration-300",
+                                        dataPost?.isNSFW && !showNSFWContent && "blur-2xl"
+                                   )}
+                                   unoptimized
+                                   onError={(e) => {
+                                        setImageError(true)
+                                   }}
+                              />
+                              {dataPost?.isNSFW && !showNSFWContent && (
+                                   <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-background/80">
+                                        <div className="flex flex-col items-center gap-3">
+                                             <AlertTriangle className="h-12 w-12 text-red-500" />
+                                             <h3 className="text-lg font-semibold">18+ Sensitive Content</h3>
+                                             <Button
+                                                  variant="destructive"
+                                                  onClick={() => setShowNSFWContent(true)}
+                                             >
+                                                  <Eye className="mr-2 h-4 w-4" />
+                                                  View Content
+                                             </Button>
+                                        </div>
+                                   </div>
+                              )}
+                              {dataPost?.isNSFW && showNSFWContent && (
+                                   <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        className="absolute top-4 right-4 z-10"
+                                        onClick={() => setShowNSFWContent(false)}
+                                   >
+                                        <EyeOff className="mr-2 h-4 w-4" />
+                                        Hide
+                                   </Button>
+                              )}
+                         </>
                     ) : (
                          <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                               <ImageIcon size={48} />
