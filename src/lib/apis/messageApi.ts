@@ -20,5 +20,10 @@ export const messageApi = {
      createRoomChat: async (payload: { name: string, type: string, participantIds: [id: string] }) => {
           const res = await apiClient.post(endpoints.message.all, payload)
           return res.data
+     },
+
+     createDirectChat: async (otherUserId: string) => {
+          const res = await apiClient.post(endpoints.message.createDirect(otherUserId))
+          return res.data
      }
 }
