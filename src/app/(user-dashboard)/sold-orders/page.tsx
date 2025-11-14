@@ -11,6 +11,10 @@ import { OrderDetailsDialog } from './components/order-details-dialog';
 import { OrderStats } from './components/order-stats';
 import { OrdersTable } from './components/orders-table';
 import { WithdrawDialog } from './components/withdraw-dialog';
+import { withdrawalApi } from '@/lib/apis/withdrawalApi';
+import { Button } from '@/components/ui/button';
+import { Wallet } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function SoldOrdersPage() {
      const [orders, setOrders] = useState<SoldOrder[]>([]);
@@ -18,6 +22,7 @@ export default function SoldOrdersPage() {
      const [loading, setLoading] = useState(false);
      const [activeTab, setActiveTab] = useState<'all' | OrderStatus>('all');
      const [selectedOrder, setSelectedOrder] = useState<SoldOrder | null>(null);
+     const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
      const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
      const [isWithdrawDialogOpen, setIsWithdrawDialogOpen] = useState(false);
      const [isWithdrawing, setIsWithdrawing] = useState(false);
@@ -29,6 +34,12 @@ export default function SoldOrdersPage() {
      useEffect(() => {
           filterOrders();
      }, [activeTab, orders]);
+
+     useEffect(() => {
+          if (activeTab !== 'ready_for_withdrawal') {
+               setSelectedOrders([]);
+          }
+     }, [activeTab]);
 
      const fetchOrders = async () => {
           try {
@@ -57,30 +68,60 @@ export default function SoldOrdersPage() {
      };
 
      const handleWithdrawClick = (order: SoldOrder) => {
-          setSelectedOrder(order);
+          setSelectedOrders([order.id]);
           setIsWithdrawDialogOpen(true);
+     };
+
+     const handleBulkWithdrawClick = () => {
+          if (selectedOrders.length === 0) {
+               toast.error('Please select orders to withdraw');
+               return;
+          }
+          setIsWithdrawDialogOpen(true);
+     };
+
+     const handleOrderSelect = (orderId: string, checked: boolean) => {
+          if (checked) {
+               setSelectedOrders([...selectedOrders, orderId]);
+          } else {
+               setSelectedOrders(selectedOrders.filter(id => id !== orderId));
+          }
+     };
+
+     const handleSelectAll = (checked: boolean) => {
+          if (checked) {
+               const withdrawableOrderIds = filteredOrders
+                    .filter(order => order.canWithdraw === true)
+                    .map(order => order.id);
+               setSelectedOrders(withdrawableOrderIds);
+          } else {
+               setSelectedOrders([]);
+          }
      };
 
      const handleWithdrawFromDetails = () => {
           if (selectedOrder) {
                setIsDetailDialogOpen(false);
+               setSelectedOrders([selectedOrder.id]);
                setIsWithdrawDialogOpen(true);
           }
      };
 
-     const handleWithdraw = async () => {
-          if (!selectedOrder) return;
-
+     const handleWithdraw = async (bankCardId: string, orderIds: string[], note?: string) => {
           try {
                setIsWithdrawing(true);
-               await orderApi.withdrawOrder(selectedOrder.id);
-               toast.success('Withdrawal successful! Funds have been added to your wallet.');
+               await withdrawalApi.createWithdrawal({
+                    bankCardId,
+                    orderIds,
+                    note
+               });
+               toast.success('Withdrawal request submitted successfully!');
                setIsWithdrawDialogOpen(false);
-               setSelectedOrder(null);
+               setSelectedOrders([]);
                fetchOrders();
           } catch (error: any) {
-               console.error('Error withdrawing:', error);
-               toast.error(error.response?.data?.message || 'Failed to withdraw funds');
+               console.error('Error creating withdrawal:', error);
+               toast.error(error.response?.data?.message || 'Failed to create withdrawal request');
           } finally {
                setIsWithdrawing(false);
           }
@@ -98,6 +139,38 @@ export default function SoldOrdersPage() {
 
                {/* Stats Cards */}
                <OrderStats orders={orders} />
+
+               {/* Bulk Actions Bar */}
+               {filteredOrders.some(o => o.canWithdraw === true) && (
+                    <Card className="bg-muted/50">
+                         <CardContent className="flex items-center justify-between p-4">
+                              <div className="flex items-center gap-4">
+                                   <Checkbox
+                                        id="select-all"
+                                        checked={
+                                             selectedOrders.length > 0 &&
+                                             selectedOrders.length === filteredOrders.filter(o => o.canWithdraw === true).length
+                                        }
+                                        onCheckedChange={handleSelectAll}
+                                   />
+                                   <label htmlFor="select-all" className="text-sm font-medium cursor-pointer">
+                                        Select All ({filteredOrders.filter(o => o.canWithdraw === true).length})
+                                   </label>
+                                   {selectedOrders.length > 0 && (
+                                        <span className="text-sm text-muted-foreground">
+                                             {selectedOrders.length} selected
+                                        </span>
+                                   )}
+                              </div>
+                              {selectedOrders.length > 0 && (
+                                   <Button onClick={handleBulkWithdrawClick}>
+                                        <Wallet className="mr-2 h-4 w-4" />
+                                        Withdraw Selected ({selectedOrders.length})
+                                   </Button>
+                              )}
+                         </CardContent>
+                    </Card>
+               )}
 
                {/* Orders Table */}
                <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)}>
@@ -132,6 +205,9 @@ export default function SoldOrdersPage() {
                                              orders={filteredOrders}
                                              onViewDetails={handleViewDetails}
                                              onWithdraw={handleWithdrawClick}
+                                             selectedOrders={selectedOrders}
+                                             onOrderSelect={handleOrderSelect}
+                                             showCheckboxes={filteredOrders.some(o => o.canWithdraw === true)}
                                         />
                                    )}
                               </CardContent>
@@ -148,7 +224,7 @@ export default function SoldOrdersPage() {
                />
 
                <WithdrawDialog
-                    order={selectedOrder}
+                    orders={orders.filter(o => selectedOrders.includes(o.id))}
                     open={isWithdrawDialogOpen}
                     onOpenChange={setIsWithdrawDialogOpen}
                     onConfirm={handleWithdraw}

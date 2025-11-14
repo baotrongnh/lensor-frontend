@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
      DropdownMenu,
      DropdownMenuContent,
@@ -30,9 +31,12 @@ interface OrdersTableProps {
      orders: SoldOrder[];
      onViewDetails: (order: SoldOrder) => void;
      onWithdraw: (order: SoldOrder) => void;
+     selectedOrders?: string[];
+     onOrderSelect?: (orderId: string, checked: boolean) => void;
+     showCheckboxes?: boolean;
 }
 
-export function OrdersTable({ orders, onViewDetails, onWithdraw }: OrdersTableProps) {
+export function OrdersTable({ orders, onViewDetails, onWithdraw, selectedOrders = [], onOrderSelect, showCheckboxes = false }: OrdersTableProps) {
      const getStatusBadge = (status: OrderStatus) => {
           const statusConfig: Record<OrderStatus, { variant: any; label: string; icon: React.ReactNode; className?: string }> = {
                ready_for_withdrawal: {
@@ -71,6 +75,16 @@ export function OrdersTable({ orders, onViewDetails, onWithdraw }: OrdersTablePr
           };
 
           const config = statusConfig[status];
+
+          if (!config) {
+               return (
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                         <Clock className="h-3 w-3" />
+                         {status}
+                    </Badge>
+               );
+          }
+
           return (
                <Badge variant={config.variant} className={`flex items-center gap-1 ${config.className || ''}`}>
                     {config.icon}
@@ -118,6 +132,7 @@ export function OrdersTable({ orders, onViewDetails, onWithdraw }: OrdersTablePr
                <Table>
                     <TableHeader>
                          <TableRow>
+                              {showCheckboxes && <TableHead className="w-12"></TableHead>}
                               <TableHead>Order ID</TableHead>
                               <TableHead>Status</TableHead>
                               <TableHead>Products</TableHead>
@@ -128,73 +143,91 @@ export function OrdersTable({ orders, onViewDetails, onWithdraw }: OrdersTablePr
                          </TableRow>
                     </TableHeader>
                     <TableBody>
-                         {orders.map((order) => (
-                              <TableRow key={order.id}>
-                                   <TableCell className="font-mono text-xs">
-                                        {order.id.substring(0, 8)}...
-                                   </TableCell>
-                                   <TableCell>{getStatusBadge(order.status)}</TableCell>
-                                   <TableCell>
-                                        <div className="max-w-[200px]">
-                                             {order.sellerItems.map((item, idx) => (
-                                                  <div key={idx} className="text-sm truncate">
-                                                       {item.productTitle} ({item.quantity}x)
-                                                  </div>
-                                             ))}
-                                        </div>
-                                   </TableCell>
-                                   <TableCell className="font-semibold">
-                                        {formatCurrency(order.sellerEarnings)}
-                                   </TableCell>
-                                   <TableCell>
-                                        {order.canWithdraw ? (
-                                             <Badge className="bg-green-500">
-                                                  <CheckCircle className="h-3 w-3 mr-1" />
-                                                  Available
-                                             </Badge>
-                                        ) : (
-                                             <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                                  <CalendarClock className="h-3 w-3" />
-                                                  {getTimeUntilWithdrawable(order.withdrawableAt)}
-                                             </div>
-                                        )}
-                                   </TableCell>
-                                   <TableCell className="text-sm">
-                                        {formatDate(order.createdAt)}
-                                   </TableCell>
-                                   <TableCell>
-                                        <DropdownMenu>
-                                             <DropdownMenuTrigger asChild>
-                                                  <Button
-                                                       size="sm"
-                                                       variant="ghost"
-                                                       className="h-8 w-8 p-0"
-                                                  >
-                                                       <MoreVertical className="h-4 w-4" />
-                                                  </Button>
-                                             </DropdownMenuTrigger>
-                                             <DropdownMenuContent align="end">
-                                                  <DropdownMenuItem
-                                                       onClick={() => onViewDetails(order)}
-                                                       className="cursor-pointer"
-                                                  >
-                                                       <Eye className="mr-2 h-4 w-4" />
-                                                       View Details
-                                                  </DropdownMenuItem>
-                                                  {order.canWithdraw && order.status === 'ready_for_withdrawal' && (
-                                                       <DropdownMenuItem
-                                                            onClick={() => onWithdraw(order)}
-                                                            className="cursor-pointer text-green-600"
-                                                       >
-                                                            <Wallet className="mr-2 h-4 w-4" />
-                                                            Withdraw Funds
-                                                       </DropdownMenuItem>
+                         {orders.map((order) => {
+                              // Order có thể rút khi: canWithdraw = true (backend quyết định)
+                              const isWithdrawable = order.canWithdraw === true;
+                              const isSelected = selectedOrders.includes(order.id);
+
+                              return (
+                                   <TableRow key={order.id}>
+                                        {showCheckboxes && (
+                                             <TableCell>
+                                                  {isWithdrawable && (
+                                                       <Checkbox
+                                                            checked={isSelected}
+                                                            onCheckedChange={(checked) =>
+                                                                 onOrderSelect?.(order.id, checked as boolean)
+                                                            }
+                                                       />
                                                   )}
-                                             </DropdownMenuContent>
-                                        </DropdownMenu>
-                                   </TableCell>
-                              </TableRow>
-                         ))}
+                                             </TableCell>
+                                        )}
+                                        <TableCell className="font-mono text-xs">
+                                             {order.id.substring(0, 8)}...
+                                        </TableCell>
+                                        <TableCell>{getStatusBadge(order.status)}</TableCell>
+                                        <TableCell>
+                                             <div className="max-w-[200px]">
+                                                  {order.sellerItems.map((item, idx) => (
+                                                       <div key={idx} className="text-sm truncate">
+                                                            {item.productTitle} ({item.quantity}x)
+                                                       </div>
+                                                  ))}
+                                             </div>
+                                        </TableCell>
+                                        <TableCell className="font-semibold">
+                                             {formatCurrency(order.sellerEarnings)}
+                                        </TableCell>
+                                        <TableCell>
+                                             {order.canWithdraw ? (
+                                                  <Badge className="bg-green-500">
+                                                       <CheckCircle className="h-3 w-3 mr-1" />
+                                                       Available
+                                                  </Badge>
+                                             ) : (
+                                                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                                       <CalendarClock className="h-3 w-3" />
+                                                       {getTimeUntilWithdrawable(order.withdrawableAt)}
+                                                  </div>
+                                             )}
+                                        </TableCell>
+                                        <TableCell className="text-sm">
+                                             {formatDate(order.createdAt)}
+                                        </TableCell>
+                                        <TableCell>
+                                             <DropdownMenu>
+                                                  <DropdownMenuTrigger asChild>
+                                                       <Button
+                                                            size="sm"
+                                                            variant="ghost"
+                                                            className="h-8 w-8 p-0"
+                                                       >
+                                                            <MoreVertical className="h-4 w-4" />
+                                                       </Button>
+                                                  </DropdownMenuTrigger>
+                                                  <DropdownMenuContent align="end">
+                                                       <DropdownMenuItem
+                                                            onClick={() => onViewDetails(order)}
+                                                            className="cursor-pointer"
+                                                       >
+                                                            <Eye className="mr-2 h-4 w-4" />
+                                                            View Details
+                                                       </DropdownMenuItem>
+                                                       {isWithdrawable && (
+                                                            <DropdownMenuItem
+                                                                 onClick={() => onWithdraw(order)}
+                                                                 className="cursor-pointer text-green-600"
+                                                            >
+                                                                 <Wallet className="mr-2 h-4 w-4" />
+                                                                 Withdraw Funds
+                                                            </DropdownMenuItem>
+                                                       )}
+                                                  </DropdownMenuContent>
+                                             </DropdownMenu>
+                                        </TableCell>
+                                   </TableRow>
+                              );
+                         })}
                     </TableBody>
                </Table>
           </div>
