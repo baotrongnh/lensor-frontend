@@ -39,5 +39,10 @@ export const marketplaceApi = {
      delete: async (id: string) => {
           const res = await apiClient.delete(endpoints.product.byId(id))
           return res.data
+     },
+
+     createReview: async (productId: string, payload: { rating: number; comment: string }) => {
+          const res = await apiClient.post(endpoints.review.byProductId(productId), payload)
+          return res.data
      }
 }

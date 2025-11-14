@@ -10,6 +10,8 @@ import { useOwnProducts } from "@/lib/hooks/useMarketplaceHooks"
 import { MarketplaceItem } from "@/types/marketplace"
 import { EditProductDialog } from "./components/edit-product-dialog"
 import { DeleteProductDialog } from "./components/delete-product-dialog"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export default function ProductManagement() {
      const router = useRouter()
@@ -91,7 +93,12 @@ export default function ProductManagement() {
      return (
           <div className="p-5">
                <div className="bg-accent w-full p-5 rounded-2xl shadow-2xl border">
-                    <h1 className="text-2xl font-bold mb-4">Product Management</h1>
+                    <div className="flex justify-between items-center ">
+                         <h1 className="text-2xl font-bold mb-4">Product Management</h1>
+                         <Link href={'/create-product'}>
+                              <Button>Create Product</Button>
+                         </Link>
+                    </div>
                     <DataTable
                          columns={columns}
                          data={data}

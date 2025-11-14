@@ -74,8 +74,9 @@ export default function ImageGallery({ imagePairs, name }: Pick<MarketplaceDetai
                             src={getImageSrc(image?.after)}
                             alt={`${name || 'Product'} - Preview ${index + 1}`}
                             fill
+                            sizes="80px"
+                            loading='lazy'
                             className='rounded-md object-cover hover:opacity-80 transition-opacity'
-                            unoptimized
                             onError={(e) => {
                                 const target = e.target as HTMLImageElement;
                                 target.src = '/images/default-fallback-image.png';

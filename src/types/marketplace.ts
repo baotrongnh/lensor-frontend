@@ -77,14 +77,19 @@ export type MarketplaceDetail = {
 }
 
 export type Review = {
-  id?: string
-  userId?: string
-  userName?: string
+  id: string
+  userId: string
+  userName: string
   userAvatar?: string
-  rating?: number
-  comment?: string
-  createdAt?: string
+  rating: number
+  comment: string
+  createdAt: string
   helpful?: number
+}
+
+export type CreateReviewPayload = {
+  rating: number
+  comment: string
 }
 
 export type FilterSidebarProps = {
@@ -140,8 +145,13 @@ export type PresetItem = {
 }
 
 export type PresetUploadModalProps = {
-    isOpen: boolean
-    onClose: () => void
-    onSave: (items: PresetItem[]) => void
-    existingItems?: PresetItem[]
+  isOpen: boolean
+  onClose: () => void
+  onSave: (items: PresetItem[]) => void
+  existingItems?: PresetItem[]
+}
+
+export type ReviewFormProps = {
+    productId: string
+    onSuccess?: () => void
 }

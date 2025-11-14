@@ -1,10 +1,13 @@
-import React from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import Image from 'next/image'
 import { MarketplaceDetail } from '@/types/marketplace'
-import { Star, Shield, ThumbsUp, Check, Tag } from 'lucide-react'
+import { Check, Shield, Star, Tag, User } from 'lucide-react'
+import React from 'react'
+import ReviewForm from './review-form'
 
 export default function ProductDetailsTabs({
+    id,
     description,
     category,
     fileFormat,
@@ -16,8 +19,9 @@ export default function ProductDetailsTabs({
     reviewCount,
     reviews,
     specifications,
-    tags
-}: MarketplaceDetail) {
+    tags,
+    onReviewSuccess
+}: MarketplaceDetail & { onReviewSuccess?: () => void }) {
     return (
         <div className='mt-12'>
             <Tabs defaultValue="description" className="w-full">
@@ -144,68 +148,126 @@ export default function ProductDetailsTabs({
 
 
                 <TabsContent value="reviews" className="mt-6">
-                    <div className='border rounded-lg p-6'>
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl font-bold">Customer Reviews</h2>
-
-                            {rating && rating > 0 ? (
-                                <div className="flex items-center gap-2">
-                                    <div className="flex text-yellow-500">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                className="w-5 h-5"
-                                                fill={i < Math.floor(rating) ? 'currentColor' : 'none'}
-                                                stroke="currentColor"
-                                            />
-                                        ))}
-                                    </div>
-                                    <span className="font-semibold">{rating.toFixed(1)} out of 5</span>
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-2 text-gray-400">
-                                    <Star className="w-5 h-5" stroke="currentColor" />
-                                    <span className="italic">This product has no reviews yet</span>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className='space-y-6'>
-                            {reviews?.map((review) => (
-                                <div key={review?.id} className='border-b pb-6 last:border-b-0'>
-                                    <div className='flex items-start gap-4'>
-                                        <Image
-                                            src={review?.userAvatar || '/images/default_avatar.jpg'}
-                                            alt={review?.userName || 'User'}
-                                            width={48}
-                                            height={48}
-                                            className='rounded-full'
-                                            unoptimized
-                                        />
-                                        <div className='flex-1'>
-                                            <div className='flex items-center justify-between mb-2'>
-                                                <h4 className='font-semibold'>{review?.userName || 'Anonymous'}</h4>
-                                                <span className='text-sm text-muted-foreground'>{review?.createdAt ? new Date(review?.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}</span>
-                                            </div>
-                                            <div className='flex text-yellow-500 mb-2'>
+                    <div className='space-y-6'>
+                        <div className='border rounded-lg p-6 bg-gradient-to-br from-background to-muted/20'>
+                            <h2 className="text-2xl font-bold mb-6">Customer Reviews</h2>
+                            <div className='grid md:grid-cols-3 gap-6'>
+                                <div className='flex flex-col items-center justify-center p-6 bg-background rounded-lg border'>
+                                    {rating && rating > 0 ? (
+                                        <>
+                                            <div className='text-5xl font-bold mb-2'>{rating.toFixed(1)}</div>
+                                            <div className="flex text-yellow-500 mb-2">
                                                 {[...Array(5)].map((_, i) => (
                                                     <Star
                                                         key={i}
-                                                        className='w-4 h-4'
-                                                        fill={i < (review?.rating || 0) ? 'currentColor' : 'none'}
+                                                        className="w-5 h-5"
+                                                        fill={i < Math.floor(rating) ? 'currentColor' : 'none'}
                                                         stroke="currentColor"
                                                     />
                                                 ))}
                                             </div>
-                                            <p className='text-muted-foreground mb-2'>{review?.comment || 'No comment'}</p>
-                                            <button className='text-sm text-muted-foreground hover:text-foreground flex items-center gap-1'>
-                                                <ThumbsUp className='w-4 h-4' />
-                                                Helpful ({review?.helpful || 0})
-                                            </button>
-                                        </div>
-                                    </div>
+                                            <p className='text-sm text-muted-foreground'>{reviewCount || 0} {reviewCount === 1 ? 'review' : 'reviews'}</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Star className="w-16 h-16 text-muted-foreground/20 mb-2" stroke="currentColor" />
+                                            <p className='text-sm text-muted-foreground text-center'>No reviews yet</p>
+                                        </>
+                                    )}
                                 </div>
-                            ))}
+
+                                <div className='md:col-span-2 space-y-3'>
+                                    {[5, 4, 3, 2, 1].map((star) => {
+                                        const count = reviews?.filter(r => r.rating === star).length || 0
+                                        const percentage = (reviewCount || 0) > 0 ? (count / (reviewCount || 1)) * 100 : 0
+
+                                        return (
+                                            <div key={star} className='flex items-center gap-3'>
+                                                <div className='flex items-center gap-1 w-20'>
+                                                    <span className='text-sm font-medium'>{star}</span>
+                                                    <Star className='w-4 h-4 text-yellow-500 fill-yellow-500' />
+                                                </div>
+                                                <div className='flex-1 h-2 bg-muted rounded-full overflow-hidden'>
+                                                    <div
+                                                        className='h-full bg-yellow-500 transition-all duration-300'
+                                                        style={{ width: `${percentage}%` }}
+                                                    />
+                                                </div>
+                                                <span className='text-sm text-muted-foreground w-12 text-right'>{count}</span>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+
+                        <ReviewForm productId={id} onSuccess={onReviewSuccess} />
+
+                        <div className='border rounded-lg p-6'>
+                            <h3 className='text-xl font-semibold mb-6'>All Reviews ({reviewCount || 0})</h3>
+
+                            {reviews && reviews?.length > 0 ? (
+                                <div className='space-y-6'>
+                                    {reviews?.map((review, index) => (
+                                        <React.Fragment key={review?.id}>
+                                            <div className='flex items-start gap-4'>
+                                                <Avatar className='w-12 h-12'>
+                                                    <AvatarImage
+                                                        src={review?.userAvatar || '/images/default_avatar.jpg'}
+                                                        alt={review?.userName || 'User'}
+                                                    />
+                                                    <AvatarFallback>
+                                                        <User className='w-6 h-6' />
+                                                    </AvatarFallback>
+                                                </Avatar>
+
+                                                <div className='flex-1 space-y-3'>
+                                                    <div className='flex items-start justify-between gap-4'>
+                                                        <div>
+                                                            <div className='flex items-center gap-2 mb-1'>
+                                                                <h4 className='font-semibold'>{review?.userName || 'Anonymous'}</h4>
+                                                                {/* <Badge variant='outline' className='text-xs'>Verified Purchase</Badge> */}
+                                                            </div>
+                                                            <div className='flex items-center gap-3'>
+                                                                <div className='flex text-yellow-500'>
+                                                                    {[...Array(5)].map((_, i) => (
+                                                                        <Star
+                                                                            key={i}
+                                                                            className='w-4 h-4'
+                                                                            fill={i < (review?.rating || 0) ? 'currentColor' : 'none'}
+                                                                            stroke="currentColor"
+                                                                        />
+                                                                    ))}
+                                                                </div>
+                                                                <span className='text-sm text-muted-foreground'>
+                                                                    {review?.createdAt ? new Date(review?.createdAt).toLocaleDateString('en-US', {
+                                                                        year: 'numeric',
+                                                                        month: 'short',
+                                                                        day: 'numeric'
+                                                                    }) : 'N/A'}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <p className='text-muted-foreground leading-relaxed'>
+                                                        {review?.comment || 'No comment provided'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            {index < reviews?.length - 1 && <Separator className='my-6' />}
+                                        </React.Fragment>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className='flex flex-col items-center justify-center py-12 text-center'>
+                                    <div className='w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4'>
+                                        <Star className='w-10 h-10 text-muted-foreground/50' />
+                                    </div>
+                                    <h4 className='text-lg font-semibold mb-2'>No reviews yet</h4>
+                                    <p className='text-muted-foreground mb-4'>Be the first to share your experience with this preset!</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </TabsContent>

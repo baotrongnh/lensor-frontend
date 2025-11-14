@@ -13,7 +13,7 @@ export default function MarketplaceItemCard(item: MarketplaceItem) {
     const getImageSrc = () => {
         if (imageError) return '/images/default-fallback-image.png';
         if (!item?.thumbnail) return '/images/default-fallback-image.png';
-        
+
         if (item?.thumbnail.startsWith('http')) {
             return item?.thumbnail;
         }
@@ -23,7 +23,7 @@ export default function MarketplaceItemCard(item: MarketplaceItem) {
     const getAvatarSrc = () => {
         if (avatarError) return undefined;
         if (!item?.author?.avatar) return undefined;
-        
+
         if (item?.author.avatar.startsWith('http')) {
             return item?.author.avatar;
         }
@@ -33,7 +33,7 @@ export default function MarketplaceItemCard(item: MarketplaceItem) {
     if (!item?.id || !item?.title) {
         return null;
     }
-    console.log(item?.rating)
+
     return (
         <Link href={`/marketplace/${item?.id}`}>
             <div className="relative w-full aspect-square bg-card rounded-lg overflow-hidden shadow-lg hover:shadow-xl hover:opacity-80 transition-shadow h-min-[442px] h-full group">
@@ -41,8 +41,8 @@ export default function MarketplaceItemCard(item: MarketplaceItem) {
                     src={getImageSrc()}
                     alt={item?.title || 'Product image'}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    priority={true}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    loading='lazy'
                     className="object-cover hover:opacity-90 transition-opacity"
                     onError={() => {
                         if (!imageError) {
@@ -52,7 +52,7 @@ export default function MarketplaceItemCard(item: MarketplaceItem) {
                     }}
                     unoptimized={imageError}
                 />
-                
+
                 <div className="p-4 absolute inset-0 z-10 flex flex-col justify-end bg-gradient-to-t from-black/40 to-transparent opacity-100 transition duration-200 ease-in-out group-hover:opacity-0">
                     <h3 className="text-lg text-white font-semibold mb-2 truncate">{item?.title}</h3>
                     <p className="text-lg text-white font-bold">{item?.price ? item.price.toLocaleString('vi-VN') : '0'} ₫</p>
@@ -61,12 +61,12 @@ export default function MarketplaceItemCard(item: MarketplaceItem) {
                 <div className='absolute p-4 inset-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black to-transparent transition opacity-0 duration-200 ease-in-out group-hover:opacity-100'>
                     <h3 className="text-lg text-white font-semibold mb-2 truncate">{item?.title}</h3>
                     <p className="text-sm text-white mb-4 line-clamp-2">{item?.description}</p>
-                    
+
                     {item?.author && (
                         <div className="flex items-center gap-2 mb-3">
                             <Avatar className='size-8'>
-                                <AvatarImage 
-                                    src={getAvatarSrc()} 
+                                <AvatarImage
+                                    src={getAvatarSrc()}
                                     alt={item?.author.name}
                                     onError={() => {
                                         if (!avatarError) {

@@ -23,3 +23,10 @@ export const useOwnProducts = () => {
      )
      return { data, error, isLoading, mutate, isValidating }
 }
+
+export const useCreateReview = () => {
+     const createReview = async (productId: string, payload: { rating: number; comment: string }) => {
+          return await marketplaceApi.createReview(productId, payload)
+     }
+     return { createReview }
+}
