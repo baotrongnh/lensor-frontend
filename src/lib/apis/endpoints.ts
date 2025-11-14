@@ -29,5 +29,11 @@ export const endpoints = {
      review: {
           byProductId: (productId: string) => `${API_PREFIX}/products/${productId}/reviews`,
           byId: (productId: string, reviewId: string) => `${API_PREFIX}/products/${productId}/reviews/${reviewId}`
+     },
+     orders: {
+          all: `${API_PREFIX}/orders`,
+          checkout: `${API_PREFIX}/orders/checkout`,
+          byId: (orderId: string) => `${API_PREFIX}/orders/${orderId}`,
+          products: (orderId: string) => `${API_PREFIX}/orders/${orderId}/products`
      }
 }
