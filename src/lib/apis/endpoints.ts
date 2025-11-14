@@ -60,5 +60,20 @@ export const endpoints = {
           byId: (id: string) => `${API_PREFIX}/users/${id}`,
           follow: (id: string) => `${API_PREFIX}/users/${id}/follow`,
           unfollow: (id: string) => `${API_PREFIX}/users/${id}/unfollow`
+     },
+     withdrawal: {
+          all: `${API_PREFIX}/withdrawals`,
+          create: `${API_PREFIX}/withdrawals`
+     },
+     bankCard: {
+          all: `${API_PREFIX}/bank-cards`,
+          create: `${API_PREFIX}/bank-cards`,
+          byId: (id: string) => `${API_PREFIX}/bank-cards/${id}`,
+          setDefault: (id: string) => `${API_PREFIX}/bank-cards/${id}/default`
+     },
+     notification: {
+          all: `${API_PREFIX}/notifications`,
+          markAsRead: (id: string) => `${API_PREFIX}/notifications/${id}/read`,
+          markAllAsRead: `${API_PREFIX}/notifications/read-all`
      }
 }
