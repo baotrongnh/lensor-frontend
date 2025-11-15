@@ -3,6 +3,17 @@ import { apiClient } from './client'
 import { endpoints } from './endpoints'
 
 export const reportApi = {
+    // Create report with multipart/form-data (direct file upload)
+    createReportWithFiles: async (formData: FormData): Promise<ReportResponse> => {
+        const res = await apiClient.post(endpoints.reports.create, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        return res.data
+    },
+
+    // Create report with JSON (pre-uploaded URLs)
     createReport: async (payload: CreateReportPayload): Promise<ReportResponse> => {
         const res = await apiClient.post(endpoints.reports.create, payload)
         return res.data

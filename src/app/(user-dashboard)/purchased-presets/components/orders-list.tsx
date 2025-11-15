@@ -52,7 +52,7 @@ export default function OrdersList({
         <div className="text-center py-12 border rounded-lg">
             <ShoppingBag className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
             <p className="text-muted-foreground mb-2">
-                {searchQuery ? "No orders found matching your search." : "No completed orders yet."}
+                {searchQuery ? "No orders found matching your search." : "No orders yet."}
             </p>
         </div>
     )
