@@ -14,7 +14,7 @@ export default function PurchasedPresets() {
 
      const orders: Order[] = useMemo(() => {
           if (!ordersResponse?.data) return []
-          return ordersResponse.data.filter((order: Order) => order.status === 'completed')
+          return ordersResponse.data
      }, [ordersResponse])
 
      const filteredOrders = orders.filter(order => {
@@ -26,7 +26,7 @@ export default function PurchasedPresets() {
                order.transactionId.toLowerCase().includes(searchLower) ||
                order.items.some(item =>
                     item.productTitle.toLowerCase().includes(searchLower)
-               )     
+               )
           )
      })
 
@@ -38,7 +38,7 @@ export default function PurchasedPresets() {
           <div className="p-5 space-y-6">
                <div className="flex items-center justify-between">
                     <div>
-                         <h1 className="text-3xl font-bold">Purchased Orders</h1>
+                         <h1 className="text-3xl font-bold">My Orders</h1>
                          <p className="text-muted-foreground mt-1">
                               View your order history and access purchased products
                          </p>

@@ -33,11 +33,9 @@ export default function ReportDialog({ orderId, products, disabled }: ReportDial
     const [reason, setReason] = useState("")
     const [evidenceFiles, setEvidenceFiles] = useState<File[]>([])
     const [evidencePreviews, setEvidencePreviews] = useState<string[]>([])
-    const [isUploading, setIsUploading] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
-    const { createReport } = useCreateReport()
-    const supabase = createClient()
+    const { createReportWithFiles } = useCreateReport()
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || [])
@@ -92,6 +90,7 @@ export default function ReportDialog({ orderId, products, disabled }: ReportDial
 
     const uploadFilesToSupabase = async (files: File[]): Promise<string[]> => {
         const uploadedUrls: string[] = []
+        const supabase = createClient()
 
         for (const file of files) {
             const fileExt = file.name.split('.').pop()
@@ -132,21 +131,14 @@ export default function ReportDialog({ orderId, products, disabled }: ReportDial
         }
 
         setIsSubmitting(true)
-        setIsUploading(true)
 
         try {
-            let evidenceUrls: string[] = []
-            if (evidenceFiles.length > 0) {
-                toast.info("Uploading evidence files...")
-                evidenceUrls = await uploadFilesToSupabase(evidenceFiles)
-                toast.success("Files uploaded successfully!")
-            }
-
-            await createReport({
+            // Use multipart/form-data upload (API handles file upload automatically)
+            await createReportWithFiles({
                 orderId,
                 productId: selectedProductId,
                 reason: reason.trim(),
-                evidence: evidenceUrls
+                evidence: evidenceFiles.length > 0 ? evidenceFiles : undefined
             })
 
             toast.success("Report submitted successfully! We'll review it within 24-48 hours.")
@@ -164,7 +156,6 @@ export default function ReportDialog({ orderId, products, disabled }: ReportDial
             toast.error(errorMessage)
         } finally {
             setIsSubmitting(false)
-            setIsUploading(false)
         }
     }
 
@@ -259,7 +250,7 @@ export default function ReportDialog({ orderId, products, disabled }: ReportDial
                             variant="outline"
                             className="w-full"
                             onClick={() => fileInputRef.current?.click()}
-                            disabled={evidenceFiles.length >= 5 || isUploading}
+                            disabled={evidenceFiles.length >= 5 || isSubmitting}
                         >
                             <Upload className="h-4 w-4 mr-2" />
                             {evidenceFiles.length >= 5 ? "Maximum files reached" : "Upload Evidence Files"}

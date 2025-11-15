@@ -1,11 +1,11 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Order } from "@/types/order"
-import { ChevronRight, Package, Calendar, CreditCard } from "lucide-react"
+import { ChevronRight, Package, Calendar, CreditCard, AlertCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface OrderItemProps {
     order: Order
@@ -13,21 +13,7 @@ interface OrderItemProps {
 
 export default function OrderItem({ order }: OrderItemProps) {
     const router = useRouter()
-
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'completed':
-                return 'bg-green-500/10 text-green-600 border-green-500/20'
-            case 'pending':
-                return 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20'
-            case 'cancelled':
-                return 'bg-red-500/10 text-red-600 border-red-500/20'
-            case 'refunded':
-                return 'bg-blue-500/10 text-blue-600 border-blue-500/20'
-            default:
-                return 'bg-gray-500/10 text-gray-600 border-gray-500/20'
-        }
-    }
+    const isReported = order.status === 'reported'
 
     const getPaymentMethodLabel = (method: string) => {
         switch (method) {
@@ -59,9 +45,18 @@ export default function OrderItem({ order }: OrderItemProps) {
                                 <h3 className="font-semibold text-lg truncate">
                                     Order #{order.id.slice(0, 8)}
                                 </h3>
-                                <Badge className={getStatusColor(order.status)}>
-                                    {order.status}
-                                </Badge>
+                                {isReported && (
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <AlertCircle className="h-5 w-5 text-amber-500 flex-shrink-0" />
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>This order has been reported</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                )}
                             </div>
                             <p className="text-sm text-muted-foreground truncate">
                                 Transaction: {order.transactionId}

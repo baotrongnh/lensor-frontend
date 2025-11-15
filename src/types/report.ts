@@ -19,7 +19,14 @@ export type CreateReportPayload = {
     orderId: string
     productId: string
     reason: string
-    evidence: string[]
+    evidence: string[] // Array of URLs for JSON method
+}
+
+export type CreateReportFormData = {
+    orderId: string
+    productId: string
+    reason: string
+    evidence?: File[] // Array of Files for multipart method
 }
 
 export type ReportResponse = {

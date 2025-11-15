@@ -1,3 +1,11 @@
+export type OrderStatus =
+    | 'ready_for_withdrawal'
+    | 'pending'
+    | 'completed'
+    | 'failed'
+    | 'refunded'
+    | 'reported';
+
 export type OrderItem = {
     productId: string
     productTitle: string
@@ -11,7 +19,7 @@ export type Order = {
     id: string
     userId: string
     totalAmount: string
-    status: 'pending' | 'completed' | 'cancelled' | 'refunded'
+    status: OrderStatus
     paymentMethod: 'wallet' | 'vnpay' | 'credit_card'
     transactionId: string
     items: OrderItem[]
@@ -132,53 +140,47 @@ export type OrderProductsDetailResponse = {
         totalAmount: string
         products: OrderProductDetail[]
     }
-export type OrderStatus =
-     | 'ready_for_withdrawal'
-     | 'pending'
-     | 'completed'
-     | 'failed'
-     | 'refunded'
-     | 'reported';
+}
 
-export interface OrderItem {
-     productId: string;
-     productTitle: string;
-     quantity: number;
-     price: number;
-     subtotal: number;
-     sellerId: string;
+export interface OrderItemInterface {
+    productId: string;
+    productTitle: string;
+    quantity: number;
+    price: number;
+    subtotal: number;
+    sellerId: string;
 }
 
 export interface SoldOrder {
-     id: string;
-     userId: string;
-     totalAmount: string;
-     status: OrderStatus;
-     paymentMethod: string;
-     transactionId: string | null;
-     items: OrderItem[];
-     canWithdraw: boolean;
-     withdrawableAt: string;
-     reportId: string | null;
-     cancelReason: string | null;
-     createdAt: string;
-     updatedAt: string;
-     sellerItems: OrderItem[];
-     sellerEarnings: number;
+    id: string;
+    userId: string;
+    totalAmount: string;
+    status: OrderStatus;
+    paymentMethod: string;
+    transactionId: string | null;
+    items: OrderItemInterface[];
+    canWithdraw: boolean;
+    withdrawableAt: string;
+    reportId: string | null;
+    cancelReason: string | null;
+    createdAt: string;
+    updatedAt: string;
+    sellerItems: OrderItemInterface[];
+    sellerEarnings: number;
 }
 
 export interface SoldOrdersResponse {
-     data: SoldOrder[];
+    data: SoldOrder[];
 }
 
 export interface WithdrawOrderPayload {
-     orderId: string;
+    orderId: string;
 }
 
 export interface WithdrawOrderResponse {
-     message: string;
-     data: {
-          order: SoldOrder;
-          transaction: any;
-     };
+    message: string;
+    data: {
+        order: SoldOrder;
+        transaction: any;
+    };
 }
