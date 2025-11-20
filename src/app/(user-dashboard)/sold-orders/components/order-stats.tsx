@@ -1,18 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DollarSign, Wallet, Clock } from 'lucide-react';
 import { SoldOrder } from '@/types/order';
+import { WithdrawalStatistics } from '@/types/withdrawal';
 
 interface OrderStatsProps {
      orders: SoldOrder[];
+     statistics: WithdrawalStatistics | null;
 }
 
-export function OrderStats({ orders }: OrderStatsProps) {
+export function OrderStats({ orders, statistics }: OrderStatsProps) {
+     const totalEarnings = orders.reduce((sum, order) => sum + order.sellerEarnings, 0);
+
      const stats = {
           total: orders.length,
           readyForWithdrawal: orders.filter(o => o.status === 'ready_for_withdrawal').length,
           pending: orders.filter(o => o.status === 'pending').length,
           completed: orders.filter(o => o.status === 'completed').length,
-          totalEarnings: orders.reduce((sum, order) => sum + order.sellerEarnings, 0),
+          totalEarnings: totalEarnings,
+          actualAmount: statistics?.totalActualAmount || 0,
      };
 
      const formatCurrency = (amount: number) => {
@@ -56,13 +61,16 @@ export function OrderStats({ orders }: OrderStatsProps) {
 
                <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                         <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+                         <CardTitle className="text-sm font-medium">Total Received (After Fee)</CardTitle>
                          <DollarSign className="h-4 w-4 text-blue-600" />
                     </CardHeader>
                     <CardContent>
                          <div className="text-2xl font-bold text-blue-600">
-                              {formatCurrency(stats.totalEarnings)}
+                              {formatCurrency(stats.actualAmount)}
                          </div>
+                         <p className="text-xs text-muted-foreground mt-1">
+                              From {formatCurrency(stats.totalEarnings)} (17% fee)
+                         </p>
                     </CardContent>
                </Card>
           </div>

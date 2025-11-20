@@ -8,27 +8,23 @@ export interface Withdrawal {
      id: string
      userId: string
      bankCardId: string
-     amount: number
-     fee: number
-     actualAmount: number
+     amount: string
+     fee: string
+     actualAmount: string
      status: 'pending' | 'approved' | 'rejected' | 'completed'
-     note?: string
-     adminNote?: string
-     processedBy?: string
-     processedAt?: string
-     createdAt: string
-     updatedAt: string
-     orders: Array<{
-          id: string
-          totalAmount: string
-          sellerEarnings: number
-     }>
-     bankCard: {
-          id: string
+     orderIds: string[]
+     bankInfo: {
           bankName: string
           accountNumber: string
           accountHolder: string
      }
+     note: string | null
+     adminId: string | null
+     adminResponse: string | null
+     paymentProofImageUrl: string[] | null
+     processedAt: string | null
+     createdAt: string
+     updatedAt: string
 }
 
 export interface WithdrawalResponse {
@@ -38,4 +34,19 @@ export interface WithdrawalResponse {
 
 export interface WithdrawalsResponse {
      data: Withdrawal[]
+}
+
+export interface WithdrawalStatistics {
+     totalWithdrawals: number
+     totalAmount: number
+     totalFee: number
+     totalActualAmount: number
+     filters: {
+          year: string
+          month: string
+     }
+}
+
+export interface WithdrawalStatisticsResponse {
+     data: WithdrawalStatistics
 }

@@ -29,6 +29,23 @@ import { Separator } from '@/components/ui/separator';
 // System withdrawal fee percentage
 const WITHDRAWAL_FEE_PERCENTAGE = 17;
 
+// Format currency
+const formatCurrency = (amount: number) => {
+     return new Intl.NumberFormat('vi-VN', {
+          style: 'currency',
+          currency: 'VND',
+     }).format(amount);
+};
+
+// Calculate total earnings and fees
+const calculateWithdrawal = (orders: SoldOrder[]) => {
+     const totalEarnings = orders.reduce((sum, order) => sum + order.sellerEarnings, 0);
+     const fee = totalEarnings * (WITHDRAWAL_FEE_PERCENTAGE / 100);
+     const finalAmount = totalEarnings - fee;
+
+     return { totalEarnings, fee, finalAmount };
+};
+
 // Popular Vietnamese banks
 const VIETNAMESE_BANKS = [
      'Vietcombank - BIDV',
@@ -89,6 +106,7 @@ export function WithdrawDialog({
           }
      }, [bankCardsData, selectedBankCardId]);
 
+     // Reset form when closing dialog
      useEffect(() => {
           if (!open) {
                setNote('');
@@ -102,23 +120,12 @@ export function WithdrawDialog({
           }
      }, [open]);
 
-     if (orders.length === 0) return null;
-
-     const formatCurrency = (amount: number | string) => {
-          const num = typeof amount === 'string' ? parseFloat(amount) : amount;
-          return new Intl.NumberFormat('vi-VN', {
-               style: 'currency',
-               currency: 'VND',
-          }).format(num);
-     };
-
-     const totalEarnings = orders.reduce((sum, order) => sum + order.sellerEarnings, 0);
-     const withdrawalFee = totalEarnings * (WITHDRAWAL_FEE_PERCENTAGE / 100);
-     const amountAfterFee = totalEarnings - withdrawalFee;
-
+     // Add new bank card
      const handleAddCard = async () => {
-          if (!newCard.bankName || !newCard.accountNumber || !newCard.accountHolder) {
-               toast.error('Please fill all bank card fields');
+          const { bankName, accountNumber, accountHolder } = newCard;
+
+          if (!bankName || !accountNumber || !accountHolder) {
+               toast.error('Please fill in all bank card information');
                return;
           }
 
@@ -126,44 +133,48 @@ export function WithdrawDialog({
                setIsAddingCard(true);
                await bankCardApi.createBankCard(newCard);
                toast.success('Bank card added successfully');
+
                await mutateBankCards();
                setShowAddCard(false);
-               setNewCard({
-                    bankName: '',
-                    accountNumber: '',
-                    accountHolder: '',
-                    isDefault: false
-               });
+               setNewCard({ bankName: '', accountNumber: '', accountHolder: '', isDefault: false });
           } catch (error: any) {
-               console.error('Error adding bank card:', error);
-               toast.error(error.response?.data?.message || 'Failed to add bank card');
+               const errorMessage = error.response?.data?.message || 'Failed to add bank card';
+               toast.error(errorMessage);
           } finally {
                setIsAddingCard(false);
           }
      };
 
+     // Delete bank card
      const handleDeleteCard = async (cardId: string) => {
           try {
                await bankCardApi.deleteBankCard(cardId);
                toast.success('Bank card deleted successfully');
                await mutateBankCards();
+
                if (selectedBankCardId === cardId) {
                     setSelectedBankCardId('');
                }
           } catch (error: any) {
-               console.error('Error deleting bank card:', error);
-               toast.error(error.response?.data?.message || 'Failed to delete bank card');
+               const errorMessage = error.response?.data?.message || 'Failed to delete bank card';
+               toast.error(errorMessage);
           }
      };
 
+     // Confirm withdrawal
      const handleConfirm = () => {
           if (!selectedBankCardId) {
                toast.error('Please select a bank card');
                return;
           }
+
           const orderIds = orders.map(order => order.id);
           onConfirm(selectedBankCardId, orderIds, note || undefined);
      };
+
+     if (orders.length === 0) return null;
+
+     const { totalEarnings, fee, finalAmount } = calculateWithdrawal(orders);
 
      return (
           <Dialog open={open} onOpenChange={onOpenChange}>
@@ -191,14 +202,14 @@ export function WithdrawDialog({
                               <div className="flex justify-between items-center text-red-600 dark:text-red-400">
                                    <span className="text-sm">Withdrawal Fee ({WITHDRAWAL_FEE_PERCENTAGE}%):</span>
                                    <span className="text-base font-semibold">
-                                        - {formatCurrency(withdrawalFee)}
+                                        - {formatCurrency(fee)}
                                    </span>
                               </div>
                               <Separator />
                               <div className="flex justify-between items-center">
                                    <span className="text-sm font-medium">Amount to Receive:</span>
                                    <span className="text-xl font-bold text-green-600">
-                                        {formatCurrency(amountAfterFee)}
+                                        {formatCurrency(finalAmount)}
                                    </span>
                               </div>
                          </div>
@@ -231,9 +242,7 @@ export function WithdrawDialog({
                                                   </SelectTrigger>
                                                   <SelectContent>
                                                        {VIETNAMESE_BANKS.map((bank) => (
-                                                            <SelectItem key={bank} value={bank}>
-                                                                 {bank}
-                                                            </SelectItem>
+                                                            <SelectItem key={bank} value={bank}>{bank}</SelectItem>
                                                        ))}
                                                   </SelectContent>
                                              </Select>
@@ -278,20 +287,14 @@ export function WithdrawDialog({
                                    </div>
                               )}
 
-                              {bankCardsData?.data && bankCardsData.data.length > 0 ? (
+                              {bankCardsData?.data?.length > 0 ? (
                                    <RadioGroup value={selectedBankCardId} onValueChange={setSelectedBankCardId}>
                                         <div className="space-y-2">
                                              {bankCardsData.data.map((card: any) => (
-                                                  <div
-                                                       key={card.id}
-                                                       className="flex items-center justify-between p-3 border rounded-md hover:bg-muted/50"
-                                                  >
+                                                  <div key={card.id} className="flex items-center justify-between p-3 border rounded-md hover:bg-muted/50">
                                                        <div className="flex items-center space-x-3 flex-1">
                                                             <RadioGroupItem value={card.id} id={card.id} />
-                                                            <label
-                                                                 htmlFor={card.id}
-                                                                 className="flex-1 cursor-pointer"
-                                                            >
+                                                            <label htmlFor={card.id} className="flex-1 cursor-pointer">
                                                                  <div className="flex items-center gap-2">
                                                                       <CreditCard className="h-4 w-4 text-muted-foreground" />
                                                                       <span className="font-medium">{card.bankName}</span>
@@ -321,7 +324,7 @@ export function WithdrawDialog({
                                    </RadioGroup>
                               ) : (
                                    <div className="text-center py-6 text-muted-foreground text-sm">
-                                        No bank cards found. Please add a bank card first.
+                                        No bank cards found. Please add a new card.
                                    </div>
                               )}
                          </div>
@@ -331,7 +334,7 @@ export function WithdrawDialog({
                               <Label htmlFor="note">Note (Optional)</Label>
                               <Input
                                    id="note"
-                                   placeholder="e.g., Rút tiền tháng 11"
+                                   placeholder="e.g., November withdrawal"
                                    value={note}
                                    onChange={(e) => setNote(e.target.value)}
                               />
@@ -350,7 +353,7 @@ export function WithdrawDialog({
                          <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-md border border-blue-200 dark:border-blue-800">
                               <p className="text-sm text-blue-700 dark:text-blue-300">
                                    <Wallet className="inline h-4 w-4 mr-1" />
-                                   Your withdrawal request will be processed by admin. Funds will be transferred to your bank account.
+                                   Your withdrawal request will be reviewed by admin and transferred to your bank account.
                               </p>
                          </div>
                     </div>

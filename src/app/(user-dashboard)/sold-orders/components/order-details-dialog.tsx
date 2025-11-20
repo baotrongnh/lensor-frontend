@@ -85,6 +85,11 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onWithdraw }: Or
           }).format(num);
      };
 
+     // Calculate actual amount after 17% fee
+     const WITHDRAWAL_FEE_PERCENTAGE = 17;
+     const withdrawalFee = order.sellerEarnings * (WITHDRAWAL_FEE_PERCENTAGE / 100);
+     const actualAmount = order.sellerEarnings - withdrawalFee;
+
      const getTimeUntilWithdrawable = (withdrawableAt: string) => {
           const now = new Date();
           const withdrawDate = new Date(withdrawableAt);
@@ -125,8 +130,16 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onWithdraw }: Or
                               </div>
                               <div>
                                    <p className="text-sm font-medium text-muted-foreground">Your Earnings</p>
+                                   <p className="text-sm font-semibold">{formatCurrency(order.sellerEarnings)}</p>
+                              </div>
+                              <div>
+                                   <p className="text-sm font-medium text-muted-foreground">Withdrawal Fee (17%)</p>
+                                   <p className="text-sm font-semibold text-red-600">-{formatCurrency(withdrawalFee)}</p>
+                              </div>
+                              <div>
+                                   <p className="text-sm font-medium text-muted-foreground">Actual Amount</p>
                                    <p className="text-sm font-semibold text-green-600">
-                                        {formatCurrency(order.sellerEarnings)}
+                                        {formatCurrency(actualAmount)}
                                    </p>
                               </div>
                               <div>
@@ -164,7 +177,25 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onWithdraw }: Or
                               </div>
                          </div>
 
-                         {order.canWithdraw && (
+                         {order.status === 'completed' && (
+                              <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-md border border-blue-200 dark:border-blue-800">
+                                   <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
+                                        <CheckCircle className="h-4 w-4" />
+                                        <p className="text-sm font-medium">This order has been withdrawn</p>
+                                   </div>
+                              </div>
+                         )}
+
+                         {order.status === 'reported' && (
+                              <div className="p-3 bg-red-50 dark:bg-red-950 rounded-md border border-red-200 dark:border-red-800">
+                                   <div className="flex items-center gap-2 text-red-700 dark:text-red-300">
+                                        <AlertTriangle className="h-4 w-4" />
+                                        <p className="text-sm font-medium">Cannot withdraw - Order is reported</p>
+                                   </div>
+                              </div>
+                         )}
+
+                         {order.canWithdraw && order.status !== 'completed' && order.status !== 'reported' && (
                               <div className="p-3 bg-green-50 dark:bg-green-950 rounded-md border border-green-200 dark:border-green-800">
                                    <div className="flex items-center gap-2 text-green-700 dark:text-green-300">
                                         <CheckCircle className="h-4 w-4" />
@@ -173,7 +204,7 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onWithdraw }: Or
                               </div>
                          )}
 
-                         {!order.canWithdraw && (
+                         {!order.canWithdraw && order.status !== 'completed' && order.status !== 'reported' && (
                               <div className="p-3 bg-yellow-50 dark:bg-yellow-950 rounded-md border border-yellow-200 dark:border-yellow-800">
                                    <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-300">
                                         <Clock className="h-4 w-4" />
@@ -189,7 +220,7 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onWithdraw }: Or
                          <Button variant="outline" onClick={() => onOpenChange(false)}>
                               Close
                          </Button>
-                         {order.canWithdraw && order.status === 'ready_for_withdrawal' && onWithdraw && (
+                         {order.canWithdraw && order.status !== 'completed' && order.status !== 'reported' && onWithdraw && (
                               <Button onClick={onWithdraw}>
                                    <Wallet className="mr-2 h-4 w-4" />
                                    Withdraw Funds
