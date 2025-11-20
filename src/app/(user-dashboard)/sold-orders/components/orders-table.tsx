@@ -16,6 +16,7 @@ import {
      TableRow,
 } from '@/components/ui/table';
 import { SoldOrder, OrderStatus } from '@/types/order';
+import { Withdrawal } from '@/types/withdrawal';
 import {
      CheckCircle,
      XCircle,
@@ -29,6 +30,7 @@ import {
 
 interface OrdersTableProps {
      orders: SoldOrder[];
+     withdrawals: Withdrawal[];
      onViewDetails: (order: SoldOrder) => void;
      onWithdraw: (order: SoldOrder) => void;
      selectedOrders?: string[];
@@ -36,7 +38,7 @@ interface OrdersTableProps {
      showCheckboxes?: boolean;
 }
 
-export function OrdersTable({ orders, onViewDetails, onWithdraw, selectedOrders = [], onOrderSelect, showCheckboxes = false }: OrdersTableProps) {
+export function OrdersTable({ orders, withdrawals, onViewDetails, onWithdraw, selectedOrders = [], onOrderSelect, showCheckboxes = false }: OrdersTableProps) {
      const getStatusBadge = (status: OrderStatus) => {
           const statusConfig: Record<OrderStatus, { variant: any; label: string; icon: React.ReactNode; className?: string }> = {
                ready_for_withdrawal: {
@@ -127,6 +129,14 @@ export function OrdersTable({ orders, onViewDetails, onWithdraw, selectedOrders 
           return `${minutes}m`;
      };
 
+     // Check if order is already withdrawn
+     const isOrderWithdrawn = (orderId: string) => {
+          return withdrawals.some(w =>
+               w.orderIds.includes(orderId) &&
+               (w.status === 'approved' || w.status === 'pending')
+          );
+     };
+
      return (
           <div className="overflow-x-auto">
                <Table>
@@ -144,8 +154,7 @@ export function OrdersTable({ orders, onViewDetails, onWithdraw, selectedOrders 
                     </TableHeader>
                     <TableBody>
                          {orders.map((order) => {
-                              // Order có thể rút khi: canWithdraw = true (backend quyết định)
-                              const isWithdrawable = order.canWithdraw === true;
+                              const isWithdrawable = order.canWithdraw;
                               const isSelected = selectedOrders.includes(order.id);
 
                               return (
@@ -179,8 +188,18 @@ export function OrdersTable({ orders, onViewDetails, onWithdraw, selectedOrders 
                                              {formatCurrency(order.sellerEarnings)}
                                         </TableCell>
                                         <TableCell>
-                                             {order.canWithdraw ? (
-                                                  <Badge className="bg-green-500">
+                                             {order.status === 'completed' || isOrderWithdrawn(order.id) ? (
+                                                  <Badge className="bg-yellow-500 hover:bg-yellow-600">
+                                                       <CheckCircle className="h-3 w-3 mr-1" />
+                                                       Withdrawn
+                                                  </Badge>
+                                             ) : order.status === 'reported' ? (
+                                                  <Badge className="bg-red-500 hover:bg-red-600">
+                                                       <AlertTriangle className="h-3 w-3 mr-1" />
+                                                       Cannot Withdraw
+                                                  </Badge>
+                                             ) : order.canWithdraw ? (
+                                                  <Badge className="bg-green-500 hover:bg-green-600">
                                                        <CheckCircle className="h-3 w-3 mr-1" />
                                                        Available
                                                   </Badge>
@@ -213,7 +232,7 @@ export function OrdersTable({ orders, onViewDetails, onWithdraw, selectedOrders 
                                                             <Eye className="mr-2 h-4 w-4" />
                                                             View Details
                                                        </DropdownMenuItem>
-                                                       {isWithdrawable && (
+                                                       {isWithdrawable && order.status !== 'completed' && !isOrderWithdrawn(order.id) && (
                                                             <DropdownMenuItem
                                                                  onClick={() => onWithdraw(order)}
                                                                  className="cursor-pointer text-green-600"

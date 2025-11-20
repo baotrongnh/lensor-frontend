@@ -63,7 +63,8 @@ export const endpoints = {
      },
      withdrawal: {
           all: `${API_PREFIX}/withdrawals`,
-          create: `${API_PREFIX}/withdrawals`
+          create: `${API_PREFIX}/withdrawals`,
+          statistics: `${API_PREFIX}/withdrawals/statistics`
      },
      bankCard: {
           all: `${API_PREFIX}/bank-cards`,
