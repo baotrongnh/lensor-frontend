@@ -122,16 +122,16 @@ export default function Cart() {
   }
 
   return (
-    <div className="min-h-screen container px-6">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="min-h-screen container px-2 sm:px-4 md:px-6">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-6 md:py-8">
         <Link href="/marketplace">
-          <Button variant="ghost" className="mb-10 -ml-2">
-            <ChevronLeft className="h-4 w-4 mr-1" />
+          <Button variant="ghost" className="mb-6 sm:mb-8 md:mb-10 -ml-2 h-8 sm:h-9 text-xs sm:text-sm">
+            <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
             Continue Shopping
           </Button>
         </Link>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>

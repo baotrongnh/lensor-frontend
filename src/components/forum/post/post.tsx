@@ -59,8 +59,8 @@ export default function Post({ dataPost, isDetailView = false }: { dataPost: Pos
 
      if (!dataPost) return null
 
-     const handleUpdateCommentCount = () => {
-          setCommentCount(commentCount + 1)
+     const handleUpdateCommentCount = (increment: number) => {
+          setCommentCount(prev => prev + increment)
      }
 
      const handleVotePost = async () => {

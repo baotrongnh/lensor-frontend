@@ -119,87 +119,87 @@ export default function SupportPage() {
      };
 
      return (
-          <div className="container mx-auto py-6 space-y-6 p-8">
-               <div className="flex items-center justify-between">
+          <div className="container mx-auto py-3 sm:py-4 md:py-6 space-y-3 sm:space-y-4 md:space-y-6 p-2 sm:p-4 md:p-6 lg:p-8">
+               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
                     <div>
-                         <h1 className="text-3xl font-bold">Support Tickets</h1>
-                         <p className="text-muted-foreground mt-1">
+                         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Support Tickets</h1>
+                         <p className="text-muted-foreground mt-0.5 sm:mt-1 text-xs sm:text-sm">
                               Manage your support requests and get help
                          </p>
                     </div>
-                    <Button onClick={() => setIsCreateDialogOpen(true)}>
-                         <Plus className="mr-2 h-4 w-4" />
+                    <Button onClick={() => setIsCreateDialogOpen(true)} className="w-full sm:w-auto h-8 sm:h-9 md:h-10 text-xs sm:text-sm">
+                         <Plus className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                          Create Ticket
                     </Button>
                </div>
 
                {/* Stats Cards */}
-               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+               <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                     <Card>
-                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                              <CardTitle className="text-sm font-medium">Total</CardTitle>
+                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2">
+                              <CardTitle className="text-xs sm:text-sm font-medium">Total</CardTitle>
                          </CardHeader>
                          <CardContent>
-                              <div className="text-2xl font-bold">{stats.total}</div>
+                              <div className="text-lg sm:text-xl md:text-2xl font-bold">{stats.total}</div>
                          </CardContent>
                     </Card>
                     <Card>
-                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                              <CardTitle className="text-sm font-medium">Open</CardTitle>
-                              <AlertCircle className="h-4 w-4 text-blue-500" />
+                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2">
+                              <CardTitle className="text-xs sm:text-sm font-medium">Open</CardTitle>
+                              <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
                          </CardHeader>
                          <CardContent>
-                              <div className="text-2xl font-bold">{stats.open}</div>
+                              <div className="text-lg sm:text-xl md:text-2xl font-bold">{stats.open}</div>
                          </CardContent>
                     </Card>
                     <Card>
-                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                              <CardTitle className="text-sm font-medium">In Progress</CardTitle>
-                              <Clock className="h-4 w-4 text-yellow-500" />
+                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2">
+                              <CardTitle className="text-xs sm:text-sm font-medium">In Progress</CardTitle>
+                              <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500" />
                          </CardHeader>
                          <CardContent>
-                              <div className="text-2xl font-bold">{stats.in_progress}</div>
+                              <div className="text-lg sm:text-xl md:text-2xl font-bold">{stats.in_progress}</div>
                          </CardContent>
                     </Card>
                     <Card>
-                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                              <CardTitle className="text-sm font-medium">Resolved</CardTitle>
-                              <CheckCircle className="h-4 w-4 text-green-500" />
+                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2">
+                              <CardTitle className="text-xs sm:text-sm font-medium">Resolved</CardTitle>
+                              <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
                          </CardHeader>
                          <CardContent>
-                              <div className="text-2xl font-bold">{stats.resolved}</div>
+                              <div className="text-lg sm:text-xl md:text-2xl font-bold">{stats.resolved}</div>
                          </CardContent>
                     </Card>
                     <Card>
-                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                              <CardTitle className="text-sm font-medium">Closed</CardTitle>
-                              <XCircle className="h-4 w-4 text-muted-foreground" />
+                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2">
+                              <CardTitle className="text-xs sm:text-sm font-medium">Closed</CardTitle>
+                              <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                          </CardHeader>
                          <CardContent>
-                              <div className="text-2xl font-bold">{stats.closed}</div>
+                              <div className="text-lg sm:text-xl md:text-2xl font-bold">{stats.closed}</div>
                          </CardContent>
                     </Card>
                </div>
 
                {/* Tickets Table */}
                <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)}>
-                    <TabsList>
-                         <TabsTrigger value="all">All ({stats.total})</TabsTrigger>
-                         <TabsTrigger value="open">Open ({stats.open})</TabsTrigger>
-                         <TabsTrigger value="in_progress">In Progress ({stats.in_progress})</TabsTrigger>
-                         <TabsTrigger value="resolved">Resolved ({stats.resolved})</TabsTrigger>
-                         <TabsTrigger value="closed">Closed ({stats.closed})</TabsTrigger>
+                    <TabsList className="w-full sm:w-auto grid grid-cols-2 sm:flex sm:flex-wrap gap-1 h-auto">
+                         <TabsTrigger value="all" className="text-xs sm:text-sm">All ({stats.total})</TabsTrigger>
+                         <TabsTrigger value="open" className="text-xs sm:text-sm">Open ({stats.open})</TabsTrigger>
+                         <TabsTrigger value="in_progress" className="text-xs sm:text-sm hidden sm:inline-flex">In Progress ({stats.in_progress})</TabsTrigger>
+                         <TabsTrigger value="resolved" className="text-xs sm:text-sm hidden sm:inline-flex">Resolved ({stats.resolved})</TabsTrigger>
+                         <TabsTrigger value="closed" className="text-xs sm:text-sm hidden sm:inline-flex">Closed ({stats.closed})</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value={activeTab} className="mt-4">
+                    <TabsContent value={activeTab} className="mt-3 sm:mt-4">
                          <Card>
                               <CardHeader>
-                                   <CardTitle>Your Tickets</CardTitle>
-                                   <CardDescription>
+                                   <CardTitle className="text-base sm:text-lg md:text-xl">Your Tickets</CardTitle>
+                                   <CardDescription className="text-xs sm:text-sm">
                                         {loading ? 'Loading...' : `${filteredTickets.length} ticket(s)`}
                                    </CardDescription>
                               </CardHeader>
-                              <CardContent>
+                              <CardContent className="p-2 sm:p-4 md:p-6">
                                    {loading ? (
                                         <div className="flex justify-center items-center py-12">
                                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>

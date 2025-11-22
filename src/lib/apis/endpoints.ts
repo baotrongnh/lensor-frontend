@@ -13,7 +13,8 @@ export const endpoints = {
      product: createEndpoints('products'),
      forum: createEndpoints('forums'),
      comment: {
-          byPostId: (postId: string) => `${API_PREFIX}/posts/${postId}/comments`
+          byPostId: (postId: string) => `${API_PREFIX}/posts/${postId}/comments`,
+          delete: (postId: string, commentId: string) => `${API_PREFIX}/posts/${postId}/comments/${commentId}`
      },
      like: {
           byPostId: (postId: string) => `${API_PREFIX}/posts/${postId}/like`,

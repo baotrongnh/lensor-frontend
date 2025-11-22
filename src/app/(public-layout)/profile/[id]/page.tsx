@@ -139,26 +139,26 @@ export default function PublicProfile() {
   }
 
   return (
-    <div className='max-w-3xl mx-auto py-6 px-4 space-y-4'>
+    <div className='max-w-3xl mx-auto py-3 sm:py-4 md:py-6 px-2 sm:px-3 md:px-4 space-y-3 sm:space-y-4'>
       {/* Profile Header */}
       <Card>
-        <CardContent className='p-8'>
-          <div className='flex items-start gap-6'>
-            <Avatar className='h-24 w-24 border'>
+        <CardContent className='p-3 sm:p-5 md:p-8'>
+          <div className='flex items-start gap-3 sm:gap-4 md:gap-6'>
+            <Avatar className='h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 border'>
               <AvatarImage src={profile.avatarUrl} alt={profile.name} />
-              <AvatarFallback className='text-2xl'>
+              <AvatarFallback className='text-lg sm:text-xl md:text-2xl'>
                 {profile.name?.charAt(0)?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
 
             <div className='flex-1 min-w-0'>
-              <div className='flex items-start justify-between gap-4 mb-4'>
+              <div className='flex items-start justify-between gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4'>
                 <div className='flex-1 min-w-0'>
-                  <h1 className='text-2xl font-bold truncate mb-1'>{profile.name}</h1>
-                  <p className='text-sm text-muted-foreground truncate'>{profile.email}</p>
+                  <h1 className='text-base sm:text-xl md:text-2xl font-bold truncate mb-0.5 sm:mb-1'>{profile.name}</h1>
+                  <p className='text-[10px] sm:text-xs md:text-sm text-muted-foreground truncate'>{profile.email}</p>
                 </div>
 
-                <div className='flex items-center gap-2 flex-shrink-0'>
+                <div className='flex items-center gap-1 sm:gap-2 flex-shrink-0'>
                   <FollowButton userId={userId} size="sm" />
                   <Button
                     variant='outline'
@@ -175,32 +175,32 @@ export default function PublicProfile() {
                 </div>
               </div>
 
-              <div className='flex items-center gap-6 text-sm'>
+              <div className='flex items-center gap-3 sm:gap-4 md:gap-6 text-[10px] sm:text-xs md:text-sm flex-wrap'>
                 <button
                   onClick={() => setFollowersDialogOpen(true)}
                   className='hover:underline cursor-pointer'
                 >
                   <span className='font-semibold'>{stats?.followersCount || 0}</span>
-                  <span className='text-muted-foreground ml-1'>Followers</span>
+                  <span className='text-muted-foreground ml-0.5 sm:ml-1'>Followers</span>
                 </button>
                 <button
                   onClick={() => setFollowingDialogOpen(true)}
                   className='hover:underline cursor-pointer'
                 >
                   <span className='font-semibold'>{stats?.followingCount || 0}</span>
-                  <span className='text-muted-foreground ml-1'>Following</span>
+                  <span className='text-muted-foreground ml-0.5 sm:ml-1'>Following</span>
                 </button>
                 <div>
                   <span className='font-semibold'>{profile.posts.length}</span>
-                  <span className='text-muted-foreground ml-1'>Posts</span>
+                  <span className='text-muted-foreground ml-0.5 sm:ml-1'>Posts</span>
                 </div>
                 <div>
                   <span className='font-semibold'>{profile.products.length}</span>
-                  <span className='text-muted-foreground ml-1'>Products</span>
+                  <span className='text-muted-foreground ml-0.5 sm:ml-1'>Products</span>
                 </div>
               </div>
 
-              <p className='text-xs text-muted-foreground mt-3 flex items-center gap-1'>
+              <p className='text-[10px] sm:text-xs text-muted-foreground mt-2 sm:mt-3 flex items-center gap-1'>
                 <Calendar className='h-3 w-3' />
                 Joined {formatDistanceToNow(new Date(profile.createdAt), { addSuffix: true })}
               </p>
@@ -211,20 +211,20 @@ export default function PublicProfile() {
 
       {/* Content Tabs */}
       <Tabs defaultValue="posts" className="w-full">
-        <TabsList className='w-full grid grid-cols-2 h-11'>
-          <TabsTrigger value="posts" className='gap-2'>
-            <ImageIcon className='h-4 w-4' />
-            Posts
-            <Badge variant='secondary' className='ml-1'>{profile.posts.length}</Badge>
+        <TabsList className='w-full grid grid-cols-2 h-9 sm:h-10 md:h-11'>
+          <TabsTrigger value="posts" className='gap-1 sm:gap-2 text-xs sm:text-sm'>
+            <ImageIcon className='h-3 w-3 sm:h-4 sm:w-4' />
+            <span className='hidden sm:inline'>Posts</span>
+            <Badge variant='secondary' className='ml-0.5 sm:ml-1 text-[10px] sm:text-xs'>{profile.posts.length}</Badge>
           </TabsTrigger>
-          <TabsTrigger value="shop" className='gap-2'>
-            <Package className='h-4 w-4' />
-            Shop
-            <Badge variant='secondary' className='ml-1'>{profile.products.length}</Badge>
+          <TabsTrigger value="shop" className='gap-1 sm:gap-2 text-xs sm:text-sm'>
+            <Package className='h-3 w-3 sm:h-4 sm:w-4' />
+            <span className='hidden sm:inline'>Shop</span>
+            <Badge variant='secondary' className='ml-0.5 sm:ml-1 text-[10px] sm:text-xs'>{profile.products.filter(p => p.status === 'active').length}</Badge>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="posts" className='mt-4'>
+        <TabsContent value="posts" className='mt-3 sm:mt-4'>
           {profile.posts.length === 0 ? (
             <Card>
               <CardContent className='p-12 text-center'>
@@ -244,17 +244,17 @@ export default function PublicProfile() {
           )}
         </TabsContent>
 
-        <TabsContent value="shop" className='mt-4'>
-          {profile.products.length === 0 ? (
+        <TabsContent value="shop" className='mt-3 sm:mt-4'>
+          {profile.products.filter(p => p.status === 'active').length === 0 ? (
             <Card>
-              <CardContent className='p-12 text-center'>
-                <Package className='h-12 w-12 mx-auto text-muted-foreground/40 mb-3' />
-                <p className='text-sm text-muted-foreground'>No products available</p>
+              <CardContent className='p-8 sm:p-10 md:p-12 text-center'>
+                <Package className='h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground/40 mb-3' />
+                <p className='text-xs sm:text-sm text-muted-foreground'>No products available</p>
               </CardContent>
             </Card>
           ) : (
-            <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
-              {profile.products.map((product) => (
+            <div className='grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4'>
+              {profile.products.filter(p => p.status === 'active').map((product) => (
                 <Link
                   key={product.id}
                   href={`/marketplace/${product.id}`}
@@ -267,23 +267,23 @@ export default function PublicProfile() {
                       className='absolute inset-0 w-full h-full object-cover'
                     />
 
-                    <div className="p-3 absolute inset-0 z-10 flex flex-col justify-end bg-gradient-to-t from-black/60 to-transparent opacity-100 transition duration-200 ease-in-out group-hover:opacity-0">
-                      <h3 className="text-sm text-white font-semibold mb-1 truncate">{product.title}</h3>
-                      <p className="text-base text-white font-bold">${parseFloat(product.price).toFixed(2)}</p>
+                    <div className="p-2 sm:p-3 md:p-4 absolute inset-0 z-10 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-100 transition duration-200 ease-in-out group-hover:opacity-0">
+                      <h3 className="text-xs sm:text-sm md:text-base lg:text-lg text-white font-semibold mb-0.5 sm:mb-1 md:mb-2 truncate">{product.title}</h3>
+                      <p className="text-sm sm:text-base md:text-lg text-white font-bold">{parseFloat(product.price).toLocaleString('vi-VN')} ₫</p>
                     </div>
 
-                    <div className='absolute p-3 inset-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black to-transparent transition opacity-0 duration-200 ease-in-out group-hover:opacity-100'>
-                      <h3 className="text-sm text-white font-semibold mb-2 truncate">{product.title}</h3>
-                      <p className="text-xs text-white/90 mb-3 line-clamp-2">{product.description}</p>
+                    <div className='absolute p-2 sm:p-3 md:p-4 inset-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent transition opacity-0 duration-200 ease-in-out group-hover:opacity-100'>
+                      <h3 className="text-xs sm:text-sm md:text-base lg:text-lg text-white font-semibold mb-1 sm:mb-2 truncate">{product.title}</h3>
+                      <p className="text-[10px] sm:text-xs md:text-sm text-white/90 mb-2 sm:mb-3 md:mb-4 line-clamp-2">{product.description}</p>
 
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-xs text-white/80">Price</p>
-                          <p className="text-base text-white font-bold">${parseFloat(product.price).toFixed(2)}</p>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[8px] sm:text-[10px] md:text-xs text-white/80">Price</p>
+                          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white font-bold truncate">{parseFloat(product.price).toLocaleString('vi-VN')} ₫</p>
                         </div>
-                        <div className="text-right">
-                          <p className="text-xs text-white/80">Sold</p>
-                          <p className="text-sm text-white font-semibold">{product.sellCount}</p>
+                        <div className="text-right shrink-0">
+                          <p className="text-[8px] sm:text-[10px] md:text-xs text-white/80">Sold</p>
+                          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white font-semibold">{product.sellCount}</p>
                         </div>
                       </div>
                     </div>

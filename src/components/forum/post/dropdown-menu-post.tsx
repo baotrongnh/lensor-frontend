@@ -29,13 +29,6 @@ export default function DropdownMenuPost(props: DropdownMenuPostProps) {
                          <Eye />
                          {tButton('viewDetail')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                         onClick={props.handleReportPost}
-                         className={props.isOwner ? 'hidden' : ''}
-                    >
-                         <Flag />
-                         {tButton('report')}
-                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={props.handleSavePost}>
                          {props.isSaved ? <BookMarked className="fill-current" /> : <Bookmark />}
                          {props.isSaved ? tButton('unsavePost') : tButton('savePost')}
