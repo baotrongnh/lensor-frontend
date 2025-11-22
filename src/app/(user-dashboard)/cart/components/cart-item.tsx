@@ -47,21 +47,22 @@ export function CartItem({
 
     return (
         <div
-            className={`group flex gap-4 p-4 rounded-lg border bg-card hover:shadow-md transition-all duration-200 ${isUnavailable ? 'opacity-60 cursor-not-allowed' : ''
+            className={`group flex gap-2 sm:gap-3 md:gap-4 p-2 sm:p-3 md:p-4 rounded-lg border bg-card hover:shadow-md transition-all duration-200 ${isUnavailable ? 'opacity-60 cursor-not-allowed' : ''
                 }`}
             onClick={handleContainerClick}
         >
             {onSelect && (
-                <div className="flex items-center pt-2">
+                <div className="flex items-center pt-1 sm:pt-2">
                     <Checkbox
                         checked={isSelected && !isUnavailable}
                         onCheckedChange={handleCheckboxChange}
                         disabled={isUnavailable}
+                        className="h-4 w-4 sm:h-5 sm:w-5"
                     />
                 </div>
             )}
 
-            <div className="relative h-28 w-28 flex-shrink-0 rounded-lg overflow-hidden border bg-muted">
+            <div className="relative h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 flex-shrink-0 rounded-lg overflow-hidden border bg-muted">
                 {isUnavailable && (
                     <div className="absolute inset-0 z-10 bg-black/60 flex items-center justify-center">
                         <Ban className="w-8 h-8 text-red-500" />
@@ -75,27 +76,27 @@ export function CartItem({
                 />
             </div>
 
-            <div className="flex-1 flex flex-col gap-3">
-                <div className="space-y-1.5">
+            <div className="flex-1 flex flex-col gap-2 sm:gap-3 min-w-0">
+                <div className="space-y-1">
                     {isUnavailable && (
-                        <Badge variant="destructive" className="w-fit mb-2">
-                            <AlertCircle className="h-3 w-3 mr-1" />
-                            Product Unavailable
+                        <Badge variant="destructive" className="w-fit mb-1 sm:mb-2 text-[10px] sm:text-xs">
+                            <AlertCircle className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
+                            Unavailable
                         </Badge>
                     )}
                     <Link href={`/marketplace/${productId}`}>
-                        <h3 className="font-semibold text-base hover:text-primary transition-colors line-clamp-1">
+                        <h3 className="font-semibold text-xs sm:text-sm md:text-base hover:text-primary transition-colors line-clamp-1">
                             {title}
                         </h3>
                     </Link>
                     <Link href={ROUTES.PROFILE(authorId)}>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground">
                             by <span className='hover:text-primary hover:underline transition-colors'>{author}</span>
                         </p>
                     </Link>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2">
                     {category && (
                         <Badge variant="secondary" className="text-xs font-normal">
                             <Package className="h-3 w-3 mr-1" />

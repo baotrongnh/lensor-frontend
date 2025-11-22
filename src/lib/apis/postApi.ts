@@ -36,6 +36,11 @@ export const postApi = {
           return res.data
      },
 
+     deleteComment: async (postId: string, commentId: string) => {
+          const res = await apiClient.delete(endpoints.comment.delete(postId, commentId))
+          return res.data
+     },
+
      likePost: async (postId: string) => {
           const res = await apiClient.post(endpoints.like.byPostId(postId))
           return res.data

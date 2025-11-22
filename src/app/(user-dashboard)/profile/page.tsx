@@ -14,6 +14,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Users, Loader2 } from 'lucide-react'
 import { FollowButton } from '@/components/forum/FollowButton'
+import { toast } from 'sonner'
 
 export default function ProfilePage() {
      const isOwnProfile = false
@@ -28,9 +29,9 @@ export default function ProfilePage() {
      const { following } = useUserFollowing(userId)
 
      return (
-          <div className='container mx-auto p-3 md:p-5'>
+          <div className='container mx-auto p-2 sm:p-3 md:p-5'>
                <Card className='overflow-hidden pt-0'>
-                    <div className='relative h-32 md:h-64 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'>
+                    <div className='relative h-24 sm:h-32 md:h-48 lg:h-64 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'>
                          <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent' />
                          {/* <Button
                                    variant='secondary'
@@ -41,28 +42,33 @@ export default function ProfilePage() {
                               </Button> */}
                     </div>
 
-                    <div className='relative px-4 md:px-8'>
-                         <div className='flex flex-col md:flex-row items-center md:items-end justify-between -mt-12 md:-mt-20 gap-4'>
-                              <div className='flex flex-col md:flex-row items-center md:items-end gap-3 md:gap-6'>
-                                   <Avatar className='h-24 w-24 md:h-40 md:w-40 border-4 border-background shadow-xl'>
+                    <div className='relative px-2 sm:px-3 md:px-4 lg:px-8'>
+                         <div className='flex flex-col md:flex-row items-center md:items-end justify-between -mt-10 sm:-mt-12 md:-mt-16 lg:-mt-20 gap-2 sm:gap-3 md:gap-4'>
+                              <div className='flex flex-col md:flex-row items-center md:items-end gap-2 sm:gap-3 md:gap-4 lg:gap-6'>
+                                   <Avatar className='h-20 w-20 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 border-4 border-background shadow-xl'>
                                         <AvatarImage src={user?.user_metadata.picture} />
-                                        <AvatarFallback className='text-2xl md:text-4xl bg-primary/10 text-primary'>
+                                        <AvatarFallback className='text-lg sm:text-xl md:text-2xl lg:text-4xl bg-primary/10 text-primary'>
                                              {user?.user_metadata.name?.charAt(0) || 'U'}
                                         </AvatarFallback>
                                    </Avatar>
 
-                                   <div className='mb-0 md:mb-4 space-y-1 text-center md:text-left'>
-                                        <h1 className='text-xl md:text-3xl font-bold text-foreground'>
+                                   <div className='mb-0 md:mb-2 lg:mb-4 space-y-0.5 sm:space-y-1 text-center md:text-left'>
+                                        <h1 className='text-base sm:text-lg md:text-xl lg:text-3xl font-bold text-foreground'>
                                              {user?.user_metadata.name || 'User Name'}
                                         </h1>
-                                        <p className='text-xs md:text-sm text-muted-foreground'>
+                                        <p className='text-[10px] sm:text-xs md:text-sm text-muted-foreground'>
                                              {user?.email || 'user@example.com'}
                                         </p>
                                    </div>
                               </div>
 
-                              <div className='mb-0 md:mb-4 flex items-center gap-2 md:gap-3 w-full md:w-auto'>
-                                   <Button variant='default' size='default' className='flex-1 md:flex-none md:size-lg'>
+                              <div className='mb-0 md:mb-2 lg:mb-4 flex items-center gap-2 md:gap-3 w-full md:w-auto'>
+                                   <Button
+                                        variant='default'
+                                        size='default'
+                                        className='flex-1 md:flex-none h-8 sm:h-9 md:h-10 text-xs sm:text-sm'
+                                        onClick={() => toast.info('Coming soon! This feature is under development.')}
+                                   >
                                         Edit Profile
                                    </Button>
                                    {/* <Button variant='outline' size='lg'>
@@ -74,7 +80,7 @@ export default function ProfilePage() {
                               </div>
                          </div>
 
-                         <div className='mt-4 md:mt-6 flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-8 text-sm'>
+                         <div className='mt-3 sm:mt-4 md:mt-6 flex flex-wrap items-center justify-center md:justify-start gap-3 sm:gap-4 md:gap-6 lg:gap-8 text-xs sm:text-sm'>
                               <button
                                    onClick={() => setFollowersDialogOpen(true)}
                                    className='flex items-center gap-2 hover:underline cursor-pointer'
@@ -101,14 +107,14 @@ export default function ProfilePage() {
                     </div>
                </Card>
 
-               <div className='grid grid-cols-1 lg:grid-cols-4 items-start gap-3 md:gap-5 mt-3 md:mt-5'>
-                    <Card className='lg:sticky top-0 order-2 lg:order-1'>
+               <div className='grid grid-cols-1 lg:grid-cols-4 items-start gap-2 sm:gap-3 md:gap-5 mt-2 sm:mt-3 md:mt-5'>
+                    <Card className='hidden lg:block lg:sticky top-0 order-2 lg:order-1'>
                          <About />
                     </Card>
-                    <Card className='lg:col-span-2 p-4 order-1 lg:order-2'>
+                    <Card className='lg:col-span-2 p-2 sm:p-3 md:p-4 order-1 lg:order-2'>
                          <ProfileContent onPostsCountChange={setPostsCount} />
                     </Card>
-                    <div className='bg-[var(--color-box-inside)] rounded-md order-3'>
+                    <div className='bg-[var(--color-box-inside)] rounded-md order-3 hidden lg:block'>
                          <Card className='lg:sticky top-0'>
                               <SuggestionList />
                          </Card>

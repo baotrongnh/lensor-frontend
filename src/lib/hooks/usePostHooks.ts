@@ -31,9 +31,9 @@ export const useCreateComment = () => {
      return { createComment }
 }
 
-export const useComments = (postId: string) => {
+export const useComments = (postId: string, enabled: boolean = true) => {
      const { data, error, isLoading, mutate } = useSWR(
-          endpoints.comment.byPostId(postId),
+          enabled ? endpoints.comment.byPostId(postId) : null,
           () => postApi.getComments(postId)
      )
      return { data, error, isLoading, mutate }

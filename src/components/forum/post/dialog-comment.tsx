@@ -8,18 +8,18 @@ import {
      DialogTitle,
      DialogTrigger,
 } from "@/components/ui/dialog"
+import { Skeleton } from "@/components/ui/skeleton"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Send } from "lucide-react"
-import React, { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Comment from "./comment"
 import { useTranslations } from "next-intl"
 import { useUserStore } from "@/stores/user-store"
 import { useCreateComment, useComments } from "@/lib/hooks/usePostHooks"
 import { CommentResponseType } from "@/types/post"
-import { useRouter } from "next/navigation"
 import { LoginRequiredDialog } from "@/components/ui/login-required-dialog"
 
-export default function DialogComment({ children, postId, handleUpdateCommentCount }: { children: React.ReactNode, postId: string, handleUpdateCommentCount: () => void }) {
+export default function DialogComment({ children, postId, handleUpdateCommentCount }: { children: React.ReactNode, postId: string, handleUpdateCommentCount: (increment: number) => void }) {
      const t = useTranslations('Forum')
      const user = useUserStore(state => state.user)
      const [content, setContent] = useState('')
@@ -27,21 +27,54 @@ export default function DialogComment({ children, postId, handleUpdateCommentCou
      const [isOpen, setIsOpen] = useState(false)
      const [showLoginDialog, setShowLoginDialog] = useState(false)
      const { createComment } = useCreateComment()
-     const { data: commentsData, isLoading: isLoadingComments } = useComments(postId)
-     const router = useRouter();
+     const { data: commentsData, isLoading: isLoadingComments } = useComments(postId, isOpen)
+
+     const organizedComments = useMemo(() => {
+          if (!commentsData?.data?.comments) return []
+
+          const comments = commentsData.data.comments
+          const commentMap = new Map<string, CommentResponseType>()
+          const rootComments: CommentResponseType[] = []
+
+          // Build comment map and tree structure
+          comments.forEach((comment: CommentResponseType) => {
+               commentMap.set(comment.id, { ...comment, replies: [] })
+          })
+
+          comments.forEach((comment: CommentResponseType) => {
+               const commentWithReplies = commentMap.get(comment.id)!
+               if (comment.parentId) {
+                    const parent = commentMap.get(comment.parentId)
+                    if (parent) {
+                         if (!parent.replies) parent.replies = []
+                         parent.replies.push(commentWithReplies)
+                    }
+               } else {
+                    rootComments.push(commentWithReplies)
+               }
+          })
+
+          // Sort: root comments newest first, replies oldest first
+          rootComments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          rootComments.forEach(root => {
+               root.replies?.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+          })
+
+          return rootComments
+     }, [commentsData])
 
      const handleCreateComment = async () => {
           if (!content.trim()) return
 
+          setIsLoading(true)
           try {
-               setIsLoading(true)
                await createComment(postId, content, null)
                setContent('')
+               handleUpdateCommentCount(1)
           } catch (error) {
                console.error('Error creating comment:', error)
           } finally {
                setIsLoading(false)
-               handleUpdateCommentCount()
           }
      }
 
@@ -80,23 +113,37 @@ export default function DialogComment({ children, postId, handleUpdateCommentCou
                               duration-300"
                          >
                               {isLoadingComments ? (
-                                   <div className="text-center py-4 text-xs sm:text-sm">Loading...</div>
-                              ) : commentsData?.data?.comments?.length > 0 ? (
-                                   commentsData.data.comments.map((comment: CommentResponseType) => (
+                                   <div className="space-y-4 p-2">
+                                        {[1, 2, 3].map((i) => (
+                                             <div key={i} className="flex gap-3">
+                                                  <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+                                                  <div className="flex-1 space-y-2">
+                                                       <Skeleton className="h-4 w-24" />
+                                                       <Skeleton className="h-16 w-full rounded-2xl" />
+                                                  </div>
+                                             </div>
+                                        ))}
+                                   </div>
+                              ) : organizedComments.length > 0 ? (
+                                   organizedComments.map((comment: CommentResponseType) => (
                                         <Comment
                                              key={comment.id}
                                              data={comment}
+                                             postId={postId}
+                                             onDelete={() => handleUpdateCommentCount(-1)}
+                                             onCommentCreated={() => handleUpdateCommentCount(1)}
+                                             allComments={commentsData?.data?.comments || []}
                                         />
                                    ))
                               ) : (
-                                   <div className="text-center py-4 text-muted-foreground text-xs sm:text-sm">
+                                   <div className="text-center py-8 text-muted-foreground text-xs sm:text-sm">
                                         {t('noComments')}
                                    </div>
                               )}
                          </div>
                          <InputGroup className="h-10 sm:h-11 md:h-12 shrink-0">
                               <InputGroupInput
-                                   placeholder={`${t('search')}...`}
+                                   placeholder={`${t('shareYourComment')}...`}
                                    value={content}
                                    onChange={(e) => setContent(e.target.value)}
                                    onKeyDown={(e) => {

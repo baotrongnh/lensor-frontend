@@ -73,5 +73,6 @@ export type CommentResponseType = {
           id: string,
           name: string,
           avatarUrl: string
-     }
+     },
+     replies?: CommentResponseType[]
 }
