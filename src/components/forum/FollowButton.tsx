@@ -52,11 +52,11 @@ export function FollowButton({
                     className={className}
                >
                     {loading ? (
-                         <Loader2 className="h-4 w-4 animate-spin" />
+                         <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                     ) : (
                          <>
-                              {showIcon && (isFollowing ? <UserMinus className="h-4 w-4 mr-2" /> : <UserPlus className="h-4 w-4 mr-2" />)}
-                              {isFollowing ? 'Unfollow' : 'Follow'}
+                              {showIcon && (isFollowing ? <UserMinus className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" /> : <UserPlus className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />)}
+                              <span className="text-xs sm:text-sm">{isFollowing ? 'Unfollow' : 'Follow'}</span>
                          </>
                     )}
                </Button>

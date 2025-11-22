@@ -112,68 +112,73 @@ export default function MarketplacePage() {
     return (
         <div className="min-h-screen">
 
-            <div className="container mx-auto py-3">
-                <Breadcrumb>
-                    <BreadcrumbList>
+            <div className="container mx-auto py-2 sm:py-3 px-2 sm:px-4 md:px-6">
+                <Breadcrumb className="mb-2 sm:mb-3 md:mb-4">
+                    <BreadcrumbList className="text-[10px] sm:text-xs md:text-sm">
                         <BreadcrumbItem>
-                            <BreadcrumbLink href={ROUTES.HOME}>Home</BreadcrumbLink>
+                            <BreadcrumbLink href={ROUTES.HOME} className="hover:text-primary">Home</BreadcrumbLink>
                         </BreadcrumbItem>
-                        <BreadcrumbSeparator />
+                        <BreadcrumbSeparator className="mx-1 sm:mx-2" />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href={ROUTES.MARKETPLACE}>Marketplace</BreadcrumbLink>
+                            <BreadcrumbLink href={ROUTES.MARKETPLACE} className="hover:text-primary">Marketplace</BreadcrumbLink>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
 
-                <div className="mb-10 mt-3 border-b-1">
-                    <h1 className='font-extrabold text-3xl uppercase mb-2'>
-                        Your <span className='text-primary'>Marketplace</span> for Creativity
+                <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-10 mt-1 sm:mt-2 md:mt-3 border-b pb-3 sm:pb-4">
+                    <h1 className='font-extrabold text-lg sm:text-xl md:text-2xl lg:text-3xl uppercase mb-1 leading-tight'>
+                        Your <span className='text-primary'>Marketplace</span>
+                        <span className="hidden sm:inline"> for Creativity</span>
                     </h1>
-                    <p className='mb-6 text-muted-foreground text-sm'>Buy, sell, and showcase stunning photos & professional presets in one place</p>
+                    <p className='mb-2 sm:mb-3 md:mb-4 lg:mb-6 text-muted-foreground text-[10px] sm:text-xs md:text-sm leading-relaxed'>Buy, sell & showcase stunning photos & presets</p>
 
-                    <div className="flex gap-2 mb-6 justify-between items-center">
-                        <div className="w-[90%]">
-                            <Input
-                                type="text"
-                                value={searchInput}
-                                onChange={(e) => setSearchInput(e.target.value)}
-                                placeholder="Search presets..."
-                                className="w-full focus:ring-2 focus:ring-purple-500 transition-all"
-                            />
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-2 sm:mb-3 md:mb-4 lg:mb-6 items-stretch">
+                        <div className="flex-1">
+                            <div className="relative">
+                                <Input
+                                    type="text"
+                                    value={searchInput}
+                                    onChange={(e) => setSearchInput(e.target.value)}
+                                    placeholder="Search products, presets..."
+                                    className="w-full focus:ring-2 focus:ring-primary transition-all text-xs sm:text-sm h-10 sm:h-11 pl-4 pr-4 border-2 rounded-lg"
+                                />
+                            </div>
 
                             {searchQuery && (
-                                <div className="mt-4">
-                                    <p className='font-bold text-sm'>
-                                        Found <span className='text-purple-500'>{filteredItems?.length}</span> result{filteredItems?.length !== 1 ? 's' : ''} for &quot;<span className='text-purple-500'>{searchQuery}</span>&quot;
+                                <div className="mt-2 sm:mt-3">
+                                    <p className='font-bold text-[10px] sm:text-xs md:text-sm'>
+                                        Found <span className='text-purple-500'>{filteredItems?.length}</span> result{filteredItems?.length !== 1 ? 's' : ''} for &quot;<span className='text-purple-500 truncate inline-block max-w-[100px] sm:max-w-none'>{searchQuery}</span>&quot;
                                     </p>
-                                    <div className='border-t border-gray-200 dark:border-gray-700 mt-3' />
+                                    <div className='border-t border-gray-200 dark:border-gray-700 mt-1.5 sm:mt-2' />
                                 </div>
                             )}
                         </div>
 
-                        <FilterSidebar
-                            filters={filters}
-                            onFilterChange={setFilters}
-                            resetFilter={isFilterActive}
-                            onResetFilter={handleResetFilter}
-                            categories={categories}
-                        />
+                        <div className="sm:w-auto shrink-0">
+                            <FilterSidebar
+                                filters={filters}
+                                onFilterChange={setFilters}
+                                resetFilter={isFilterActive}
+                                onResetFilter={handleResetFilter}
+                                categories={categories}
+                            />
+                        </div>
                     </div>
                 </div>
 
-                <div className='flex flex-col gap-8'>
+                <div className='flex flex-col gap-3 sm:gap-4 md:gap-6 lg:gap-8 pb-3 sm:pb-4 md:pb-6'>
                     {isLoading ?
                         <MarketplaceSkeleton />
                         :
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 xl:gap-6">
                             {paginatedItems.map((item: MarketplaceItem) => (
                                 <MarketplaceItemCard {...item} key={item.id} />
                             ))}
                         </div>
                     }
-                    <Pagination>
-                        <PaginationContent>
+                    <Pagination className="mt-2 sm:mt-4">
+                        <PaginationContent className="gap-1 sm:gap-2">
                             <PaginationItem>
                                 <PaginationPrevious
                                     href="#"
@@ -181,10 +186,12 @@ export default function MarketplacePage() {
                                         e.preventDefault()
                                         handlePageChange(currentPage - 1)
                                     }}
+                                    className="h-8 sm:h-9 px-2 sm:px-4 text-xs sm:text-sm"
                                 />
                             </PaginationItem>
 
-                            <PaginationItem>
+                            {/* Desktop: Show full pagination */}
+                            <PaginationItem className="hidden md:block">
                                 <PaginationLink
                                     href="#"
                                     isActive={currentPage === 1}
@@ -198,7 +205,7 @@ export default function MarketplacePage() {
                             </PaginationItem>
 
                             {currentPage > 3 && (
-                                <PaginationItem>
+                                <PaginationItem className="hidden md:block">
                                     <PaginationEllipsis />
                                 </PaginationItem>
                             )}
@@ -211,7 +218,7 @@ export default function MarketplacePage() {
                                     page <= currentPage + 1
                                 )
                                 .map((page) => (
-                                    <PaginationItem key={page}>
+                                    <PaginationItem key={page} className="hidden md:block">
                                         <PaginationLink
                                             href="#"
                                             isActive={page === currentPage}
@@ -226,13 +233,13 @@ export default function MarketplacePage() {
                                 ))}
 
                             {currentPage < totalPages - 2 && (
-                                <PaginationItem>
+                                <PaginationItem className="hidden md:block">
                                     <PaginationEllipsis />
                                 </PaginationItem>
                             )}
 
                             {totalPages > 1 && (
-                                <PaginationItem>
+                                <PaginationItem className="hidden md:block">
                                     <PaginationLink
                                         href="#"
                                         isActive={currentPage === totalPages}
@@ -246,6 +253,13 @@ export default function MarketplacePage() {
                                 </PaginationItem>
                             )}
 
+                            {/* Mobile: Show current page only */}
+                            <PaginationItem className="md:hidden">
+                                <span className="flex h-8 items-center justify-center px-3 text-xs font-medium">
+                                    {currentPage} / {totalPages}
+                                </span>
+                            </PaginationItem>
+
                             <PaginationItem>
                                 <PaginationNext
                                     href="#"
@@ -253,6 +267,7 @@ export default function MarketplacePage() {
                                         e.preventDefault()
                                         handlePageChange(currentPage + 1)
                                     }}
+                                    className="h-8 sm:h-9 px-2 sm:px-4 text-xs sm:text-sm"
                                 />
                             </PaginationItem>
                         </PaginationContent>

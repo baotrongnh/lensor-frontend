@@ -234,7 +234,7 @@ export default function PublicProfile() {
             </Card>
           ) : (
             <div className='space-y-0'>
-              {profile.posts.map((post: PostType, index) => (
+              {(profile.posts as PostType[]).map((post, index) => (
                 <div key={post.id}>
                   <Post dataPost={post} />
                   {index < profile.posts.length - 1 && <hr className='solid' />}

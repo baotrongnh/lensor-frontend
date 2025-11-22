@@ -3,46 +3,16 @@
 import { LostConnect } from '@/components/empty/lost-connect'
 import Post from '@/components/forum/post/post'
 import PostSkeleton from '@/components/forum/post/post-skeleton'
-import { postApi } from '@/lib/apis/postApi'
-import { useUserStore } from '@/stores/user-store'
+import { useLikedPosts } from '@/lib/hooks/usePostHooks'
 import { PostType } from '@/types/post'
 import { Heart } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
 export default function LikedPostsSection() {
-     const user = useUserStore(state => state.user)
-     const [posts, setPosts] = useState<PostType[]>([])
-     const [isLoading, setIsLoading] = useState(true)
-     const [error, setError] = useState(false)
+     const { data, error, isLoading, mutate } = useLikedPosts()
 
-     useEffect(() => {
-          fetchLikedPosts()
-     }, [user])
+     const posts = data?.data || []
 
-     const fetchLikedPosts = async () => {
-          if (!user?.id) return
-
-          try {
-               setIsLoading(true)
-               setError(false)
-               const { data } = await postApi.getLikedPosts(user.id)
-
-               // Ensure all liked posts have isLiked set to true
-               const likedPosts = (data || []).map((post: PostType) => ({
-                    ...post,
-                    isLiked: true
-               }))
-
-               setPosts(likedPosts)
-          } catch (err) {
-               console.error('Error fetching liked posts:', err)
-               setError(true)
-          } finally {
-               setIsLoading(false)
-          }
-     }
-
-     if (error) return <LostConnect refecth={fetchLikedPosts} />
+     if (error) return <LostConnect refecth={mutate} />
 
      if (isLoading) return <PostSkeleton />
 
