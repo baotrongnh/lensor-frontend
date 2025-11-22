@@ -75,8 +75,8 @@ export const endpoints = {
      },
      notification: {
           all: `${API_PREFIX}/notifications`,
-          markAsRead: (id: string) => `${API_PREFIX}/notifications/${id}/read`,
-          markAllAsRead: `${API_PREFIX}/notifications/read-all`
+          markAsRead: `${API_PREFIX}/notifications/mark-as-read`,
+          markAllAsRead: `${API_PREFIX}/notifications/mark-all-as-read`
      },
      userFollows: {
           follow: (userId: string) => `${API_PREFIX}/user-follows/${userId}`,

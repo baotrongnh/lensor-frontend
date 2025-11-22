@@ -17,16 +17,14 @@ import { useEffect } from "react";
 export default function ForumPage() {
   const t = useTranslations("Forum");
   const tButton = useTranslations("Button");
-  const { data: dataForum, error, mutate, isValidating } = usePosts();
-  const user = useUserStore((state) => state.user);
+  const { data: dataForum, error, mutate, isValidating } = usePosts()
+  const user = useUserStore((state) => state.user)
 
-  if (error) return <LostConnect refecth={mutate} />;
+  if (error) return <LostConnect refecth={mutate} />
 
   useEffect(() => {
-    console.log('check');
     sessionStorage.setItem('redirectAfterLogin', '/forum')
   }, [])
-
 
   return (
     <div className="w-[720px] mx-auto">

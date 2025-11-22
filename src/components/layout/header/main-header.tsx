@@ -15,6 +15,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useCart } from '@/lib/hooks/useCartHooks'
 import { useNotifications } from '@/lib/hooks/useNotificationHooks'
+import { notificationApi } from '@/lib/apis/notificationApi'
 
 export default function MainHeader() {
   const t = useTranslations('Header')
@@ -45,6 +46,16 @@ export default function MainHeader() {
       setNotifications(notificationData.data.notifications, notificationData.data.meta.unreadCount)
     }
   }, [notificationData, setNotifications])
+
+  const handleNotificationClick = async () => {
+    if (user && unreadCount > 0) {
+      try {
+        await notificationApi.markAllAsRead()
+      } catch (error) {
+        console.error('Failed to mark all as read:', error)
+      }
+    }
+  }
 
   const balance = walletData?.balance || 0
   const formattedBalance = balance.toLocaleString('vi-VN')
@@ -112,7 +123,7 @@ export default function MainHeader() {
                     )}
                   </Link>
                 </Button>
-                <Button variant='ghost' size='icon' className='relative'>
+                <Button variant='ghost' size='icon' className='relative' onClick={handleNotificationClick}>
                   <Link href={ROUTES.NOTIFICATION}>
                     <Bell className='h-4 w-4' />
                     {unreadCount > 0 && (
