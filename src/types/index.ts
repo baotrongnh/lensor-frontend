@@ -40,5 +40,6 @@ export interface UserProduct {
      rating: string
      reviewCount: number
      sellCount: number
+     status?: string
      createdAt: string
 }
