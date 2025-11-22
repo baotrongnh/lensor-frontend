@@ -92,18 +92,18 @@ export default function ForumPage() {
   if (error) return <LostConnect refecth={mutate} />
 
   return (
-    <div className="w-[720px] mx-auto">
-      <div className="p-5">
+    <div className="w-full max-w-[720px] mx-auto px-3 sm:px-4">
+      <div className="py-3 sm:p-5">
         <DialogCreatePost>
-          <Card className="flex flex-row items-center gap-3 px-3 py-3">
+          <Card className="flex flex-row items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 sm:py-3">
             {user && (
-              <Avatar>
+              <Avatar className='h-8 w-8 sm:h-10 sm:w-10'>
                 <AvatarImage src={user.user_metadata.avatar_url} />
                 <AvatarFallback>{user.user_metadata.name}</AvatarFallback>
               </Avatar>
             )}
-            <Input disabled placeholder={t("placeholderInputCreatePost")} className="flex-1" />
-            <Button>{tButton("createPost")}</Button>
+            <Input disabled placeholder={t("placeholderInputCreatePost")} className="flex-1 text-sm" />
+            <Button size='sm' className='text-xs sm:text-sm'>{tButton("createPost")}</Button>
           </Card>
         </DialogCreatePost>
       </div>

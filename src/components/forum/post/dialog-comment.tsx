@@ -60,16 +60,16 @@ export default function DialogComment({ children, postId, handleUpdateCommentCou
                </div>
 
                <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                    <DialogContent className="h-[95%] !max-w-[750px]">
-                         <DialogHeader className="shrink-0">
-                              <DialogTitle>{t('comment')} ({commentsData?.data?.count || 0})</DialogTitle>
-                              <DialogDescription>
+                    <DialogContent className="w-[calc(100vw-1rem)] sm:w-[90vw] md:w-[750px] h-[90vh] sm:h-[85vh] md:h-[95%] max-w-[750px] p-3 sm:p-4 md:p-6 flex flex-col">
+                         <DialogHeader className="shrink-0 space-y-1 sm:space-y-2">
+                              <DialogTitle className="text-base sm:text-lg">{t('comment')} ({commentsData?.data?.count || 0})</DialogTitle>
+                              <DialogDescription className="text-xs sm:text-sm">
                                    {t('shareYourComment')}
                               </DialogDescription>
 
                          </DialogHeader>
                          <div
-                              className="pr-2 h-[480px] overflow-y-auto 
+                              className="pr-1 sm:pr-2 flex-1 overflow-y-auto
                               [&::-webkit-scrollbar]:w-1
                               hover:[&::-webkit-scrollbar]:w-1
                               [&::-webkit-scrollbar-track]:bg-transparent
@@ -80,7 +80,7 @@ export default function DialogComment({ children, postId, handleUpdateCommentCou
                               duration-300"
                          >
                               {isLoadingComments ? (
-                                   <div className="text-center py-4">Loading...</div>
+                                   <div className="text-center py-4 text-xs sm:text-sm">Loading...</div>
                               ) : commentsData?.data?.comments?.length > 0 ? (
                                    commentsData.data.comments.map((comment: CommentResponseType) => (
                                         <Comment
@@ -89,12 +89,12 @@ export default function DialogComment({ children, postId, handleUpdateCommentCou
                                         />
                                    ))
                               ) : (
-                                   <div className="text-center py-4 text-muted-foreground">
+                                   <div className="text-center py-4 text-muted-foreground text-xs sm:text-sm">
                                         {t('noComments')}
                                    </div>
                               )}
                          </div>
-                         <InputGroup className="h-12">
+                         <InputGroup className="h-10 sm:h-11 md:h-12 shrink-0">
                               <InputGroupInput
                                    placeholder={`${t('search')}...`}
                                    value={content}
@@ -105,19 +105,22 @@ export default function DialogComment({ children, postId, handleUpdateCommentCou
                                              handleCreateComment()
                                         }
                                    }}
+                                   className="text-xs sm:text-sm"
                               />
-                              <InputGroupAddon>
-                                   <Avatar>
+                              <InputGroupAddon className="hidden sm:flex">
+                                   <Avatar className="h-8 w-8 sm:h-9 sm:w-9">
                                         <AvatarImage src={user?.user_metadata.avatar_url} />
-                                        <AvatarFallback>CN</AvatarFallback>
+                                        <AvatarFallback className="text-xs">CN</AvatarFallback>
                                    </Avatar>
                               </InputGroupAddon>
                               <InputGroupAddon align="inline-end">
                                    <Button
                                         onClick={handleCreateComment}
                                         disabled={isLoading || !content.trim()}
+                                        size="sm"
+                                        className="h-8 sm:h-9 w-8 sm:w-9 p-0"
                                    >
-                                        <Send />
+                                        <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                    </Button>
                               </InputGroupAddon>
                          </InputGroup>
