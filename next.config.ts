@@ -4,7 +4,29 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["images.unsplash.com", "i.pinimg.com", "14.169.52.232", "lensor.klong.io.vn"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pinimg.com',
+      },
+      {
+        protocol: 'http',
+        hostname: '14.169.52.232',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lensor.klong.io.vn',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
+      },
+    ],
   },
 };
 const withNextIntl = createNextIntlPlugin();
