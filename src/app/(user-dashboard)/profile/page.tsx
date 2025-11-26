@@ -4,7 +4,7 @@ import { FollowButton } from '@/components/forum/FollowButton'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useFollowStats, useUserFollowers, useUserFollowing } from '@/lib/hooks/useFollow'
 import { useUserStore } from '@/stores/user-store'
 import { Loader2, Users } from 'lucide-react'
@@ -55,16 +55,39 @@ export default function ProfilePage() {
                                    </div>
                               </div>
 
-                              <div className='mb-0 md:mb-2 lg:mb-4 flex items-center gap-2 md:gap-3 w-full md:w-auto'>
-                                   <Button
-                                        variant='default'
-                                        size='default'
-                                        className='flex-1 md:flex-none h-8 sm:h-9 md:h-10 text-xs sm:text-sm'
-                                        onClick={() => toast.info('Coming soon! This feature is under development.')}
-                                   >
-                                        Edit Profile
-                                   </Button>
-                              </div>
+                              <Dialog>
+                                   <form>
+                                        <div className='mb-0 md:mb-2 lg:mb-4 flex items-center gap-2 md:gap-3 w-full md:w-auto'>
+                                             <DialogTrigger asChild>
+                                                  <Button
+                                                       variant='default'
+                                                       size='default'
+                                                       className='flex-1 md:flex-none h-8 sm:h-9 md:h-10 text-xs sm:text-sm hover:opacity-80'
+                                                  >
+                                                       Edit Profile
+                                                  </Button>
+                                             </DialogTrigger>
+                                        </div>
+
+                                        <DialogContent className="sm:max-w-[425px]">
+                                             <DialogHeader>
+                                                  <DialogTitle>Edit profile</DialogTitle>
+                                                  <DialogDescription>
+                                                       Make changes to your profile here. Save when you&apos;re
+                                                       done.
+                                                  </DialogDescription>
+                                             </DialogHeader>
+                                             hello
+                                             <DialogFooter>
+                                                  <DialogClose asChild>
+                                                       <Button variant="outline">Cancel</Button>
+                                                  </DialogClose>
+                                                  <Button type="submit">Save changes</Button>
+                                             </DialogFooter>
+                                        </DialogContent>
+                                   </form>
+                              </Dialog>
+
                          </div>
 
                          <div className='mt-3 sm:mt-4 md:mt-6 flex flex-wrap items-center justify-center md:justify-start gap-3 sm:gap-4 md:gap-6 lg:gap-8 text-xs sm:text-sm'>
