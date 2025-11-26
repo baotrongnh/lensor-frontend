@@ -169,7 +169,7 @@ export default function OrderDetailPage() {
                     )}
 
                     <div className="flex justify-end items-center">
-                        {orderData.status !== 'reported' && (
+                        {(orderData.status === 'reported' || orderData.status === 'completed') && (
                             <ReportDialog
                                 orderId={orderId}
                                 products={orderData.products}
