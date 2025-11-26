@@ -24,6 +24,9 @@ export default function Cart() {
   )
   const activeItems = cartItems.filter((item: CartItemData) => item.product?.status === 'active')
   const hasUnavailableItems = activeItems.length < cartItems.length
+  const allActiveSelected = activeItems.length > 0 && activeItems.every((item: CartItemData) =>
+    Array.from(selectedItems).some(selectedItem => selectedItem.id === item.id)
+  )
 
   const subtotal = selectedCartItems.reduce(
     (sum: number, item: CartItemData) => {
@@ -73,6 +76,16 @@ export default function Cart() {
       })
     }
     setSelectedItems(newSelected)
+  }
+
+  const handleSelectAll = () => {
+    if (allActiveSelected) {
+      // Deselect all
+      setSelectedItems(new Set())
+    } else {
+      // Select all active items
+      setSelectedItems(new Set(activeItems))
+    }
   }
 
   const handleClearCart = async () => {
@@ -157,17 +170,29 @@ export default function Cart() {
                     <ShoppingCart />
                     Shopping Cart ({cartItems.length} items)
                   </div>
-                  {cartItems.length > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleClearCart}
-                      disabled={isUpdating}
-                      className="text-red-500 hover:text-red-600"
-                    >
-                      Clear All
-                    </Button>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {activeItems.length > 0 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSelectAll}
+                        disabled={isUpdating}
+                      >
+                        {allActiveSelected ? 'Deselect All' : 'Select All'}
+                      </Button>
+                    )}
+                    {cartItems.length > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleClearCart}
+                        disabled={isUpdating}
+                        className="text-red-500 hover:text-red-600"
+                      >
+                        Clear All
+                      </Button>
+                    )}
+                  </div>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -223,6 +248,7 @@ export default function Cart() {
                 subtotal={subtotal}
                 itemCount={totalQuantity}
                 selectedCartItems={Array.from(selectedItems)}
+                cartItems={cartItems}
                 onCheckoutSuccess={mutate}
                 disabled={
                   selectedItems.size === 0 ||
