@@ -46,7 +46,7 @@ export default function ChatSidebar() {
           }
 
           socket.on('newMessage', handleNewMessage)
-          
+
           return () => {
                socket.off('newMessage', handleNewMessage)
           }
