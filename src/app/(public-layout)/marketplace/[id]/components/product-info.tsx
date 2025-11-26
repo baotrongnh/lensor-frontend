@@ -133,7 +133,7 @@ export default function ProductInfo({
                 </div>
             }
 
-            {isInCart && (
+            {user && isInCart && (
                 <div className='flex items-center gap-2 p-2.5 sm:p-3 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg'>
                     <CheckCircle2 className='w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-500 shrink-0' />
                     <div className='flex-1 min-w-0'>
@@ -169,9 +169,9 @@ export default function ProductInfo({
                         onClick={handleAddToCart}
                         size={'lg'}
                         className='flex-1 bg-primary text-primary-foreground py-2.5 sm:py-3 rounded-md text-sm sm:text-base font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50'
-                        disabled={isSubmitting || isInCart}
+                        disabled={isSubmitting || (user && isInCart)}
                     >
-                        {isInCart ? (
+                        {user && isInCart ? (
                             <>
                                 <CheckCircle2 className='w-4 h-4 sm:w-5 sm:h-5' />
                                 In Cart
