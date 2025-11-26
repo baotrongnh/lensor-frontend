@@ -45,7 +45,11 @@ export function ForumSidebarLeft({ ...props }: React.ComponentProps<typeof Sideb
 
      const handleBrandClick = (brand: string) => {
           const params = new URLSearchParams(searchParams.toString())
-          brand === 'Unknown' ? params.delete('camera') : params.set('camera', brand)
+          if (brand === 'Unknown') {
+               params.delete('camera')
+          } else {
+               params.set('camera', brand)
+          }
           router.push(`/forum?${params.toString()}`)
      }
 
