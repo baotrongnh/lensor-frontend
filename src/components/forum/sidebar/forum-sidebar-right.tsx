@@ -51,19 +51,20 @@ export function ForumSidebarRight({ ...props }: React.ComponentProps<typeof Side
                     ) : (
                          <div className="space-y-1">
                               {displayedForums.map((forum) => (
-                                   <Link
+                                   <p
                                         key={forum.id}
-                                        href={`/forum/${forum.id}`}
+                                        // href={`/forum/${forum.id}`}
                                         className={cn(
-                                             "block px-3 py-2 rounded-lg transition-colors",
-                                             "hover:bg-accent hover:text-accent-foreground"
+                                             "block px-3 py-2 rounded-lg transition-colors cursor-pointer",
+                                             "hover:bg-accent hover:text-accent-foreground",
+                                             "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
                                         )}
                                    >
-                                        <p className="text-sm font-medium truncate">{forum.name}</p>
-                                        <p className="text-xs text-muted-foreground mt-0.5">
+                                        <p className="text-sm font-medium truncate pointer-events-none">{forum.name}</p>
+                                        <p className="text-xs text-muted-foreground mt-0.5 pointer-events-none">
                                              {forum.communicateCount} {forum.communicateCount === 1 ? 'post' : 'posts'}
                                         </p>
-                                   </Link>
+                                   </p>
                               ))}
                          </div>
                     )}
