@@ -2,19 +2,18 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { LoginRequiredDialog } from '@/components/ui/login-required-dialog'
 import { ROUTES } from '@/constants/path'
 import { cartApi } from '@/lib/apis/cartApi'
 import { useCart } from '@/lib/hooks/useCartHooks'
-import { MarketplaceDetail } from '@/types/marketplace'
-import { CartItemData } from '@/types/cart'
-import { ShoppingCart, Star, CheckCircle2 } from 'lucide-react'
-import Link from 'next/link'
-import { useState, useMemo } from 'react'
-import { toast } from 'sonner'
 import { useUserStore } from '@/stores/user-store'
+import { CartItemData } from '@/types/cart'
+import { MarketplaceDetail } from '@/types/marketplace'
+import { CheckCircle2, ShoppingCart, Star } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { LoginRequiredDialog } from '@/components/ui/login-required-dialog'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { useMemo, useState } from 'react'
+import { toast } from 'sonner'
 
 export default function ProductInfo({
     id,
@@ -30,7 +29,6 @@ export default function ProductInfo({
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showLoginDialog, setShowLoginDialog] = useState(false)
     const { data: cartData, mutate: mutateCart } = useCart()
-    const [showBoughtDialog, setShowBoughtDialog] = useState(false)
 
 
     const isInCart = useMemo(() => {
@@ -42,17 +40,13 @@ export default function ProductInfo({
     const router = useRouter()
 
     const handleAddToCart = async () => {
-        if (isUserBought) {
-            setShowBoughtDialog(true)
-            return
-        }
-
         if (!user) {
             // Nếu chưa login, hiển thị dialog yêu cầu login
             sessionStorage.setItem('tempCart', id)
             setShowLoginDialog(true)
             return
         }
+
 
         if (isInCart) {
             toast.info('This product is already in your cart')
@@ -153,26 +147,44 @@ export default function ProductInfo({
                     </Link>
                 </div>
             )}
-            <div className='flex gap-2 sm:gap-3'>
-                <Button
-                    onClick={handleAddToCart}
-                    size={'lg'}
-                    className='flex-1 bg-primary text-primary-foreground py-2.5 sm:py-3 rounded-md text-sm sm:text-base font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50'
-                    disabled={isSubmitting || isInCart}
-                >
-                    {isInCart ? (
-                        <>
-                            <CheckCircle2 className='w-4 h-4 sm:w-5 sm:h-5' />
-                            In Cart
-                        </>
-                    ) : (
-                        <>
-                            <ShoppingCart className='w-4 h-4 sm:w-5 sm:h-5' />
-                            {isSubmitting ? 'Adding...' : 'Add to Cart'}
-                        </>
-                    )}
-                </Button>
-            </div>
+            {user && isUserBought
+                ?
+                <div className='flex flex-col gap-2'>
+                    <p className='text-muted-foreground text-sm italic'>You're already bought this product</p>
+                    <div className='flex gap-2 sm:gap-3'>
+                        <Button
+                            onClick={() => {
+                                router.push(ROUTES.PURCHASED_PRESETS)
+                            }}
+                            size={'lg'}
+                            className='flex-1 bg-primary text-primary-foreground py-2.5 sm:py-3 rounded-md text-sm sm:text-base font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50'
+                        >
+                            Go to Purchased Presets
+                        </Button>
+                    </div>
+                </div>
+                :
+                <div className='flex gap-2 sm:gap-3'>
+                    <Button
+                        onClick={handleAddToCart}
+                        size={'lg'}
+                        className='flex-1 bg-primary text-primary-foreground py-2.5 sm:py-3 rounded-md text-sm sm:text-base font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50'
+                        disabled={isSubmitting || isInCart}
+                    >
+                        {isInCart ? (
+                            <>
+                                <CheckCircle2 className='w-4 h-4 sm:w-5 sm:h-5' />
+                                In Cart
+                            </>
+                        ) : (
+                            <>
+                                <ShoppingCart className='w-4 h-4 sm:w-5 sm:h-5' />
+                                {isSubmitting ? 'Adding...' : 'Add to Cart'}
+                            </>
+                        )}
+                    </Button>
+                </div>
+            }
 
             <LoginRequiredDialog
                 open={showLoginDialog}
@@ -180,36 +192,6 @@ export default function ProductInfo({
                 title="Login Required"
                 description="Product has been added to cart, please login to continue."
             />
-
-            <Dialog open={showBoughtDialog} onOpenChange={setShowBoughtDialog}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>You already purchased this</DialogTitle>
-                        <DialogDescription>
-                            You've purchased this preset before. Want to download it now?
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <DialogFooter>
-                        <Button
-                            variant="outline"
-                            onClick={() => setShowBoughtDialog(false)}
-                        >
-                            Cancel
-                        </Button>
-
-                        <Button
-                            onClick={() => {
-                                setShowBoughtDialog(false)
-                                router.push(ROUTES.PURCHASED_PRESETS)
-                            }}
-                        >
-                            Go to Purchased Presets
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
         </div>
     )
 }

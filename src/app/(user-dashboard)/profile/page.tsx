@@ -50,7 +50,6 @@ export default function ProfilePage() {
                setUpdatingProfile(false);
                return;
           }
-
           try {
                if (currentPassword) {
                     const { data: reauthData, error: reauthError } = await supabase.auth.signInWithPassword({
@@ -64,7 +63,6 @@ export default function ProfilePage() {
                          return;
                     }
                }
-
                const { data, error } = await supabase.auth.updateUser({
                     password: newPassword || undefined,
                     data: { full_name: editFullName },

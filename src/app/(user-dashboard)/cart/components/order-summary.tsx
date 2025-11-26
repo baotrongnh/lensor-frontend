@@ -11,12 +11,15 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog'
 import { orderApi } from '@/lib/apis/orderApi'
+import { cartApi } from '@/lib/apis/cartApi'
 import { useWallet } from '@/lib/hooks/useWalletHooks'
+import { useOrders } from '@/lib/hooks/useOrderHooks'
 import { CartItemData } from '@/types/cart'
 import { AlertCircle, CreditCard, Download, Shield, Wallet } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { ROUTES } from '@/constants/path'
 
 interface OrderSummaryProps {
     subtotal: number
@@ -24,13 +27,17 @@ interface OrderSummaryProps {
     selectedCartItems: CartItemData[]
     onCheckoutSuccess?: () => void
     disabled?: boolean
+    cartItems: CartItemData[]
 }
 
-export function OrderSummary({ subtotal, itemCount, selectedCartItems, onCheckoutSuccess, disabled = false }: OrderSummaryProps) {
+export function OrderSummary({ subtotal, itemCount, selectedCartItems, onCheckoutSuccess, disabled = false, cartItems }: OrderSummaryProps) {
     const router = useRouter()
     const [isCheckingOut, setIsCheckingOut] = useState(false)
     const [showCheckoutDialog, setShowCheckoutDialog] = useState(false)
+    const [showAlreadyPurchasedDialog, setShowAlreadyPurchasedDialog] = useState(false)
+    const [purchasedProductIds, setPurchasedProductIds] = useState<string[]>([])
     const { data: walletData, isLoading: isLoadingWallet } = useWallet()
+    const { data: ordersData } = useOrders()
 
     const walletBalance = parseFloat(walletData?.data?.balance || '0')
     const remainingBalance = walletBalance - subtotal
@@ -52,6 +59,7 @@ export function OrderSummary({ subtotal, itemCount, selectedCartItems, onCheckou
             const productIds = selectedCartItems
                 .map(item => item.product?.id)
                 .filter((id): id is string => id !== undefined)
+
             const response = await orderApi.checkout(productIds)
 
             if (response.data) {
@@ -63,12 +71,73 @@ export function OrderSummary({ subtotal, itemCount, selectedCartItems, onCheckou
             }
         } catch (error) {
             console.error('Checkout failed:', error)
-            const errorMessage = (error as any)?.response?.data?.message
+            const errorResponse = (error as any)?.response
+
+            // Check if it's a 403 error for already purchased product
+            if (errorResponse?.status === 403) {
+                const errorMessage = errorResponse?.data?.message || ''
+                // Extract product ID from error message using regex
+                const productIdMatch = errorMessage.match(/product: ([a-f0-9-]+)/)
+                if (productIdMatch && productIdMatch[1]) {
+                    // Get all purchased product IDs from all orders
+                    const allPurchasedProductIds = new Set<string>()
+                    if (ordersData?.data) {
+                        ordersData.data.forEach(order => {
+                            order.items?.forEach(item => {
+                                if (item.productId) {
+                                    allPurchasedProductIds.add(item.productId)
+                                }
+                            })
+                        })
+                    }
+
+                    // Find all cart items that are already purchased
+                    const alreadyPurchasedInCart = cartItems
+                        .filter(item => item.product?.id && allPurchasedProductIds.has(item.product.id))
+                        .map(item => item.product!.id)
+
+                    if (alreadyPurchasedInCart.length > 0) {
+                        setPurchasedProductIds(alreadyPurchasedInCart)
+                        setShowAlreadyPurchasedDialog(true)
+                        setIsCheckingOut(false)
+                        return
+                    }
+                }
+            }
+
+            const errorMessage = errorResponse?.data?.message
                 || (error as Error)?.message
                 || 'Failed to complete checkout. Please check your wallet balance.'
             toast.error(errorMessage)
         } finally {
             setIsCheckingOut(false)
+        }
+    }
+
+    const handleRemovePurchasedProduct = async () => {
+        if (purchasedProductIds.length === 0) return
+
+        try {
+            // Find all cart items that match the purchased product IDs
+            const cartItemsToRemove = cartItems.filter(
+                item => item.product?.id && purchasedProductIds.includes(item.product.id)
+            )
+
+            if (cartItemsToRemove.length > 0) {
+                // Remove all purchased products from cart
+                await Promise.all(
+                    cartItemsToRemove.map(item => cartApi.removeCartItem(item.id))
+                )
+                await onCheckoutSuccess?.()
+                toast.success(`${cartItemsToRemove.length} product(s) removed from cart`)
+            }
+
+            setShowAlreadyPurchasedDialog(false)
+            setPurchasedProductIds([])
+            router.push(ROUTES.PURCHASED_PRESETS)
+        } catch (error) {
+            console.error('Failed to remove products from cart:', error)
+            toast.error('Failed to remove products from cart')
         }
     }
 
@@ -217,6 +286,36 @@ export function OrderSummary({ subtotal, itemCount, selectedCartItems, onCheckou
                     <p className="text-xs text-muted-foreground mt-2">— Lensor Community</p>
                 </div>
             </Card>
+
+            <Dialog open={showAlreadyPurchasedDialog} onOpenChange={setShowAlreadyPurchasedDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>You already purchased {purchasedProductIds.length > 1 ? 'these products' : 'this product'}</DialogTitle>
+                        <DialogDescription>
+                            {purchasedProductIds.length > 1
+                                ? `You've purchased ${purchasedProductIds.length} products before. They will be removed from your cart.`
+                                : "You've purchased this preset before. It will be removed from your cart."
+                            }
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setShowAlreadyPurchasedDialog(false)
+                                setPurchasedProductIds([])
+                            }}
+                        >
+                            Cancel
+                        </Button>
+
+                        <Button onClick={handleRemovePurchasedProduct}>
+                            OK
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
