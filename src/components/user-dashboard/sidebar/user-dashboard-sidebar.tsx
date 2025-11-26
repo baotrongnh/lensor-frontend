@@ -33,6 +33,7 @@ import {
 import { useTranslations } from "next-intl"
 import { usePathname } from "next/navigation"
 import * as React from "react"
+import Link from "next/link"
 
 export function UserDashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
@@ -156,7 +157,7 @@ export function UserDashboardSidebar({ ...props }: React.ComponentProps<typeof S
         <div className="flex h-14 items-center px-4">
           <div className="flex items-center gap-2">
             <GalleryVerticalEnd className="size-6 text-primary" />
-            <span className="font-bold text-lg text-primary group-data-[collapsible=icon]:hidden">LENSOR</span>
+            <Link href='/forum'><span className="font-bold text-lg text-primary group-data-[collapsible=icon]:hidden">LENSOR</span></Link>
           </div>
         </div>
       </SidebarHeader>
