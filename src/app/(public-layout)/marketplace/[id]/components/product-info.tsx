@@ -42,15 +42,15 @@ export default function ProductInfo({
     const router = useRouter()
 
     const handleAddToCart = async () => {
-        if (isUserBought) {
-            setShowBoughtDialog(true)
-            return
-        }
-
         if (!user) {
             // Nếu chưa login, hiển thị dialog yêu cầu login
             sessionStorage.setItem('tempCart', id)
             setShowLoginDialog(true)
+            return
+        }
+
+        if (isUserBought) {
+            setShowBoughtDialog(true)
             return
         }
 
